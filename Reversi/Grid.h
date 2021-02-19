@@ -3,6 +3,9 @@
 #include <array>
 #include <algorithm>
 #include "Vector2i.h"
+#include <string>
+#include <iostream>
+
 template <
 	typename VALUE,					// elements of the 2D array
 	size_t SIZE, 					// axis size
@@ -22,10 +25,7 @@ public:
 	// default value constructor
 	Grid(VALUE v = DEFAULT_VALUE)
 	{
-		// fill each row with default value
-		std::for_each(mTable.begin(), mTable.end(), [&v](Row& r) {
-				std::fill(r.begin(), r.end(), v);
-		});
+		fill(v);
 	}
 
 	// copy constructor
@@ -34,6 +34,31 @@ public:
 		mTable(grid.mTable)
 	{
 
+	}
+
+
+	bool operator !=(const Grid& b) const
+	{
+		bool notEqual = false;
+
+		Vector2i pos;
+		while (pos.x < SIZE && !notEqual)
+		{
+			while (pos.y < SIZE && !notEqual)
+			{
+
+				VALUE aa = mTable.at(pos.x).at(pos.y);
+				VALUE bb = b.mTable.at(pos.x).at(pos.y);
+				if (aa != bb)
+				{
+					notEqual = true;
+				}
+				++pos.y;
+			}
+			++pos.x;
+		}
+
+		return notEqual;
 	}
 
 	//at
@@ -62,5 +87,24 @@ public:
 		return mTable.size() * row_size();
 	}
 
-};
+	void to_console()
+	{
+		for (auto& row : mTable)
+		{
+			for (VALUE& cell : row)
+			{
+				std::cout << cell << " ";
+			}
+			std::cout << "\n";
+		}
+	}
 
+	void fill(VALUE v)
+	{
+		// fill each row with default value
+		std::for_each(mTable.begin(), mTable.end(), [&v](Row& r) 
+			{
+			std::fill(r.begin(), r.end(), v);
+			});
+	}
+};
