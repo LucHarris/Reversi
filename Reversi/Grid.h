@@ -36,26 +36,25 @@ public:
 
 	}
 
-
 	bool operator !=(const Grid& b) const
 	{
 		bool notEqual = false;
 
 		Vector2i pos;
-		while (pos.x < SIZE && !notEqual)
+		while (pos.y < SIZE && !notEqual)
 		{
-			while (pos.y < SIZE && !notEqual)
+			while (pos.x < SIZE && !notEqual)
 			{
 
-				VALUE aa = mTable.at(pos.x).at(pos.y);
-				VALUE bb = b.mTable.at(pos.x).at(pos.y);
+				VALUE aa = mTable.at(pos.y).at(pos.x);
+				VALUE bb = b.mTable.at(pos.y).at(pos.x);
 				if (aa != bb)
 				{
 					notEqual = true;
 				}
-				++pos.y;
+				++pos.x;
 			}
-			++pos.x;
+			++pos.y;
 		}
 
 		return notEqual;
@@ -66,13 +65,13 @@ public:
 	// value at coordinates
 	VALUE& at(size_t x, size_t y)
 	{
-		return mTable.at(x).at(y);
+		return mTable.at(y).at(x);
 	}
 
 	VALUE& at(Vector2i v)
 	{
 		assert(v.x >= 0 && v.y >= 0);
-		return mTable.at(v.x).at(v.y);
+		return mTable.at(v.y).at(v.x);
 	}
 
 	// cells in a row
@@ -107,4 +106,6 @@ public:
 			std::fill(r.begin(), r.end(), v);
 			});
 	}
+
+
 };

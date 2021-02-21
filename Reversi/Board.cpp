@@ -1,30 +1,38 @@
 #include "Board.h"
 #include <cmath>
+#include <limits>
 
-
-#define PLAYER_CELL_CHAR ((mPlayerIndex == PLAYER_ONE) ? CELL_WHITE : CELL_BLACK)
-
-void Board::SwapPlayers()
+void ReversiBoard::SwapPlayers()
 {
 	std::swap(mPlayerIndex, mOpponentIndex);
 }
 
-void Board::GenerateScoreGrid()
+void ReversiBoard::GenerateScoreGrid()
 {
 	std::cout << "\n\n\nGenerateScoreGrid called\n\n\n";
 
+	Vector2i cell; // Zero
+
+	// reset max and min to out of bounds. 
+	mMinMax.first.position = { -1,-1 };
+	mMinMax.first.score = MAX_SCORE;	// impssible to get flip the whole board in one move
+	mMinMax.first.player = mPlayerIndex;
+
+	mMinMax.second.position = { -1,-1 }; 
+	mMinMax.second.score = ZERO_SCORE;
+	mMinMax.second.player = mPlayerIndex;
+
 	mScoreGrid.fill(ZERO_SCORE); // reset
 
-	Vector2i cell; // Zero
 	int score = 0;
 
-	const char Active = (mPlayerIndex == PLAYER_ONE) ?   CELL_WHITE: CELL_BLACK;
-	const char Opponent = (mPlayerIndex == PLAYER_ONE) ? CELL_BLACK : CELL_WHITE;
+	const char Active = GetActivePlayerDisc();
+	const char Opponent = GetActiveOpponentDisc();
 
 	// every cell
-	while (cell.x < GRID_SIZE)
+	while (cell.y < GRID_SIZE)
 	{
-		while (cell.y < GRID_SIZE)
+		while (cell.x < GRID_SIZE)
 		{
 			if (mDiscGrid.at(cell) == CELL_EMPTY)
 			{
@@ -32,6 +40,7 @@ void Board::GenerateScoreGrid()
 
 				//std::cout << "\n\ncell:" << cell.x << "," << cell.y << " ";//debug
 
+				// look in every direction
 				for (auto& direction : Vector2i::Directions)
 				{
 					// first step in direction (reset)
@@ -60,19 +69,39 @@ void Board::GenerateScoreGrid()
 					}
 
 				}
-				//std::cout << "\n\t\tcumulative score @ cell:" << mScoreGrid.at(cell)<< "\n\n";//debug
-			}
-			
-			
 
-			++cell.y;
+				//std::cout << "\n\t\tcumulative score @ cell:" << mScoreGrid.at(cell)<< "\n\n";//debug
+
+				// update min max
+				const int cellScore = mScoreGrid.at(cell); // can't use local score variable as may be different to cell score
+
+				if (cellScore >= MIN_SCORE)
+				{
+					// min
+					if (cellScore < mMinMax.first.score)
+					{
+						mMinMax.first.position = cell;
+						mMinMax.first.score = cellScore;
+					}
+
+					// max
+					if (cellScore > mMinMax.second.score)
+					{
+						mMinMax.second.position = cell;
+						mMinMax.second.score = cellScore;
+					}
+
+				}
+			}
+	
+			++cell.x;
 		}
-		cell.y = 0;
-		++cell.x;
+		cell.x = 0;
+		++cell.y;
 	}
 }
 
-void Board::Move(const Vector2i& v)
+void ReversiBoard::Move(const Vector2i& v)
 {
 	if (ValidCellForMove(v))
 	{
@@ -85,40 +114,24 @@ void Board::Move(const Vector2i& v)
 	}
 }
 
-bool Board::ValidCellForMove(const Vector2i& v)
+bool ReversiBoard::ValidCellForMove(const Vector2i& v)
 {
 	return mScoreGrid.at(v) >= MIN_SCORE;
 }
 
-bool Board::CanMove()
+bool ReversiBoard::CanMove()
 {
-	bool canMove = false;
-
-	Vector2i v{ 0,0 };
-	while (v.x < GRID_SIZE && !canMove)
-	{
-		while (v.y < GRID_SIZE && !canMove)
-		{
-			if (mScoreGrid.at(v) > 0)
-			{
-				canMove = true;
-			}
-			++v.y;
-		}
-		++v.x;
-	}
-
-	return canMove;
+	return mMinMax.first.IsValid() && mMinMax.second.IsValid();
 }
 
-void Board::PlaceMove(const Vector2i& v)
+void ReversiBoard::PlaceMove(const Vector2i& v)
 {
 	if (mScoreGrid.at(v) >= MIN_SCORE)
 	{
 		Vector2i offset = v;
 		int distance = 0;
-		const char Active = (mPlayerIndex == PLAYER_ONE) ?	CELL_WHITE: CELL_BLACK;
-		const char Opponent = (mPlayerIndex == PLAYER_ONE) ? CELL_BLACK : CELL_WHITE;
+		const char Active = GetActivePlayerDisc();
+		const char Opponent = GetActiveOpponentDisc();
 
 		for (auto& direction : Vector2i::Directions)
 		{
@@ -153,17 +166,17 @@ void Board::PlaceMove(const Vector2i& v)
 	
 }
 
-void Board::UpdateBoardBackup()
+void ReversiBoard::UpdateBoardBackup()
 {
 	// override old buffer
 	mDiscGridBackup = mDiscGrid;
 }
 
-void Board::ToConsole()
+void ReversiBoard::ToConsole()
 {
 	std::cout
 		<< "\n--------------------\n"
-		<< "Player " << PLAYER_CELL_CHAR << " Turn... mPlayerIndex = " << mPlayerIndex << " "
+		<< "Player " << GetActivePlayerDisc() << " Turn... mPlayerIndex = " << mPlayerIndex << " "
 		<< "\n--------------------\n"
 		;
 
@@ -173,10 +186,31 @@ void Board::ToConsole()
 	mDiscGridBackup.to_console();
 
 	mScoreGrid.to_console();
+	std::cout << "\nMinMax:";
+	std::cout
+		<< "\n\tMin Score: " << mMinMax.first.score << "\tPos:" << mMinMax.first.position.x << "," << mMinMax.first.position.y << "\n"
+		<< "\n\tMax Score: " << mMinMax.second.score << "\tPos:" << mMinMax.second.position.x << "," << mMinMax.second.position.y << "\n"
+		;
 	std::cout << "\n";
 }
 
-void Board::PopulateStart()
+const char ReversiBoard::GetActivePlayerDisc() const 
+{
+	return (mPlayerIndex == PLAYER_ONE) ? CELL_WHITE : CELL_BLACK;
+}
+
+const char ReversiBoard::GetActiveOpponentDisc() const
+{
+	return (mPlayerIndex == PLAYER_ONE) ? CELL_BLACK : CELL_WHITE;
+}
+
+void ReversiBoard::Initialize()
+{
+	PopulateStart();
+	GenerateScoreGrid();
+}
+
+void ReversiBoard::PopulateStart()
 {
 	mDiscGrid = DiscGrid();
 
@@ -187,3 +221,22 @@ void Board::PopulateStart()
 
 }
 
+const bool MoveData::IsValid() const
+{
+	return
+		position.x >= 0 &&
+		position.y >= 0 &&
+		position.x < GRID_SIZE&&
+		position.y < GRID_SIZE&&
+		score >= MIN_SCORE && score <= MAX_SCORE;
+}
+
+const ReversiBoard::MinMax& ReversiBoard::GetMinMax() const
+{
+	return mMinMax;
+}
+
+const std::pair<int, int> ReversiBoard::GetPlayerScores() const
+{
+	return std::pair<int, int>();
+}

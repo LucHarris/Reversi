@@ -15,26 +15,12 @@ int main()
 
 	// test board
 	{
-		Board b;
+		ReversiBoard b;
 
 		// game init
-		b.PopulateStart();
-		b.GenerateScoreGrid();
+		b.Initialize();
+
 		b.ToConsole();
-		//move player 1
-		//Vector2i move{ 0,1 };
-		//b.Move(move); // with player switch
-		//b.ToConsole();
-		//if (b.BoardChanged())
-		//{
-		//	std::cout << "\n\n\n\nBoard changed\n\n\n\n\n";
-		//	// change visuals
-		//	b.PostUpdateBuffer();
-		//}
-
-		//b.ToConsole();
-		//system("Pause");
-
 
 		// y x
 		std::array<Vector2i, 4> moves =
@@ -46,15 +32,20 @@ int main()
 		};
 
 
-		for (auto& m : moves)
+
+		while (b.CanMove())
 		{
-			std::cout << "\n\nMove" << m.x << "," << m.y;
-			b.Move(m);
+			ReversiBoard::MinMax minMax(b.GetMinMax());
+
+			std::cout << "\n\nMove" << minMax.second.position.x << "," << minMax.second.position.y;
+
+			b.Move(minMax.second.position);
+
 			if (b.BoardHasChanged())
 			{
 				std::cout << "\n\nBoard changed\n\n\n";
-				// change visuals
 				b.UpdateBoardBackup();
+				// change visuals
 			}
 			else
 			{
@@ -64,6 +55,14 @@ int main()
 			b.ToConsole();
 			system("Pause");
 		}
+		
+
+		std::cout << "\n\n\n\nGAME OVER\n\n\n\n\n";
+
+		
+		system("Pause");
+
+
 	}
 
 }

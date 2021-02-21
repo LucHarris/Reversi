@@ -33,14 +33,28 @@
 #define MIN_SCORE 2
 #endif // !MIN_SCORE
 
+#ifndef MAX_SCORE
+#define MAX_SCORE GRID_SIZE * GRID_SIZE
+#endif // !MAX_SCORE
+
+
+struct MoveData
+{
+	Vector2i position{-1,-1};		// Board position 
+	int score = 0;					//ScoreGrid data 
+	size_t player;					// player index
+	// validates position and score
+	const bool IsValid() const;
+};
 
 // A board for square grid and 2 players
-class Board
+class ReversiBoard
 {
 public:
 	typedef Grid<char, GRID_SIZE, CELL_EMPTY,Vector2i>	DiscGrid;			// Player discs
-	typedef std::array<DiscGrid, 2>				DiscGridBuffer;		// Defaults char to 0
+	typedef std::array<DiscGrid, 2>						DiscGridBuffer;		// Defaults char to 0
 	typedef Grid<int, GRID_SIZE, ZERO_SCORE, Vector2i>	ScoreGrid;
+	typedef  std::pair<MoveData, MoveData>				MinMax;
 private:
 	// Track changes to grid
 	DiscGrid mDiscGrid;
@@ -48,16 +62,13 @@ private:
 	// Each cell contains number of cells that can be flipped
 	// Available moves are scores above 0.
 	ScoreGrid mScoreGrid;
+	// first is min second is max. Updated in GenerateScoreGrid()
+	MinMax mMinMax;
 	//Active player for buffer index
 	size_t mPlayerIndex = 0;
 	//Oppenent to active player
 	size_t mOpponentIndex = 1;
-	bool mGameEnded = false;
 
-
-
-	// Based on generated score grid
-	bool CanMove();
 	
 	// Dependant on mScoreGird populated and upto date
 	void PlaceMove(const Vector2i& v);
@@ -73,11 +84,17 @@ private:
 	}
 
 public:
+	// Sets up the board for the first move
+	void Initialize();
+
 	// starting grid
 	void PopulateStart();
 
 	// For either active player
 	void GenerateScoreGrid();
+
+	// Negtive winning condition based on generated score grid has a valid score 
+	bool CanMove();
 
 	// Places a move for player.
 	// Required mScoreGrid to be generated for current player
@@ -98,5 +115,13 @@ public:
 	{
 		return mDiscGrid != mDiscGridBackup;
 	}
+
+	const char GetActivePlayerDisc() const;
+
+	const char GetActiveOpponentDisc() const;
+
+	const MinMax& GetMinMax() const;
+
+	const std::pair<int, int> GetPlayerScores() const;
 };
 
