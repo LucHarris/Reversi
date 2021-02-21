@@ -69,7 +69,6 @@ private:
 	//Oppenent to active player
 	size_t mOpponentIndex = 1;
 
-	
 	// Dependant on mScoreGird populated and upto date
 	void PlaceMove(const Vector2i& v);
 

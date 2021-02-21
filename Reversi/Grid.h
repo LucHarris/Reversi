@@ -107,5 +107,21 @@ public:
 			});
 	}
 
+	int count(VALUE v) const
+	{
+		int count = 0;
 
+		for (auto& row : mTable)
+		{
+			for (auto& cell : row)
+			{
+				if (v == cell)
+				{
+					++count;
+				}
+			}
+		}
+
+		return count;
+	}
 };

@@ -13,7 +13,7 @@ int main()
 		gameTable = gameTable2;
 	}
 
-	// test board
+	// test auto board
 	{
 		ReversiBoard b;
 
@@ -22,19 +22,10 @@ int main()
 
 		b.ToConsole();
 
-		// y x
-		std::array<Vector2i, 4> moves =
-		{
-			Vector2i{0,1},
-			Vector2i{0,2},
-			Vector2i{0,3},
-			Vector2i{0,0}
-		};
-
-
-
+		// player turns until win/draw
 		while (b.CanMove())
 		{
+			// auto game for both players
 			ReversiBoard::MinMax minMax(b.GetMinMax());
 
 			std::cout << "\n\nMove" << minMax.second.position.x << "," << minMax.second.position.y;
@@ -44,8 +35,8 @@ int main()
 			if (b.BoardHasChanged())
 			{
 				std::cout << "\n\nBoard changed\n\n\n";
+				// change visuals here
 				b.UpdateBoardBackup();
-				// change visuals
 			}
 			else
 			{
@@ -53,14 +44,33 @@ int main()
 			}
 
 			b.ToConsole();
-			system("Pause");
+			//system("Pause");
 		}
 		
+		// Final score
+		{
+			auto scores = b.GetPlayerScores();
 
-		std::cout << "\n\n\n\nGAME OVER\n\n\n\n\n";
+			std::string winner = (scores.first > scores.second) ? "One" : "Two";
+
+			if ((scores.first == scores.second))
+			{
+				winner = "Draw";
+			}
+
+			std::cout
+				<< "\n\n\n\nGAME OVER\n\n"
+				<< "\nPlayer 1(O): "
+				<< scores.first
+				<< "\nPlayer 2(T): "
+				<< scores.second
+				<< "\n\nWinner: " << winner
+				;
+
+			system("Pause");
+		}
 
 		
-		system("Pause");
 
 
 	}

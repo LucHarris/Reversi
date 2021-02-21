@@ -238,5 +238,5 @@ const ReversiBoard::MinMax& ReversiBoard::GetMinMax() const
 
 const std::pair<int, int> ReversiBoard::GetPlayerScores() const
 {
-	return std::pair<int, int>();
+	return { mDiscGrid.count(CELL_WHITE) ,  mDiscGrid.count(CELL_BLACK) };
 }
