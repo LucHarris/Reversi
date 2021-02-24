@@ -180,10 +180,10 @@ void ReversiBoard::ToConsole()
 		<< "\n--------------------\n"
 		;
 
-
 	mDiscGrid.to_console();
 	std::cout << "\n";
 	mDiscGridBackup.to_console();
+	std::cout << "\n";
 
 	mScoreGrid.to_console();
 	std::cout << "\nMinMax:";

@@ -15,12 +15,9 @@ template <
 // 2D square grid
 class Grid
 {
-public:
-	typedef typename std::array<VALUE, SIZE> Row;
-	typedef typename std::array<Row, SIZE> Table;
 private:
-	Table mTable;
-
+	std::array<VALUE, SIZE * SIZE> mTable;
+	size_t mDimention = SIZE;
 public:
 	// default value constructor
 	Grid(VALUE v = DEFAULT_VALUE)
@@ -38,26 +35,7 @@ public:
 
 	bool operator !=(const Grid& b) const
 	{
-		bool notEqual = false;
-
-		Vector2i pos;
-		while (pos.y < SIZE && !notEqual)
-		{
-			while (pos.x < SIZE && !notEqual)
-			{
-
-				VALUE aa = mTable.at(pos.y).at(pos.x);
-				VALUE bb = b.mTable.at(pos.y).at(pos.x);
-				if (aa != bb)
-				{
-					notEqual = true;
-				}
-				++pos.x;
-			}
-			++pos.y;
-		}
-
-		return notEqual;
+		return mTable != b.mTable && mDimention != b.mDimention;
 	}
 
 	//at
@@ -65,63 +43,60 @@ public:
 	// value at coordinates
 	VALUE& at(size_t x, size_t y)
 	{
-		return mTable.at(y).at(x);
+		return mTable.at(y * SIZE + x); 
 	}
 
-	VALUE& at(Vector2i v)
+	VALUE& at(COORD v)
 	{
-		assert(v.x >= 0 && v.y >= 0);
-		return mTable.at(v.y).at(v.x);
+		assert(
+			v.x >= 0 && 			
+			v.y >= 0 &&			
+			v.x < SIZE &&			
+			v.y < SIZE
+		);
+
+		return mTable.at(v.y * SIZE + v.x);
 	}
 
 	// cells in a row
-	size_t row_size()
+	size_t dimension_size()
 	{
-		return mTable.at(0).size();
+		return SIZE;
 	}
 
 	// total number of cells
 	size_t size()
 	{
-		return mTable.size() * row_size();
+		return mTable.size();
 	}
 
 	void to_console()
 	{
-		for (auto& row : mTable)
+		int count = 0;
+		
+		for (VALUE& element : mTable)
 		{
-			for (VALUE& cell : row)
+			std::cout << element << " ";
+
+			// increment and check for EOL
+			if (++count >= SIZE)
 			{
-				std::cout << cell << " ";
+				std::cout << "\n";
+				count = 0;
 			}
-			std::cout << "\n";
 		}
 	}
 
 	void fill(VALUE v)
 	{
-		// fill each row with default value
-		std::for_each(mTable.begin(), mTable.end(), [&v](Row& r) 
-			{
-			std::fill(r.begin(), r.end(), v);
-			});
+		std::fill(mTable.begin(), mTable.end(), v);
 	}
 
 	int count(VALUE v) const
 	{
-		int count = 0;
-
-		for (auto& row : mTable)
-		{
-			for (auto& cell : row)
+		return std::count_if(mTable.begin(), mTable.end(), [&v](const VALUE& element)
 			{
-				if (v == cell)
-				{
-					++count;
-				}
-			}
-		}
-
-		return count;
+				return v == element;
+			});
 	}
 };
