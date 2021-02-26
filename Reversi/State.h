@@ -2,12 +2,16 @@
 
 class GameTimer;
 
+class ReversiSFML;
+
 class State
 {
+private:
+	ReversiSFML* mpApp;
 public:
-	virtual void Initialize() = 0;
-	virtual void Update(const GameTimer&) = 0;
-	virtual void Render(const GameTimer&) = 0;
+	virtual void Init() = 0;
+	virtual void Update(float) = 0;
+	virtual void Render(float) = 0;
 	virtual void Input() = 0;
 };
 

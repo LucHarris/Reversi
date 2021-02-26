@@ -1,17 +1,37 @@
 #include "StateManager.h"
+#include <assert.h>
+#include <SFML/System.hpp>
 
-void StateManager::Initialize()
+
+StateManager::StateManager(ReversiSFML* app)
+	:
+	mpApp(app)
 {
+	assert(app);
 }
 
-void StateManager::Update(const GameTimer& gt)
+void StateManager::Init()
 {
-	mStates.at(mActiveState)->Update(gt);
+
 }
 
-void StateManager::Render(const GameTimer& gt)
+void StateManager::Update(float dt)
 {
-	mStates.at(mActiveState)->Render(gt);
+	mStates.at(mActiveState)->Update(dt);
+}
+
+void StateManager::Render(float dt)
+{
+	mStates.at(mActiveState)->Render(dt);
+}
+
+void StateManager::MouseInput(const sf::Vector2i& pos)
+{
+	
+}
+
+void StateManager::KeyInput(sf::Keyboard::Key key)
+{
 }
 
 void StateManager::Input()
