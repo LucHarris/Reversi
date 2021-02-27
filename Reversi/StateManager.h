@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SFML/Window.hpp>
 #include "State.h"
 #include <map>
 #include <memory>
@@ -11,11 +10,12 @@ typedef std::map<StateKey, std::unique_ptr<State>> StateMap;
 
 class StateManager
 {
-	ReversiSFML* mpApp;
 	StateMap mStates;
-
+	sf::Sprite mBackground;
+	ReversiSFML* mpApp;
 	StateKey mActiveState = StateKey::MENU;
 
+	void InitStates();
 public:
 	StateManager(ReversiSFML* app);
 	void Init();
@@ -23,7 +23,6 @@ public:
 	void Render(float dt);
 	void MouseInput(const sf::Vector2i& pos);
 	void KeyInput(sf::Keyboard::Key key);
-	void Input();
 
 };
 

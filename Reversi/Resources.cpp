@@ -6,11 +6,13 @@
 void Resources::LoadTextures()
 {
 	// define texture data for iteration
-	const TextureData textureData[3]
+	const TextureData textureData[5]
 	{
 		{"Data/Textures/patternBackground.png",true,true },
 		{"Data/Textures/board.png",true,true },
-		{"Data/Textures/disc.png",true,true }
+		{"Data/Textures/disc.png",true,true },
+		{"Data/Textures/logoStretch.png",true,true },
+		{"Data/Textures/logo.png",false,true }
 	};
 
 	const size_t size = sizeof(textureData) / sizeof(textureData[0]);
@@ -53,12 +55,12 @@ void Resources::Load()
 	LoadFonts();
 }
 
-sf::Texture& Resources::GetTextureAt(size_t p)
+const sf::Texture& Resources::GetTextureAt(size_t p) const
 {
 	return mTextures.at(p);
 }
 
-sf::Font& Resources::GetFontAt(size_t p)
+const sf::Font& Resources::GetFontAt(size_t p) const
 {
 	return mFonts.at(p);
 }

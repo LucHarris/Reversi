@@ -17,15 +17,23 @@ class Resources
 	};
 
 
-	std::array<sf::Texture, 3> mTextures;
+	std::array<sf::Texture, 5> mTextures;
 	std::array<sf::Font, 1> mFonts;
 	void LoadTextures();
 	void LoadFonts();
 public:
 	void Load();
 
-	sf::Texture& GetTextureAt(size_t p);
-	sf::Font& GetFontAt(size_t p);
+	const sf::Texture& GetTextureAt(size_t p) const;
+	const sf::Font& GetFontAt(size_t p) const;
 
+	enum {
+		FONT_MAIN = 0,
+		TEXTURE_BG = 0,
+		TEXTURE_BOARD,
+		TEXTURE_DISC,
+		TEXTURE_STRETCH,
+		TEXTURE_LOGO
+	};
 };
 
