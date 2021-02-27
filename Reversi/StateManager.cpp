@@ -49,7 +49,7 @@ void StateManager::Render(float dt)
 	mStates.at(mActiveState)->Render(dt);
 }
 
-void StateManager::MouseInput(const sf::Vector2i& pos)
+void StateManager::MouseInput(const sf::Vector2f& pos)
 {
 	mStates.at(mActiveState)->MouseInput(pos);
 }

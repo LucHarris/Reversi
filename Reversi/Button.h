@@ -14,7 +14,7 @@ class MenuButton
 public:
 	MenuButton(ReversiSFML* app);
 	void Init (const std::string& prompt, float pos);
-	bool Contains(const sf::Vector2i& pos);
+	bool Contains(const sf::Vector2f& pos);
 
 	void Render(float dt);
 

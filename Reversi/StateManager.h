@@ -22,7 +22,7 @@ public:
 	void Init();
 	void Update(float dt);
 	void Render(float dt);
-	void MouseInput(const sf::Vector2i& pos);
+	void MouseInput(const sf::Vector2f& pos);
 	void KeyInput(sf::Keyboard::Key key);
 	// Immediately changes active state
 	void ChangeState(size_t s);

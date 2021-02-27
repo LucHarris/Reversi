@@ -31,7 +31,7 @@ void GameSampleState::Render(float dt)
 	mDiscSprites.Render(dt);
 }
 
-void GameSampleState::MouseInput(const sf::Vector2i& pos)
+void GameSampleState::MouseInput(const sf::Vector2f& pos)
 {
 	mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU);
 }

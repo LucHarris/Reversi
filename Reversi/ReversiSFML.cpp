@@ -41,7 +41,7 @@ void ReversiSFML::Run()
 				window.close(); 
 				break;
 			case sf::Event::MouseButtonReleased:
-				stateManager.MouseInput(sf::Mouse::getPosition(window));
+				stateManager.MouseInput((sf::Vector2f)sf::Mouse::getPosition(window));
 			case sf::Event::KeyReleased:
 				stateManager.KeyInput(sfEvent.key.code);
 			default:

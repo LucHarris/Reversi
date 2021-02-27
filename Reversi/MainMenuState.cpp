@@ -47,7 +47,7 @@ void MainMenuState::Render(float dt)
 	}
 }
 
-void MainMenuState::MouseInput(const sf::Vector2i& pos)
+void MainMenuState::MouseInput(const sf::Vector2f& pos)
 {
 	if (mButtons.at(0).Contains(pos))
 	{

@@ -20,7 +20,7 @@ void MenuButton::Init( const std::string& prompt, float relY)
 	mText.setPosition(mSprite.getPosition());
 }
 
-bool MenuButton::Contains(const sf::Vector2i& pos)
+bool MenuButton::Contains(const sf::Vector2f& pos)
 {
 	sf::FloatRect fr = mSprite.getGlobalBounds();
 	return fr.contains((sf::Vector2f)pos);

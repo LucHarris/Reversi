@@ -13,7 +13,7 @@ public:
 	virtual void Init() override;
 	virtual void Update(float) override;
 	virtual void Render(float) override;
-	virtual void MouseInput(const sf::Vector2i&) override;
+	virtual void MouseInput(const sf::Vector2f&) override;
 	virtual void KeyInput(sf::Keyboard::Key) override;
 };
 
