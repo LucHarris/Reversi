@@ -172,6 +172,15 @@ void ReversiBoard::UpdateBoardBackup()
 	mDiscGridBackup = mDiscGrid;
 }
 
+void ReversiBoard::Move(int a)
+{
+	// to 2d coordinates
+
+	int x = a % 8;
+	int y = a / 8;
+	Move({x, y});
+}
+
 void ReversiBoard::ToConsole()
 {
 	std::cout
@@ -215,7 +224,7 @@ void ReversiBoard::Initialize()
 
 void ReversiBoard::PopulateStart()
 {
-	mDiscGrid = DiscGrid();
+	mDiscGrid;
 
 	mDiscGrid.at(1, 2) = CELL_WHITE;
 	mDiscGrid.at(2, 1) = CELL_WHITE;
@@ -234,7 +243,7 @@ const bool MoveData::IsValid() const
 		score >= MIN_SCORE && score <= MAX_SCORE;
 }
 
-const ReversiBoard::MinMax& ReversiBoard::GetMinMax() const
+const MinMax& ReversiBoard::GetMinMax() const
 {
 	return mMinMax;
 }

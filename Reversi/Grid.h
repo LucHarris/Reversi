@@ -48,14 +48,19 @@ public:
 	}
 
 	//at
+	// value from 1d position
+	reference at(size_t x)
+	{
+		return mTable.at(x);
+	}
 
 	// value at coordinates
-	VALUE& at(size_t x, size_t y)
+	reference at(size_t x, size_t y)
 	{
 		return mTable.at(y * SIZE + x); 
 	}
 
-	VALUE& at(COORD v)
+	reference at(COORD v)
 	{
 		assert(
 			v.x >= 0 && 			

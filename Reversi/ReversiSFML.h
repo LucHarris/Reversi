@@ -2,6 +2,7 @@
 
 #include "Resources.h"
 #include "StateManager.h"
+#include "Board.h"
 
 class ReversiSFML
 {
@@ -19,6 +20,7 @@ public:
 	sf::RenderWindow window;
 	Resources resources;
 	sf::Text debugLog;
+	ReversiBoard reversiGame;
 
 
 	

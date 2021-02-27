@@ -47,14 +47,16 @@ struct MoveData
 	const bool IsValid() const;
 };
 
+typedef Grid<char, GRID_SIZE,/* CELL_EMPTY,*/Vector2i>	DiscGrid;			// Player discs
+typedef std::array<DiscGrid, 2>							DiscGridBuffer;		// Defaults char to 0
+typedef Grid<int, GRID_SIZE, /*ZERO_SCORE,*/ Vector2i>	ScoreGrid;
+typedef  std::pair<MoveData, MoveData>					MinMax;
+
 // A board for square grid and 2 players
 class ReversiBoard
 {
 public:
-	typedef Grid<char, GRID_SIZE,/* CELL_EMPTY,*/Vector2i>	DiscGrid;			// Player discs
-	typedef std::array<DiscGrid, 2>						DiscGridBuffer;		// Defaults char to 0
-	typedef Grid<int, GRID_SIZE, /*ZERO_SCORE,*/ Vector2i>	ScoreGrid;
-	typedef  std::pair<MoveData, MoveData>				MinMax;
+	
 private:
 	// Track changes to grid
 	DiscGrid mDiscGrid;
@@ -98,9 +100,13 @@ public:
 	// Places a move for player.
 	// Required mScoreGrid to be generated for current player
 	void Move(const Vector2i& v);
+	// Places a move for player.
+	// Required mScoreGrid to be generated for current player
+
+	void Move(int a);
+
 	// Oppenents go
 	void SwapPlayers();
-
 	bool ValidCellForMove(const Vector2i& v);
 	
 	// Post player swap Oppenent buffer to active player buffer
@@ -122,5 +128,15 @@ public:
 	const MinMax& GetMinMax() const;
 
 	const std::pair<int, int> GetPlayerScores() const;
+
+	DiscGrid& GetDiscGrid()
+	{
+		return mDiscGrid;
+	}
+
+	ScoreGrid& GetScoreGrid()
+	{
+		return mScoreGrid;
+	}
 };
 

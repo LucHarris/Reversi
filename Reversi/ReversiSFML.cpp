@@ -11,10 +11,12 @@ void ReversiSFML::Init()
 {
 	window.create(sf::VideoMode(gc::VIEWPORT_WIDTH_U, gc::VIEWPORT_HEIGHT_U), gc::AppTitle);
 	resources.Load();
+	reversiGame.Initialize();
 	stateManager.Init();
 
 	InitText(debugLog);
 	debugLog.setString("Debug");
+
 }
 
 void ReversiSFML::Run()

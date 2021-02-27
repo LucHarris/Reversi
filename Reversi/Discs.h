@@ -3,6 +3,8 @@
 #include "Constants.h"
 #include "Grid.h"
 class ReversiSFML;
+
+
 class Discs
 {
 public:
@@ -14,9 +16,7 @@ public:
 	};
 private:
 	
-	Grid<DiscSprite, 64> mSprites;
-	//Grid<sf::Sprite,64> mDiscSprites;
-	//Grid<DiscState,64> mDiscStates;
+	Grid<DiscSprite, 8> mSprites;
 	DiscState mState = DiscState::EMPTY;
 	ReversiSFML* mpApp;
 
@@ -26,10 +26,10 @@ public:
 	void Update(float dt);
 	void Render(float dt);
 	// checks if disc has changed and sets accordingly 
-	void Set(int x, int y, const DiscState& ds);
+	void Set(int a, const DiscState& ds);
 
 	void MouseInput(const sf::Vector2f& pos);
-
+	void UpdateDiscs();
 
 };
 

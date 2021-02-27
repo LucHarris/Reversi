@@ -1,6 +1,7 @@
 #include "Discs.h"
 #include "ReversiSFML.h"
 
+
 Discs::Discs(ReversiSFML* app)
 	:
 	mpApp(app)
@@ -33,7 +34,8 @@ void Discs::Init()
 			// set properties
 			s.sprite.setPosition(pos);
 			s.sprite.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_DISC));
-			s.sprite.setTextureRect(gc::SPRITE_RECT_DISC_ACTIVE);
+
+			s.sprite.setTextureRect(gc::SPRITE_RECT_DISC_EMPTY);
 
 			// increment x
 			pos.x += 48.0f;
@@ -47,6 +49,9 @@ void Discs::Init()
 		pos.y += 48.0f;
 		++y;
 	}
+
+
+	UpdateDiscs();
 }
 
 void Discs::Update(float dt)
@@ -61,9 +66,11 @@ void Discs::Render(float dt)
 	}
 }
 
-void Discs::Set(int x, int y, const DiscState& ds)
+
+
+void Discs::Set(int a, const DiscState& ds)
 {
-	DiscSprite& discState = mSprites.at(x, y);
+	DiscSprite& discState = mSprites.at(a);
 
 	// update if changed
 	if (discState.state != ds)
@@ -101,12 +108,53 @@ void Discs::Set(int x, int y, const DiscState& ds)
 
 void Discs::MouseInput(const sf::Vector2f& pos)
 {
-
-	auto it = std::find_if(mSprites.begin(), mSprites.end(), [&pos](DiscSprite& d) 
+	auto end = std::find_if(mSprites.begin(), mSprites.end(), [&pos](DiscSprite& d) 
 		{
 			return 
-				(d.state == DiscState::EMPTY || d.state == DiscState::SHADOW) && 
+				/*(d.state == DiscState::EMPTY || d.state == DiscState::SHADOW) && */
 				d.sprite.getGlobalBounds().contains(pos);
 		});
+	
+	if (end != mSprites.end())
+	{
+		const int distance = std::distance(mSprites.begin(), end);
+
+		mpApp->reversiGame.Move(distance);
+
+		UpdateDiscs();
+	}
+
+	// todo apply to game
+
+}
+
+void Discs::UpdateDiscs()
+{
+
+	auto& scoreGrid = mpApp->reversiGame.GetScoreGrid();
+	auto& discGrid = mpApp->reversiGame.GetDiscGrid();
+
+	for (size_t i = 0; i < mSprites.size(); i++)
+	{
+		switch (discGrid.at(i))
+		{
+		case CELL_WHITE:
+			Set(i,DiscState::WHITE);
+			break;
+		case CELL_BLACK:
+			Set(i,DiscState::BLACK);
+			break;
+		default:
+			if(scoreGrid.at(i) >= MIN_SCORE)
+			{
+				Set(i,DiscState::SHADOW);
+			}
+			else
+			{
+				Set(i,DiscState::EMPTY);
+			}
+			break;
+		}
+	}
 }
 

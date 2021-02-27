@@ -33,7 +33,8 @@ void GameSampleState::Render(float dt)
 
 void GameSampleState::MouseInput(const sf::Vector2f& pos)
 {
-	mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU);
+	mDiscSprites.MouseInput(pos);
+	//mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU);
 }
 
 void GameSampleState::KeyInput(sf::Keyboard::Key key)

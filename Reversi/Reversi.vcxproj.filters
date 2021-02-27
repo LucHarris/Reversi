@@ -64,7 +64,7 @@
       <Filter>Header Files\SFML</Filter>
     </ClInclude>
     <ClInclude Include="Discs.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SFML</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -108,7 +108,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Discs.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\SFML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

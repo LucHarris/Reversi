@@ -9,7 +9,7 @@ int main()
 		gameTable.fill(CELL_EMPTY);
 		gameTable.at(0, 0) = 7;
 
-		Grid<char, 8> gameTable2('1');
+		Grid<char, 8> gameTable2;
 
 		gameTable = gameTable2;
 	}
@@ -27,7 +27,7 @@ int main()
 		while (b.CanMove())
 		{
 			// auto game for both players
-			ReversiBoard::MinMax minMax(b.GetMinMax());
+			MinMax minMax(b.GetMinMax());
 
 			std::cout << "\n\nMove" << minMax.second.position.x << "," << minMax.second.position.y;
 
