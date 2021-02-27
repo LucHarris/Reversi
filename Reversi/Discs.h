@@ -19,7 +19,7 @@ private:
 	Grid<DiscSprite, 8> mSprites;
 	DiscState mState = DiscState::EMPTY;
 	ReversiSFML* mpApp;
-
+	sf::Sprite mCursor;
 public:
 	Discs(ReversiSFML* app);
 	void Init();

@@ -138,5 +138,10 @@ public:
 	{
 		return mScoreGrid;
 	}
+
+	size_t GetPlayerIndex()
+	{
+		return mPlayerIndex;
+	}
 };
 

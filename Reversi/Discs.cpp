@@ -10,6 +10,10 @@ Discs::Discs(ReversiSFML* app)
 
 void Discs::Init()
 {
+	mCursor.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_DISC));
+	mCursor.setTextureRect(gc::SPRITE_RECT_DISC_ACTIVE);
+
+
 	// iteraters for discs
 	int x = 0, y = 0;
 
@@ -64,6 +68,8 @@ void Discs::Render(float dt)
 	{
 		mpApp->window.draw(s.sprite);
 	}
+
+	mpApp->window.draw(mCursor);
 }
 
 
@@ -108,24 +114,45 @@ void Discs::Set(int a, const DiscState& ds)
 
 void Discs::MouseInput(const sf::Vector2f& pos)
 {
+	// grid clicked
 	auto end = std::find_if(mSprites.begin(), mSprites.end(), [&pos](DiscSprite& d) 
 		{
-			return 
-				/*(d.state == DiscState::EMPTY || d.state == DiscState::SHADOW) && */
-				d.sprite.getGlobalBounds().contains(pos);
+			return	d.sprite.getGlobalBounds().contains(pos);
 		});
 	
-	if (end != mSprites.end())
+	if (mpApp->reversiGame.CanMove())
 	{
-		const int distance = std::distance(mSprites.begin(), end);
+		if (end != mSprites.end())
+		{
+			const int distance = std::distance(mSprites.begin(), end);
 
-		mpApp->reversiGame.Move(distance);
+			mpApp->reversiGame.Move(distance);
+			mpApp->reversiGame.UpdateBoardBackup();
+			mpApp->reversiGame.ToConsole();
+			UpdateDiscs();
 
-		UpdateDiscs();
+			if (mpApp->reversiGame.GetPlayerIndex() == 0)
+			{
+				mCursor.setColor(sf::Color::White);
+			}
+			else
+			{
+				mCursor.setColor(sf::Color::Black);
+			}
+		}
 	}
+	else
+	{
+		// todo move to win state
+		auto scores = mpApp->reversiGame.GetPlayerScores();
 
-	// todo apply to game
-
+		mpApp->debugLog.setString(
+			"Game ended\nWhite: " + 
+			std::to_string(scores.first) +
+			"\nBlack: "+
+			std::to_string(scores.second) + "\n"
+		);
+	}
 }
 
 void Discs::UpdateDiscs()
