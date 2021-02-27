@@ -64,3 +64,9 @@ const sf::Font& Resources::GetFontAt(size_t p) const
 {
 	return mFonts.at(p);
 }
+
+const sf::Vector2f Resources::GetTextureCenter(size_t p) const
+{
+	return(sf::Vector2f)(mTextures.at(p).getSize()) * gc::HALF;
+}
+

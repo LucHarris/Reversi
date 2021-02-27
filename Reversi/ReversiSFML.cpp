@@ -3,15 +3,15 @@
 
 ReversiSFML::ReversiSFML()
 	:
-	mStateManager(this)
+	stateManager(this)
 {
 }
 
 void ReversiSFML::Init()
 {
-	window.create(sf::VideoMode(gc::ViewportWidth, gc::ViewportHeight), gc::AppTitle);
+	window.create(sf::VideoMode(gc::VIEWPORT_WIDTH_U, gc::VIEWPORT_HEIGHT_U), gc::AppTitle);
 	resources.Load();
-	mStateManager.Init();
+	stateManager.Init();
 
 	InitText(debugLog);
 	debugLog.setString("Debug");
@@ -31,7 +31,7 @@ void ReversiSFML::Run()
 
 		dt = deltaTime.asSeconds();
 
-		mStateManager.Update(deltaTime.asSeconds());
+		stateManager.Update(deltaTime.asSeconds());
 
 		while (window.pollEvent(sfEvent))
 		{
@@ -41,9 +41,9 @@ void ReversiSFML::Run()
 				window.close(); 
 				break;
 			case sf::Event::MouseButtonReleased:
-				mStateManager.MouseInput(sf::Mouse::getPosition(window));
+				stateManager.MouseInput(sf::Mouse::getPosition(window));
 			case sf::Event::KeyReleased:
-				mStateManager.KeyInput(sfEvent.key.code);
+				stateManager.KeyInput(sfEvent.key.code);
 			default:
 				break;
 			}
@@ -58,7 +58,7 @@ void ReversiSFML::Render(float dt)
 {
 	window.clear(sf::Color::Black);
 
-	mStateManager.Render(dt);
+	stateManager.Render(dt);
 
 	window.draw(debugLog);
 
@@ -68,6 +68,6 @@ void ReversiSFML::Render(float dt)
 void ReversiSFML::InitText(sf::Text& t)
 {
 	t.setFont(resources.GetFontAt(Resources::FONT_MAIN));
-	t.setCharacterSize(gc::CharacterSizeStandard);
+	t.setCharacterSize(gc::CHAR_SIZE_REG);
 	t.setFillColor(sf::Color::Magenta);
 }

@@ -206,6 +206,9 @@ const char ReversiBoard::GetActiveOpponentDisc() const
 
 void ReversiBoard::Initialize()
 {
+	mDiscGrid.fill(CELL_EMPTY);
+	mDiscGridBackup.fill(CELL_EMPTY);
+	mScoreGrid.fill(ZERO_SCORE);
 	PopulateStart();
 	GenerateScoreGrid();
 }

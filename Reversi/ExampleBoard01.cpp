@@ -6,6 +6,7 @@ int main()
 	// test grid
 	{
 		Grid<char, 8> gameTable;
+		gameTable.fill(CELL_EMPTY);
 		gameTable.at(0, 0) = 7;
 
 		Grid<char, 8> gameTable2('1');

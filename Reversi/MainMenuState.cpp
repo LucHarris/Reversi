@@ -16,7 +16,7 @@ void MainMenuState::Init()
 
 	mLogoStretch.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_STRETCH));
 	mLogoStretch.setOrigin(((sf::Vector2f)(mpApp->resources.GetTextureAt(Resources::TEXTURE_STRETCH).getSize())) * 0.5f);
-	mLogoStretch.setTextureRect({ 0,0,gc::ViewportWidth,128 });
+	mLogoStretch.setTextureRect({ 0,0,gc::VIEWPORT_WIDTH_U,128 });
 
 	
 	mLogo.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_LOGO));
@@ -24,8 +24,8 @@ void MainMenuState::Init()
 	mLogo.setOrigin(((sf::Vector2f)(mpApp->resources.GetTextureAt(Resources::TEXTURE_LOGO).getSize())) * 0.5f);
 	
 	// position logo and tiled logo
-	mLogo.setPosition(gc::ViewportWidthF * 0.5f, gc::ViewportHeightF * logoRelPosY);
-	mLogoStretch.setPosition(0.0f, gc::ViewportHeightF * logoRelPosY);
+	mLogo.setPosition(gc::VIEWPORT_WIDTH_F * 0.5f, gc::VIEWPORT_HEIGHT_F * logoRelPosY);
+	mLogoStretch.setPosition(0.0f, gc::VIEWPORT_HEIGHT_F * logoRelPosY);
 
 	mButtons.at(0).Init("Start 1 Player Game", 0.5f);
 	mButtons.at(1).Init("Start 2 Player Game", 0.65f);
@@ -51,7 +51,7 @@ void MainMenuState::MouseInput(const sf::Vector2i& pos)
 {
 	if (mButtons.at(0).Contains(pos))
 	{
-		assert(false);
+		mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE);
 	}
 }
 

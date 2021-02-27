@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\States">
-      <UniqueIdentifier>{03035516-0e53-4c7d-980a-8fba33831220}</UniqueIdentifier>
+    <Filter Include="Header Files\SFML">
+      <UniqueIdentifier>{03cde534-64d2-4ee9-ad8b-31507d040413}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\States">
+    <Filter Include="Header Files\SFML\States">
       <UniqueIdentifier>{cd767003-7f9d-4fbb-9caf-679fd3447bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SFML">
+      <UniqueIdentifier>{35f8ed79-c19e-49eb-94ec-1f6c035dc7af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SFML\States">
+      <UniqueIdentifier>{03035516-0e53-4c7d-980a-8fba33831220}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -30,25 +36,34 @@
     <ClInclude Include="Vector2i.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="State.h">
+    <ClInclude Include="MainMenuState.h">
+      <Filter>Header Files\SFML\States</Filter>
+    </ClInclude>
+    <ClInclude Include="DeltaTimer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\SFML\States</Filter>
     </ClInclude>
     <ClInclude Include="StateManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\SFML\States</Filter>
     </ClInclude>
-    <ClInclude Include="Resources.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ReversiSFML.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenuState.h">
-      <Filter>Header Files\States</Filter>
+    <ClInclude Include="GameSampleState.h">
+      <Filter>Header Files\SFML\States</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
+      <Filter>Header Files\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Header Files\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="ReversiSFML.h">
+      <Filter>Header Files\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Discs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,16 +71,7 @@
     <ClCompile Include="Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Board.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Vector2i.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StateManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ExampleBoard01.cpp">
@@ -74,16 +80,34 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Resources.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ReversiSFML.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MainMenuState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\SFML\States</Filter>
+    </ClCompile>
+    <ClCompile Include="DeltaTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files\SFML\States</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManager.cpp">
+      <Filter>Source Files\SFML\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSampleState.cpp">
+      <Filter>Source Files\SFML\States</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
+      <Filter>Source Files\SFML</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Source Files\SFML</Filter>
+    </ClCompile>
+    <ClCompile Include="ReversiSFML.cpp">
+      <Filter>Source Files\SFML</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Discs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

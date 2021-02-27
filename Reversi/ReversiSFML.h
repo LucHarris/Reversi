@@ -5,7 +5,6 @@
 
 class ReversiSFML
 {
-	StateManager mStateManager;
 
 public:
 	ReversiSFML();
@@ -16,6 +15,7 @@ public:
 	// sets up text elements with common state
 	void InitText(sf::Text& t);
 	
+	StateManager stateManager;
 	sf::RenderWindow window;
 	Resources resources;
 	sf::Text debugLog;

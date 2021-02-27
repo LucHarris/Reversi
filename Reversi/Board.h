@@ -51,9 +51,9 @@ struct MoveData
 class ReversiBoard
 {
 public:
-	typedef Grid<char, GRID_SIZE, CELL_EMPTY,Vector2i>	DiscGrid;			// Player discs
+	typedef Grid<char, GRID_SIZE,/* CELL_EMPTY,*/Vector2i>	DiscGrid;			// Player discs
 	typedef std::array<DiscGrid, 2>						DiscGridBuffer;		// Defaults char to 0
-	typedef Grid<int, GRID_SIZE, ZERO_SCORE, Vector2i>	ScoreGrid;
+	typedef Grid<int, GRID_SIZE, /*ZERO_SCORE,*/ Vector2i>	ScoreGrid;
 	typedef  std::pair<MoveData, MoveData>				MinMax;
 private:
 	// Track changes to grid

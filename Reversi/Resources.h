@@ -26,6 +26,7 @@ public:
 
 	const sf::Texture& GetTextureAt(size_t p) const;
 	const sf::Font& GetFontAt(size_t p) const;
+	const sf::Vector2f GetTextureCenter(size_t p) const;
 
 	enum {
 		FONT_MAIN = 0,

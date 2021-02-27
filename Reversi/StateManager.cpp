@@ -2,24 +2,27 @@
 #include <assert.h>
 #include <SFML/System.hpp>
 #include "MainMenuState.h"
+#include "GameSampleState.h"
 #include "ReversiSFML.h"
 #include "Constants.h"
 void StateManager::InitStates()
 {
-	mStates[StateKey::MENU] = std::make_unique<MainMenuState>(mpApp);
+	mStates.at(gc::STATE_INDEX_MAIN_MENU) = std::make_unique<MainMenuState>(mpApp);
+	mStates.at(gc::STATE_INDEX_GAME_SAMPLE) = std::make_unique<GameSampleState>(mpApp);
+
 	// first state 
-	mActiveState = StateKey::MENU;
+	mActiveState = gc::STATE_INDEX_MAIN_MENU;
 
-
-	for (auto& s : mStates)
+	for (std::unique_ptr<State>& s : mStates)
 	{
-		s.second->Init();
+		s->Init();
 	}
 }
 
 StateManager::StateManager(ReversiSFML* app)
 	:
-	mpApp(app)
+	mpApp(app),
+	mStates(2)
 {
 	assert(app);
 }
@@ -30,7 +33,7 @@ void StateManager::Init()
 	
 	// viewport background fill
 	mBackground.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_BG));
-	mBackground.setTextureRect({ 0,0,gc::ViewportWidth,gc::ViewportHeight });
+	mBackground.setTextureRect({ 0,0,gc::VIEWPORT_WIDTH_U,gc::VIEWPORT_HEIGHT_U });
 
 }
 
@@ -53,4 +56,16 @@ void StateManager::MouseInput(const sf::Vector2i& pos)
 
 void StateManager::KeyInput(sf::Keyboard::Key key)
 {
+}
+
+void StateManager::ChangeState(size_t s)
+{
+	if (s < mStates.size())
+	{
+		mActiveState = s;
+	}
+	else
+	{
+		assert(false);
+	}
 }

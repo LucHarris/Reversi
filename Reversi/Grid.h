@@ -9,20 +9,29 @@
 template <
 	typename VALUE,					// elements of the 2D array
 	size_t SIZE, 					// axis size
-	VALUE DEFAULT_VALUE = 0,		// set default element values
+	//VALUE DEFAULT_VALUE = 0,		// set default element values
 	typename COORD = Vector2i		// Easier access elements in 2D array
 >
 // 2D square grid
 class Grid
 {
+	typedef typename std::array<VALUE,SIZE * SIZE>::iterator				iterator;
+	typedef typename std::array<VALUE,SIZE * SIZE>::const_iterator			const_iterator;
+	typedef typename std::array<VALUE,SIZE * SIZE>::size_type				size_type;
+	typedef typename std::array<VALUE,SIZE * SIZE>::reference				reference;
+	typedef typename std::array<VALUE,SIZE * SIZE>::const_reference			const_reference;
+	typedef typename std::array<VALUE,SIZE * SIZE>::reverse_iterator		reverse_iterator;
+	typedef typename std::array<VALUE,SIZE * SIZE>::const_reverse_iterator	const_reverse_iterator;
+	typedef typename std::array<VALUE,SIZE * SIZE>::difference_type			difference_type;
+	//typedef typename allocator												allocator_type;
+
 private:
 	std::array<VALUE, SIZE * SIZE> mTable;
 	size_t mDimention = SIZE;
 public:
 	// default value constructor
-	Grid(VALUE v = DEFAULT_VALUE)
+	Grid()
 	{
-		fill(v);
 	}
 
 	// copy constructor
@@ -98,5 +107,68 @@ public:
 			{
 				return v == element;
 			});
+	}
+
+
+	// iterators
+
+	iterator begin()
+	{
+		return mTable.begin();
+	}
+
+	const_iterator begin() const
+	{
+		return mTable.begin();
+	}
+
+	iterator end()
+	{
+		return mTable.end();
+	}
+
+	const_iterator end() const
+	{
+		return mTable.end();
+	}
+
+	reverse_iterator rbegin()
+	{
+		return mTable.rbegin();
+	}
+
+	reverse_iterator rend()
+	{
+		return mTable.rend();
+	}
+
+	const_reverse_iterator rbegin() const
+	{
+		return mTable.rbegin();
+	}
+
+	const_reverse_iterator rend() const
+	{
+		return mTable.rend();
+	}
+
+	reference front()
+	{
+		return mTable.front();
+	}
+
+	const_reference front() const
+	{
+		return mTable.front();
+	}
+
+	reference back()
+	{
+		return mTable.back();
+	}
+
+	const_reference back() const
+	{
+		return mTable.back();
 	}
 };

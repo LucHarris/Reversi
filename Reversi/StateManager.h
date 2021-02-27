@@ -4,16 +4,17 @@
 #include <map>
 #include <memory>
 
-enum class StateKey{MENU,ONE_PLAYER,TWO_PLAYER};
 
-typedef std::map<StateKey, std::unique_ptr<State>> StateMap;
+enum class StateKey : size_t {MENU,GAME_SAMPLE};
+
+typedef std::vector<std::unique_ptr<State>> StateContainer;
 
 class StateManager
 {
-	StateMap mStates;
+	StateContainer mStates;
 	sf::Sprite mBackground;
 	ReversiSFML* mpApp;
-	StateKey mActiveState = StateKey::MENU;
+	size_t mActiveState;
 
 	void InitStates();
 public:
@@ -23,6 +24,8 @@ public:
 	void Render(float dt);
 	void MouseInput(const sf::Vector2i& pos);
 	void KeyInput(sf::Keyboard::Key key);
+	// Immediately changes active state
+	void ChangeState(size_t s);
 
 };
 

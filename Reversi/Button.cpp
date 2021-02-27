@@ -6,14 +6,14 @@ void MenuButton::Init( const std::string& prompt, float relY)
 {
 	
 	mSprite.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_STRETCH));
-	mSprite.setTextureRect({ 0,0,gc::ViewportWidth,128 });
-	mSprite.setOrigin({ gc::ViewportWidthF * 0.5f, 64.0f });
-	mSprite.setPosition(gc::ViewportWidthF * 0.5f, gc::ViewportHeightF * relY);
+	mSprite.setTextureRect({ 0,0,gc::VIEWPORT_WIDTH_U,128 });
+	mSprite.setOrigin({ gc::VIEWPORT_WIDTH_F * 0.5f, 64.0f });
+	mSprite.setPosition(gc::VIEWPORT_WIDTH_F * 0.5f, gc::VIEWPORT_HEIGHT_F * relY);
 	mSprite.setScale({ 1.0f,0.5f });
 
 
 	mText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
-	mText.setCharacterSize(gc::CharacterSizeStandard);
+	mText.setCharacterSize(gc::CHAR_SIZE_REG);
 	mText.setFillColor(sf::Color::Black);
 	mText.setString(prompt);
 	mText.setOrigin({-100.0f,14.0f});
