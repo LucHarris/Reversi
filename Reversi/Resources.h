@@ -17,7 +17,7 @@ class Resources
 	};
 
 
-	std::array<sf::Texture, 5> mTextures;
+	std::array<sf::Texture, 7> mTextures;
 	std::array<sf::Font, 1> mFonts;
 	void LoadTextures();
 	void LoadFonts();
@@ -34,7 +34,9 @@ public:
 		TEXTURE_BOARD,
 		TEXTURE_DISC,
 		TEXTURE_STRETCH,
-		TEXTURE_LOGO
+		TEXTURE_LOGO,
+		TEXTURE_HELP_ICON,
+		TEXTURE_HELP_1
 	};
 };
 

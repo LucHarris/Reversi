@@ -22,6 +22,7 @@ void StateManager::InitStates()
 StateManager::StateManager(ReversiSFML* app)
 	:
 	mpApp(app),
+	mHelp(app),
 	mStates(2)
 {
 	assert(app);
@@ -35,6 +36,21 @@ void StateManager::Init()
 	mBackground.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_BG));
 	mBackground.setTextureRect({ 0,0,gc::VIEWPORT_WIDTH_U,gc::VIEWPORT_HEIGHT_U });
 
+	// help icon properties setup
+	mHelp.icon.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_HELP_ICON));
+	mHelp.icon.setPosition(gc::VIEWPORT_WIDTH_F - 64.0f, gc::VIEWPORT_HEIGHT_F - 64.0f);
+
+	// help display sprite properties setup
+	const sf::Texture& t = mpApp->resources.GetTextureAt(Resources::TEXTURE_HELP_1);
+	mHelp.show.setTexture(t);
+	
+	// centre of texture
+	sf::Vector2u origin = t.getSize();
+	origin.y /= 2;
+
+	mHelp.show.setOrigin((sf::Vector2f)origin);
+	mHelp.show.setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CR]);
+
 }
 
 void StateManager::Update(float dt)
@@ -47,11 +63,16 @@ void StateManager::Render(float dt)
 	mpApp->window.draw(mBackground);
 
 	mStates.at(mActiveState)->Render(dt);
+
+	mHelp.Render(dt);
+
 }
 
 void StateManager::MouseInput(const sf::Vector2f& pos)
 {
 	mStates.at(mActiveState)->MouseInput(pos);
+
+	mHelp.MouseInput(pos);
 }
 
 void StateManager::KeyInput(sf::Keyboard::Key key)
