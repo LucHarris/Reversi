@@ -6,13 +6,15 @@
 void Resources::LoadTextures()
 {
 	// define texture data for iteration
-	const TextureData textureData[5]
+	const TextureData textureData[7]
 	{
 		{"Data/Textures/patternBackground.png",true,true },
 		{"Data/Textures/board.png",true,true },
 		{"Data/Textures/disc.png",true,true },
 		{"Data/Textures/logoStretch.png",true,true },
-		{"Data/Textures/logo.png",false,true }
+		{"Data/Textures/logo.png",false,true },
+		{"Data/Textures/helpIcon.png",false,true },
+		{"Data/Textures/help1.png",false,true }
 	};
 
 	const size_t size = sizeof(textureData) / sizeof(textureData[0]);

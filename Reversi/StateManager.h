@@ -1,9 +1,9 @@
 #pragma once
 
-#include "State.h"
 #include <map>
 #include <memory>
-
+#include "State.h"
+#include "ToggleButton.h"
 
 enum class StateKey : size_t {MENU,GAME_SAMPLE};
 
@@ -13,6 +13,7 @@ class StateManager
 {
 	StateContainer mStates;
 	sf::Sprite mBackground;
+	ToggleButton mHelp;
 	ReversiSFML* mpApp;
 	size_t mActiveState;
 

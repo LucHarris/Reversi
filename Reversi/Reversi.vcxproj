@@ -153,6 +153,7 @@
     <ClInclude Include="GameSampleState.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="ToggleButton.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="ReversiSFML.h" />
     <ClInclude Include="State.h" />
@@ -172,6 +173,7 @@
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="ToggleButton.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="ReversiSFML.cpp" />
     <ClCompile Include="State.cpp" />
