@@ -3,6 +3,7 @@
 #include "Resources.h"
 #include "StateManager.h"
 #include "Board.h"
+#include "MusicEngine.h"
 
 class ReversiSFML
 {
@@ -21,6 +22,7 @@ public:
 	Resources resources;
 	sf::Text debugLog;
 	ReversiBoard reversiGame;
+	MusicEngine music;
 
 
 	

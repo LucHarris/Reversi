@@ -23,6 +23,7 @@ StateManager::StateManager(ReversiSFML* app)
 	:
 	mpApp(app),
 	mHelp(app),
+	mChat(app),
 	mStates(2)
 {
 	assert(app);
@@ -51,6 +52,19 @@ void StateManager::Init()
 	mHelp.show.setOrigin((sf::Vector2f)origin);
 	mHelp.show.setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CR]);
 
+	// Chat
+	mChat.icon.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_HELP_ICON));
+	mChat.icon.setPosition(0, gc::VIEWPORT_HEIGHT_F - 64.0f);
+
+	const sf::Texture& c = mpApp->resources.GetTextureAt(Resources::TEXTURE_HELP_1);
+
+	origin.x = 0;
+	origin.y = c.getSize().y / 2;
+
+	mChat.show.setTexture(c);
+	mChat.show.setOrigin((sf::Vector2f)origin);
+	mChat.show.setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CL]);
+
 }
 
 void StateManager::Update(float dt)
@@ -65,6 +79,7 @@ void StateManager::Render(float dt)
 	mStates.at(mActiveState)->Render(dt);
 
 	mHelp.Render(dt);
+	mChat.Render(dt);
 
 }
 
@@ -73,10 +88,19 @@ void StateManager::MouseInput(const sf::Vector2f& pos)
 	mStates.at(mActiveState)->MouseInput(pos);
 
 	mHelp.MouseInput(pos);
+	mChat.MouseInput(pos);
 }
 
 void StateManager::KeyInput(sf::Keyboard::Key key)
 {
+}
+
+void StateManager::TextEntered(unsigned int key)
+{
+	mStates.at(mActiveState)->TextEntered(key);
+
+	// show existing chat
+	mChat.mDisplay = true;
 }
 
 void StateManager::ChangeState(size_t s)

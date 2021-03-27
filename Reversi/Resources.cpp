@@ -6,6 +6,7 @@
 void Resources::LoadTextures()
 {
 	// define texture data for iteration
+	// mTextures.size() must equal textureData size
 	const TextureData textureData[7]
 	{
 		{"Data/Textures/patternBackground.png",true,true },
@@ -14,7 +15,7 @@ void Resources::LoadTextures()
 		{"Data/Textures/logoStretch.png",true,true },
 		{"Data/Textures/logo.png",false,true },
 		{"Data/Textures/helpIcon.png",false,true },
-		{"Data/Textures/help1.png",false,true }
+		{"Data/Textures/help1.png",false,true },
 	};
 
 	const size_t size = sizeof(textureData) / sizeof(textureData[0]);

@@ -9,11 +9,12 @@ class MainMenuState : public State
 	sf::Sprite mLogo;
 	std::array<MenuButton,2> mButtons;
 public:
-	MainMenuState(ReversiSFML* app);
+	MainMenuState(ReversiSFML* app) ;
 	virtual void Init() override;
-	virtual void Update(float) override;
+	virtual void Update(float)	override;
 	virtual void Render(float) override;
 	virtual void MouseInput(const sf::Vector2f&) override;
 	virtual void KeyInput(sf::Keyboard::Key) override;
+	virtual void TextEntered(unsigned int key) override;
 };
 

@@ -69,6 +69,12 @@
     <ClInclude Include="ToggleButton.h">
       <Filter>Header Files\SFML</Filter>
     </ClInclude>
+    <ClInclude Include="MusicEngine.h">
+      <Filter>Header Files\SFML</Filter>
+    </ClInclude>
+    <ClInclude Include="Fader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp">
@@ -115,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="ToggleButton.cpp">
       <Filter>Source Files\SFML</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicEngine.cpp">
+      <Filter>Source Files\SFML</Filter>
+    </ClCompile>
+    <ClCompile Include="Fader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

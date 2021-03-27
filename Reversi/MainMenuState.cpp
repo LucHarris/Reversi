@@ -58,3 +58,7 @@ void MainMenuState::MouseInput(const sf::Vector2f& pos)
 void MainMenuState::KeyInput(sf::Keyboard::Key key)
 {
 }
+
+void MainMenuState::TextEntered(unsigned int key)
+{
+}

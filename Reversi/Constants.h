@@ -5,6 +5,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
+
 namespace gc
 {
 	const std::string AppTitle = "Reversi";
@@ -19,7 +20,9 @@ namespace gc
 		STATE_INDEX_MAIN_MENU = 0,
 		STATE_INDEX_GAME_SAMPLE = 1,
 
-		BOARD_DISC_ROW_SIZE = 8
+		BOARD_DISC_ROW_SIZE = 8,
+
+		CHAT_SIZE = 6
 		;
 	const float
 		VIEWPORT_WIDTH_F = 1280.0f, // 800.0f
