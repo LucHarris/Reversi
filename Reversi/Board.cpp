@@ -101,17 +101,21 @@ void ReversiBoard::GenerateScoreGrid()
 	}
 }
 
-void ReversiBoard::Move(const Vector2i& v)
+bool ReversiBoard::Move(const Vector2i& v)
 {
+	bool m = false;
+
 	if (ValidCellForMove(v))
 	{
-		PlaceMove(v);
+		m = PlaceMove(v);
 
 		SwapPlayers();
 
 		GenerateScoreGrid();
 
 	}
+
+	return m;
 }
 
 bool ReversiBoard::ValidCellForMove(const Vector2i& v)
@@ -124,7 +128,7 @@ bool ReversiBoard::CanMove()
 	return mMinMax.first.IsValid() && mMinMax.second.IsValid();
 }
 
-void ReversiBoard::PlaceMove(const Vector2i& v)
+bool ReversiBoard::PlaceMove(const Vector2i& v)
 {
 	if (mScoreGrid.at(v) >= MIN_SCORE)
 	{
@@ -162,6 +166,11 @@ void ReversiBoard::PlaceMove(const Vector2i& v)
 				}
 			}
 		}
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 	
 }
@@ -172,13 +181,13 @@ void ReversiBoard::UpdateBoardBackup()
 	mDiscGridBackup = mDiscGrid;
 }
 
-void ReversiBoard::Move(int a)
+bool ReversiBoard::Move(int a)
 {
 	// to 2d coordinates
 
 	int x = a % 8;
 	int y = a / 8;
-	Move({x, y});
+	return Move({x, y});
 }
 
 void ReversiBoard::ToConsole()

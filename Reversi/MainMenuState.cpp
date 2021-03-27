@@ -52,6 +52,11 @@ void MainMenuState::MouseInput(const sf::Vector2f& pos)
 	if (mButtons.at(0).Contains(pos))
 	{
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE);
+		mpApp->resources.Play(Resources::SOUND_CLICK,mpApp->masterVolume);
+	}
+	else
+	{
+
 	}
 }
 

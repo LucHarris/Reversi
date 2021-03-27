@@ -122,29 +122,55 @@ void Discs::MouseInput(const sf::Vector2f& pos)
 	
 	if (mpApp->reversiGame.CanMove())
 	{
+		// valid move
 		if (end != mSprites.end())
 		{
-			const int distance = std::distance(mSprites.begin(), end);
 
-			mpApp->reversiGame.Move(distance);
-			mpApp->reversiGame.UpdateBoardBackup();
-			mpApp->reversiGame.ToConsole();
-			UpdateDiscs();
+			const int move = std::distance(mSprites.begin(), end);
 
-			if (mpApp->reversiGame.GetPlayerIndex() == 0)
+			if (mpApp->reversiGame.Move(move))
 			{
-				mCursor.setColor(sf::Color::White);
+				mpApp->reversiGame.UpdateBoardBackup();
+				mpApp->reversiGame.ToConsole();
+				UpdateDiscs();
+
+				if (mpApp->reversiGame.GetPlayerIndex() == 0)
+				{
+					mCursor.setColor(sf::Color::White);
+				}
+				else
+				{
+					mCursor.setColor(sf::Color::Black);
+				}
+
+				// check for winner
+				if (mpApp->reversiGame.CanMove())
+				{
+					mpApp->resources.Play(Resources::SOUND_PLACE, mpApp->masterVolume);
+				}
+				else
+				{
+					// todo show winner
+					mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
+				}
+
 			}
 			else
 			{
-				mCursor.setColor(sf::Color::Black);
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+
 			}
+			
 		}
+
 	}
 	else
 	{
 		// todo move to win state
 		auto scores = mpApp->reversiGame.GetPlayerScores();
+
+		mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
+
 
 		mpApp->debugLog.setString(
 			"Game ended\nWhite: " + 

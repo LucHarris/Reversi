@@ -4,10 +4,8 @@
 
 void MusicEngine::Init()
 {
-	//mMusic.resize(16);
-
 	const std::string dir("./Data/Audio/Music/");
-	const std::string ext(".wav");
+	const std::string ext(".ogg");
 
 	// searches music dir 
 	for (auto& p : std::filesystem::directory_iterator(dir))
@@ -31,6 +29,17 @@ void MusicEngine::Init()
 			}
 		}
 	}
+
+	const size_t size = mMusic.size();
+
+	assert(size > 1);
+
+	srand(time(0));
+	mActiveMusic = 1 + (rand() % (mMusic.size() - 1)); // 1 to (mMusic.size() - 1)
+
+	assert(mActiveMusic > 0);
+
+	mPreviousMusic = mActiveMusic - 1;
 }
 
 
@@ -40,8 +49,7 @@ void MusicEngine::Update(float dt)
 
 	if (mFader.isFading())
 	{
-		mMusic.at(mActiveMusic)->setVolume(mFader.GetFade() * mMasterVolume);
-		mMusic.at(mPreviousMusic)->setVolume(mFader.GetInverseFade() * mMasterVolume);
+		SetVolume();
 	} 
 	else if (mFader.EndState())
 	{
@@ -72,6 +80,24 @@ void MusicEngine::PlayNext(float fade)
 	mFader.Reset(fade);
 	
 	mMusic.at(mActiveMusic)->play();
-	//mMusic.at(mActiveMusic)->setVolume(mMasterVolume * mFader.GetFade());
-	//mMusic.at(mPreviousMusic)->setVolume(mMasterVolume * mFader.GetInverseFade());
+
 }
+
+void MusicEngine::SetMasterVolume(float vol)
+{
+	mMasterVolume = vol;
+	// update volume
+	SetVolume();
+}
+
+void MusicEngine::SetVolume()
+{
+	mMusic.at(mActiveMusic)->setVolume(mFader.GetFade() * mMasterVolume);
+	mMusic.at(mPreviousMusic)->setVolume(mFader.GetInverseFade() * mMasterVolume);
+}
+
+MusicEngine::MusicEngine()
+{
+}
+
+

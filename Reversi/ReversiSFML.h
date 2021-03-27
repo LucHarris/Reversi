@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include "Resources.h"
 #include "StateManager.h"
 #include "Board.h"
@@ -23,8 +24,8 @@ public:
 	sf::Text debugLog;
 	ReversiBoard reversiGame;
 	MusicEngine music;
+	// sf volume range from 0.0f - 100.0f
+	float masterVolume = 30.0f;
 
-
-	
 };
 

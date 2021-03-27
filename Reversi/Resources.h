@@ -1,6 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <array>
+#include <random>
+
+struct SoundResource
+{
+	sf::SoundBuffer buffer;
+	sf::Sound sound;
+};
+
 class Resources
 {
 	struct TextureData
@@ -19,15 +28,20 @@ class Resources
 
 	std::array<sf::Texture, 7> mTextures;
 	std::array<sf::Font, 1> mFonts;
+	std::array<SoundResource, 4> mSounds;
+	std::default_random_engine generator;
+
+
 	void LoadTextures();
 	void LoadFonts();
+	void LoadSounds();
 public:
 	void Load();
 
 	const sf::Texture& GetTextureAt(size_t p) const;
 	const sf::Font& GetFontAt(size_t p) const;
 	const sf::Vector2f GetTextureCenter(size_t p) const;
-
+	void Play(size_t p, float vol);
 	enum {
 		FONT_MAIN = 0,
 		TEXTURE_BG = 0,
@@ -36,7 +50,11 @@ public:
 		TEXTURE_STRETCH,
 		TEXTURE_LOGO,
 		TEXTURE_HELP_ICON,
-		TEXTURE_HELP_1
+		TEXTURE_HELP_1,
+		SOUND_PLACE = 0,
+		SOUND_CLICK ,
+		SOUND_WIN,
+		SOUND_ERROR
 	};
 };
 

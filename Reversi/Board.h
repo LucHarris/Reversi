@@ -72,7 +72,8 @@ private:
 	size_t mOpponentIndex = 1;
 
 	// Dependant on mScoreGird populated and upto date
-	void PlaceMove(const Vector2i& v);
+	// returns if move is placed
+	bool PlaceMove(const Vector2i& v);
 
 	// Inside grid
 	bool WithinLimits(const Vector2i& v)
@@ -99,11 +100,11 @@ public:
 
 	// Places a move for player.
 	// Required mScoreGrid to be generated for current player
-	void Move(const Vector2i& v);
+	bool Move(const Vector2i& v);
 	// Places a move for player.
 	// Required mScoreGrid to be generated for current player
 
-	void Move(int a);
+	bool Move(int a);
 
 	// Oppenents go
 	void SwapPlayers();

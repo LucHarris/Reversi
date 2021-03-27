@@ -108,6 +108,7 @@ void StateManager::ChangeState(size_t s)
 	if (s < mStates.size())
 	{
 		mActiveState = s;
+		mpApp->music.PlayNext();
 	}
 	else
 	{

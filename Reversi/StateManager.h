@@ -38,4 +38,3 @@ public:
 	void ChangeState(size_t s);
 
 };
-
