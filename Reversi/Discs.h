@@ -4,7 +4,7 @@
 #include "Grid.h"
 class ReversiSFML;
 
-
+// grid of sprites. Process inputs to moves 
 class Discs
 {
 public:
@@ -28,8 +28,14 @@ public:
 	// checks if disc has changed and sets accordingly 
 	void Set(int a, const DiscState& ds);
 
-	void MouseInput(const sf::Vector2f& pos);
-	void UpdateDiscs();
+	void MoveByMousePos(const sf::Vector2f& pos);
 
+	// checks mouse position against tile global bounds
+	// @param mouse position
+	// @return successful move location if value is 0 or higher
+	int MoveByMoooouse(const sf::Vector2f& pos);
+	void UpdateDiscs();
+	// 1d move location on board
+	bool Move(int move);
 };
 

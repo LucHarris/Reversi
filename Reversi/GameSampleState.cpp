@@ -1,6 +1,15 @@
 #include "GameSampleState.h"
 #include "ReversiSFML.h"
 #include "Constants.h"
+
+void GameSampleState::IncActivePlayer()
+{
+	if (++mActivePlayer >= mPlayers.size())
+	{
+		mActivePlayer = 0;
+	}
+}
+
 GameSampleState::GameSampleState(ReversiSFML* app)
 	:
 	State(app),
@@ -18,10 +27,33 @@ void GameSampleState::Init()
 
 	mDiscSprites.Init();
 
+	// simple human vs ai setup 
+	mPlayers.resize(2);
+	mPlayers.at(0).type = Player::Type::HUMAN; // white
+	mPlayers.at(1).type = Player::Type::AI; // black
+	mActivePlayer = 0;  // white goes first
+
 }
 
 void GameSampleState::Update(float dt)
 {
+	mAiTimer.Update(dt);
+
+	if (mPlayers.at(mActivePlayer).type == Player::Type::AI)
+	{
+		if (mAiTimer.HasElapsed())
+		{
+			const int move = mPlayers.at(mActivePlayer).EvaluateMove(mpApp->reversiGame.GetScoreGrid());
+
+			// successful move 
+			if (mDiscSprites.Move(move))
+			{
+				IncActivePlayer();
+			}
+		}
+
+	}
+
 	mDiscSprites.Update(dt);
 }
 
@@ -34,7 +66,29 @@ void GameSampleState::Render(float dt)
 void GameSampleState::MouseInput(const sf::Vector2f& pos)
 {
 
-	mDiscSprites.MouseInput(pos);
+	if (mPlayers.at(mActivePlayer).type == Player::Type::HUMAN && mpApp->reversiGame.CanMove())
+	{
+		const int move = mDiscSprites.MoveByMoooouse(pos);;
+
+		// successful move
+		if (move >= 0)
+		{
+			if (mDiscSprites.Move(move))
+			{
+				IncActivePlayer();
+
+				if (mPlayers.at(mActivePlayer).type == Player::Type::AI)
+				{
+					mAiTimer.Restart(1.0f);
+				}
+			}
+		}
+
+		
+	}
+	//mDiscSprites.MoveByMousePos(pos);
+
+
 	//mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU);
 }
 

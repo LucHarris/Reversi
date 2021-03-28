@@ -1,10 +1,20 @@
 #pragma once
+#include "DeltaTimer.h"
 #include "State.h"
 #include "Discs.h"
+#include "Player.h"
+
 class GameSampleState :    public State
 {
 	sf::Sprite mBoardSprite;
 	Discs mDiscSprites;
+	std::vector<Player> mPlayers;
+	int mActivePlayer = 0;
+	DeltaTimer mAiTimer;
+
+	// increments active player for next turn
+	void IncActivePlayer();
+
 public:
 	GameSampleState(ReversiSFML* app);
 	virtual void Init() override;

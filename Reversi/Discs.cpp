@@ -73,7 +73,7 @@ void Discs::Render(float dt)
 }
 
 
-
+// set properites of a disc: white, black, empty or shadow (potential move)
 void Discs::Set(int a, const DiscState& ds)
 {
 	DiscSprite& discState = mSprites.at(a);
@@ -81,8 +81,6 @@ void Discs::Set(int a, const DiscState& ds)
 	// update if changed
 	if (discState.state != ds)
 	{
-		//sf::Sprite& discSprite(mSprites.at(x, y));
-
 		// change state
 		discState.state = ds;
 
@@ -112,8 +110,9 @@ void Discs::Set(int a, const DiscState& ds)
 
 }
 
-void Discs::MouseInput(const sf::Vector2f& pos)
+void Discs::MoveByMousePos(const sf::Vector2f& pos)
 {
+	assert(false);
 	// grid clicked
 	auto end = std::find_if(mSprites.begin(), mSprites.end(), [&pos](DiscSprite& d) 
 		{
@@ -153,7 +152,6 @@ void Discs::MouseInput(const sf::Vector2f& pos)
 					// todo show winner
 					mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
 				}
-
 			}
 			else
 			{
@@ -179,6 +177,26 @@ void Discs::MouseInput(const sf::Vector2f& pos)
 			std::to_string(scores.second) + "\n"
 		);
 	}
+}
+
+int Discs::MoveByMoooouse(const sf::Vector2f& pos)
+{
+	// invalid until proven otherwise
+	int move = -1;
+
+	// find tile clicked based on mouse position
+	auto end = std::find_if(mSprites.begin(), mSprites.end(), [&pos](DiscSprite& d)
+		{
+			return	d.sprite.getGlobalBounds().contains(pos);
+		});
+
+	// valid move
+	if (end != mSprites.end())
+	{
+		move = std::distance(mSprites.begin(), end);
+	}
+
+	return move;
 }
 
 void Discs::UpdateDiscs()
@@ -208,6 +226,45 @@ void Discs::UpdateDiscs()
 			}
 			break;
 		}
+	}
+}
+
+bool Discs::Move(int move)
+{
+	if (mpApp->reversiGame.Move(move))
+	{
+		mpApp->reversiGame.UpdateBoardBackup();
+		mpApp->reversiGame.ToConsole();
+		UpdateDiscs();
+
+		if (mpApp->reversiGame.GetPlayerIndex() == 0)
+		{
+			mCursor.setColor(sf::Color::White);
+		}
+		else
+		{
+			mCursor.setColor(sf::Color::Black);
+		}
+
+		// check for winner
+		if (mpApp->reversiGame.CanMove())
+		{
+			mpApp->resources.Play(Resources::SOUND_PLACE, mpApp->masterVolume);
+		}
+		else
+		{
+			// todo show winner
+			mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
+		}
+
+		return true;
+
+	}
+	else
+	{
+		mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+
+		return false;
 	}
 }
 

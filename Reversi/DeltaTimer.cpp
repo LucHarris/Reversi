@@ -1,20 +1,19 @@
 #include "DeltaTimer.h"
 
-template<typename T>
-void DeltaTimer<T>::Restart(T t)
+
+void DeltaTimer::Restart(float t)
 {
 	time = t;
 }
 
-template<typename T>
-void DeltaTimer<T>::Update(T dt)
+
+void DeltaTimer::Update(float dt)
 {
 	time -= dt;
 }
 
-template<typename T>
-bool DeltaTimer<T>::HasElapsed()
+bool DeltaTimer::HasElapsed()
 {
-	return time <= 0;
+	return time <= 0.0f;
 }
 
