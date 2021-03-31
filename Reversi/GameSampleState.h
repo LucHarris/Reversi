@@ -3,6 +3,7 @@
 #include "State.h"
 #include "Discs.h"
 #include "Player.h"
+#include "Node.h"
 
 class GameSampleState :    public State
 {

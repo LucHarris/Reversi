@@ -2,6 +2,8 @@
 #include "ReversiSFML.h"
 #include "Constants.h"
 
+#include "NormalForm.h"
+
 void GameSampleState::IncActivePlayer()
 {
 	if (++mActivePlayer >= mPlayers.size())
@@ -43,10 +45,17 @@ void GameSampleState::Update(float dt)
 	{
 		if (mAiTimer.HasElapsed())
 		{
+
 			const int move = mPlayers.at(mActivePlayer).EvaluateMove(mpApp->reversiGame.GetScoreGrid());
 
+			const int moveTest = mPlayers.at(mActivePlayer).EvaluateMoveFromNode(mpApp->reversiGame);;
+
+			NormalForm nf(mActivePlayer, mpApp->reversiGame);
+
+			int mmm = nf.Dominant();
+
 			// successful move 
-			if (mDiscSprites.Move(move))
+			if (mDiscSprites.Move(mmm))
 			{
 				IncActivePlayer();
 			}

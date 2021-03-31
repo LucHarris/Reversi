@@ -34,12 +34,27 @@ public:
 	{
 	}
 
+
+
 	// copy constructor
 	Grid(const Grid& grid)
 		:
 		mTable(grid.mTable)
 	{
 
+	}
+
+	// copy from array
+	Grid(const std::array<VALUE, SIZE* SIZE>& grid)
+		:
+		mTable(grid)
+	{
+
+	}
+
+	void operator*=(const int a[SIZE * SIZE])
+	{
+		std::transform(a, a + SIZE * SIZE, mTable.begin(), std::multiplies);
 	}
 
 	bool operator !=(const Grid& b) const

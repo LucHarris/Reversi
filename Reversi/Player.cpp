@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Node.h"
 
 int Player::EvaluateMove(const ScoreGrid& sg)
 {
@@ -8,4 +9,16 @@ int Player::EvaluateMove(const ScoreGrid& sg)
 	int a = r - sg.begin();
 
 	return a;
+}
+
+int Player::EvaluateMoveFromNode(const ReversiBoard& board)
+{
+	
+
+	int black = 1;
+	int move = -1;
+	Node nodeBase(black, move, 2, board);
+
+
+	return -1;
 }
