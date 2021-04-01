@@ -5,13 +5,13 @@ void NormalForm::GeneratePayoffs(const ReversiBoard& board, int& p1, int& p2)
 {
 	const auto& b = board.GetDiscGrid();
 
-	Grid<int, gc::BOARD_DISC_SIZE> payoffBoard;
+	Grid<int, gc::BOARD_DISC_ROW_SIZE> payoffBoard(0);
 
 	for (int i = 0; i < gc::BOARD_DISC_SIZE; i++)
 	{
 		// defaults if tile isn't occuied by a disc
 		int disc = 0;
-		switch (b.at(0))
+		switch (b.at(i))
 		{
 		case CELL_WHITE: disc = 1;
 			break;
@@ -19,7 +19,7 @@ void NormalForm::GeneratePayoffs(const ReversiBoard& board, int& p1, int& p2)
 			break;
 		}
 
-		payoffBoard.at(0) = disc;
+		payoffBoard.at(i) = disc;
 	}
 
 	// applies multiplier

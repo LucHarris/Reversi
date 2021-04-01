@@ -2,11 +2,11 @@
 #include "Board.h"
 #include <map>
 #include <vector>
+#include <iostream>
 
 // move to cpp
 
 typedef std::map<std::pair<int, int>, std::pair<int, int>> Matrix;
-
 
 // tow player normal form payoffs
 struct Entry
@@ -17,6 +17,15 @@ struct Entry
 	int payoff[2]{ -1,-1 };
 	// max for action
 	int max[2]{ -1,-1 };
+
+    void ToConsole()
+    {
+        std::cout
+            << "\nkey[ " << key[0] << " , " << key[1] << " ]"
+            << " payoff[ " << payoff[0] << " , " << payoff[1] << " ]"
+            << " max[ " << max[0] << " , " << max[1] << " ]";
+            
+    }
 };
 
 
@@ -27,10 +36,6 @@ class NormalForm
 	std::vector<Entry> entry;
 
 public:
-	/*NormalForm() 
-	{
-
-	};*/
 
 	NormalForm(int agent, ReversiBoard board)
 	{
@@ -39,7 +44,7 @@ public:
 		// level 1
 		if (board.CanMove())
 		{
-			for (int i = 0; i < scoreGrid.size(); i++)
+			for (int i = 0; i < (int)scoreGrid.size(); i++)
 			{
 				if (scoreGrid.at(i) >= MIN_SCORE)
 				{
@@ -52,7 +57,7 @@ public:
 
 					if (b1.CanMove())
 					{
-						for (int j = 0; j < sg2.size(); j++)
+						for (int j = 0; j < (int)sg2.size(); j++)
 						{
 							if (sg2.at(j) >= MIN_SCORE)
 							{
@@ -97,8 +102,21 @@ public:
         {
             entry.push_back({ {-1,-1},{0,100},{-1,-1} });
         }
+
+        std::cout << "\n--start---------------------";
+        std::cout << "\nAll entries for agent: " << agent;
+
+        ToConsole();
+
 	}
 
+    void ToConsole()
+    {
+        for (auto& e : entry)
+        {
+            e.ToConsole();
+        }
+    }
 
 
 
@@ -109,15 +127,38 @@ public:
 
         EliminateActions();
 
-        // decide on remaining actions
-        auto ret = std::max_element(entry.begin(), entry.end(), [](const Entry& lhs, const Entry& rhs)
+        std::cout << "\nRemaining entries";
+        ToConsole();
+
+        // todo remove logic
+        // true chooses max payoff[0]
+        // false randomly selects from remaining options for variety
+        if (false)
+        {
+            // decide on remaining actions
+            auto ret = std::max_element(entry.begin(), entry.end(), [](const Entry& lhs, const Entry& rhs)
+                {
+                    return lhs.payoff[0] < rhs.payoff[0];
+                });
+
+            std::cout << "\nReturn entry";
+            if (ret != entry.end())
             {
-                return lhs.payoff[0] < rhs.payoff[0];
-            });
+                ret->ToConsole();
+            }
+            else
+            {
+                std::cout << "\nNONE returning -1";
+            }
 
-
+            std::cout << "\n--end---------------------";
+            return (ret != entry.end()) ? ret->key[0] : -1;
+        }
+        else
+        {
+            return (entry.size() > 0) ? entry.at(rand() % entry.size()).key[0] : -1;
+        }
         
-        return (ret != entry.end()) ? ret->key[0] : -1;
 	}
 
 

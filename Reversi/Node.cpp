@@ -30,7 +30,7 @@ Node::Node(int agent, int& m, int depth, ReversiBoard board)
 		if (depth >= 0)
 		{
 			// search for moves
-			for (int i = 0; i < scoreGrid.size(); i++)
+			for (int i = 0; i < (int)scoreGrid.size(); i++)
 			{
 				if (scoreGrid.at(i) >= MIN_SCORE)
 				{

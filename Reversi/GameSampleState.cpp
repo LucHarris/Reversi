@@ -6,7 +6,7 @@
 
 void GameSampleState::IncActivePlayer()
 {
-	if (++mActivePlayer >= mPlayers.size())
+	if (++mActivePlayer >= (int)mPlayers.size())
 	{
 		mActivePlayer = 0;
 	}
@@ -60,7 +60,7 @@ void GameSampleState::Init()
 	// simple human vs ai setup 
 	mPlayers.resize(2);
 	mPlayers.at(0).type = Player::Type::AI; // white
-	mPlayers.at(1).type = Player::Type::AI; // black
+	mPlayers.at(1).type = Player::Type::HUMAN; // black
 	mActivePlayer = 0;  // white goes first
 
 	mEndText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));

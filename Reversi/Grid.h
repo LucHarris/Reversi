@@ -34,6 +34,10 @@ public:
 	{
 	}
 
+	Grid(VALUE v)
+	{
+		fill(v);
+	}
 
 
 	// copy constructor

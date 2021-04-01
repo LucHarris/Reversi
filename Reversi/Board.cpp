@@ -10,7 +10,7 @@ void ReversiBoard::SwapPlayers()
 
 void ReversiBoard::GenerateScoreGrid()
 {
-	std::cout << "\n\n\nGenerateScoreGrid called\n\n\n";
+	//std::cout << "\n\n\nGenerateScoreGrid called\n\n\n";
 
 	Vector2i cell; // Zero
 
