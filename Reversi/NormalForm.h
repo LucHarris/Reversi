@@ -61,18 +61,42 @@ public:
 
 								// todo get score table and apply modifiers and accumulate for black/white
 
-								// using scores as payout
-								auto s = b2.GetPlayerScores();
-								mMatrix[{i, j}] = s;
+                                // todo remove if statement if payoffs work
+                                if (false)
+                                {
+								    // using scores as payout
+                                    auto s = b2.GetPlayerScores();
+                                    mMatrix[{i, j}] = s;
+                                    entry.push_back({ {i,j},{s.first,s.second},{-1,-1} });
 
-								entry.push_back({ {i,j},{s.first,s.second},{-1,-1} });
+                                }
+                                else
+                                {
+                                    int   po1 = 0, po2 = 0;
+                                    GeneratePayoffs(b2, po1, po2);
 
+                                    // swap values if playing for black
+                                    if (b2.GetActivePlayerDisc() == CELL_BLACK)
+                                    {
+                                        std::swap(po1, po2);
+                                    }
+
+                                    entry.push_back({ {i,j},{po1,po2},{-1,-1} });
+                                }
 							}
 						}
 					}
+                    else
+                    {
+                        entry.push_back({ {i,-1},{100,0},{-1,-1} });
+                    }
 				}
 			}
 		}
+        else
+        {
+            entry.push_back({ {-1,-1},{0,100},{-1,-1} });
+        }
 	}
 
 
@@ -165,7 +189,7 @@ private:
         int p = 0;
         bool dominant[2]{ false,false };
 
-        while (!(dominant[0] || dominant[1]))
+        while (!(dominant[0] || dominant[1]) && entry.size() > 0)
         {
             int player = p % 2;
 
@@ -190,5 +214,7 @@ private:
             ++p;
         }
     }
+
+    void GeneratePayoffs(const ReversiBoard& board,int& p1,int& p2);
 
 };

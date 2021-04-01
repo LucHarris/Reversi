@@ -1,6 +1,7 @@
 #include "Board.h"
 #include <cmath>
 #include <limits>
+#include "Constants.h"
 
 void ReversiBoard::SwapPlayers()
 {
@@ -120,7 +121,32 @@ bool ReversiBoard::Move(const Vector2i& v)
 
 bool ReversiBoard::ValidCellForMove(const Vector2i& v)
 {
-	return mScoreGrid.at(v) >= MIN_SCORE;
+	bool b = false;
+
+	// within board
+	if (v.x >= 0 &&
+		v.y >= 0 &&
+		v.x < gc::BOARD_DISC_ROW_SIZE &&
+		v.y < gc::BOARD_DISC_ROW_SIZE
+		)
+	{
+		// valid move if score above min
+		b = mScoreGrid.at(v) >= MIN_SCORE;
+	}
+
+	return b;
+}
+
+bool ReversiBoard::ValidCellForMove(int a)
+{
+	bool b = false;
+
+	if (a <= 0 && a < (int)gc::BOARD_DISC_SIZE)
+	{
+		b = mScoreGrid.at(a) >= MIN_SCORE;
+	}
+
+	return b;
 }
 
 bool ReversiBoard::CanMove()
@@ -183,6 +209,7 @@ void ReversiBoard::UpdateBoardBackup()
 
 bool ReversiBoard::Move(int a)
 {
+
 	// to 2d coordinates
 
 	int x = a % 8;
@@ -212,6 +239,7 @@ void ReversiBoard::ToConsole()
 	std::cout << "\n";
 }
 
+
 const char ReversiBoard::GetActivePlayerDisc() const 
 {
 	return (mPlayerIndex == PLAYER_ONE) ? CELL_WHITE : CELL_BLACK;
@@ -235,11 +263,10 @@ void ReversiBoard::PopulateStart()
 {
 	mDiscGrid;
 
-	mDiscGrid.at(1, 2) = CELL_WHITE;
-	mDiscGrid.at(2, 1) = CELL_WHITE;
-	mDiscGrid.at(2, 2) = CELL_BLACK;
-	mDiscGrid.at(1, 1) = CELL_BLACK;
-
+	mDiscGrid.at(3, 4) = CELL_WHITE;
+	mDiscGrid.at(4, 3) = CELL_WHITE;
+	mDiscGrid.at(4, 4) = CELL_BLACK;
+	mDiscGrid.at(3, 3) = CELL_BLACK;
 }
 
 const bool MoveData::IsValid() const

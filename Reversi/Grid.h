@@ -69,10 +69,21 @@ public:
 		return mTable.at(x);
 	}
 
+	// value from 1d position
+	const_reference at(size_t x) const
+	{
+		return mTable.at(x);
+	}
+
 	// value at coordinates
 	reference at(size_t x, size_t y)
 	{
 		return mTable.at(y * SIZE + x); 
+	}
+
+	const_reference at(size_t x, size_t y) const
+	{
+		return mTable.at(y * SIZE + x);
 	}
 
 	reference at(COORD v)
