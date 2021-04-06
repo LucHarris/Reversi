@@ -161,6 +161,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NormalForm.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="ToggleButton.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="ReversiSFML.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NormalForm.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="ToggleButton.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="ReversiSFML.cpp" />

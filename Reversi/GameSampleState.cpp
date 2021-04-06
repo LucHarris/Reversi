@@ -6,12 +6,9 @@
 
 void GameSampleState::IncActivePlayer()
 {
-	if (++mActivePlayer >= (int)mPlayers.size())
-	{
-		mActivePlayer = 0;
-	}
+	mPlayers.Increment();
 
-	if (mPlayers.at(mActivePlayer).type == Player::Type::AI)
+	if (mPlayers.GetActivePlayer().type == Player::Type::AI)
 	{
 		mAiTimer.Restart(0.3f);
 	}
@@ -19,7 +16,7 @@ void GameSampleState::IncActivePlayer()
 
 void GameSampleState::GameEnded()
 {
-	mActivePlayer = -1;
+	mPlayers.EndGame();
 
 	std::string str("White:\t");
 
@@ -33,11 +30,6 @@ void GameSampleState::GameEnded()
 	mEndText.setOrigin(r.width * gc::HALF, r.height * gc::HALF);
 	mEndText.setPosition(gc::VIEWPORT_CENTER);
 
-}
-
-bool GameSampleState::IsActiveGame()
-{
-	return mActivePlayer >= 0;
 }
 
 GameSampleState::GameSampleState(ReversiSFML* app)
@@ -58,10 +50,9 @@ void GameSampleState::Init()
 	mDiscSprites.Init();
 
 	// simple human vs ai setup 
-	mPlayers.resize(2);
-	mPlayers.at(0).type = Player::Type::AI; // white
-	mPlayers.at(1).type = Player::Type::HUMAN; // black
-	mActivePlayer = 0;  // white goes first
+	// todo interface for player setup
+	mPlayers.AddPlayer(Player::Type::HUMAN, 0);
+	mPlayers.AddPlayer(Player::Type::AI, 1);
 
 	mEndText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
 	mEndText.setString("");
@@ -69,11 +60,11 @@ void GameSampleState::Init()
 
 void GameSampleState::Update(float dt)
 {
-	if (IsActiveGame())
+	if (!mPlayers.HasGameEnded())
 	{
 		mAiTimer.Update(dt);
 
-		if (mPlayers.at(mActivePlayer).type == Player::Type::AI)
+		if (mPlayers.GetActivePlayer().type == Player::Type::AI)
 		{
 			if (mAiTimer.HasElapsed())
 			{
@@ -81,7 +72,7 @@ void GameSampleState::Update(float dt)
 				// const int move = mPlayers.at(mActivePlayer).EvaluateMove(mpApp->reversiGame.GetScoreGrid());
 				// const int moveTest = mPlayers.at(mActivePlayer).EvaluateMoveFromNode(mpApp->reversiGame);;
 
-				NormalForm nf(mActivePlayer, mpApp->reversiGame);
+				NormalForm nf(mPlayers.GetSide(), mpApp->reversiGame);
 
 				const int dominantMove = nf.Dominant();
 
@@ -90,6 +81,7 @@ void GameSampleState::Update(float dt)
 				{
 					if (mpApp->reversiGame.CanMove())
 					{
+
 						IncActivePlayer();
 					}
 					else
@@ -123,9 +115,9 @@ void GameSampleState::Render(float dt)
 
 void GameSampleState::MouseInput(const sf::Vector2f& pos)
 {
-	if (IsActiveGame())
+	if (!mPlayers.HasGameEnded())
 	{
-		if (mPlayers.at(mActivePlayer).type == Player::Type::HUMAN && mpApp->reversiGame.CanMove())
+		if (mPlayers.GetActivePlayer().type == Player::Type::HUMAN && mpApp->reversiGame.CanMove())
 		{
 			const int move = mDiscSprites.MoveByMoooouse(pos);;
 

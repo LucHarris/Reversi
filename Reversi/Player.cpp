@@ -1,6 +1,12 @@
 #include "Player.h"
 #include "Node.h"
 
+Player::Player(const Player::Type& t)
+	:
+	type(t)
+{
+}
+
 int Player::EvaluateMove(const ScoreGrid& sg)
 {
 	//auto r = std::minmax_element(sg.begin(), sg.end());

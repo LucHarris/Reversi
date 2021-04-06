@@ -217,7 +217,7 @@ private:
         }
 
         // sorted by second player key 
-        // reset sorting
+        // reset sorting for debugging
         // todo remove 
         std::sort(entry.begin(), entry.end(), [](const Entry& lhs, const Entry& rhs)
             {

@@ -4,14 +4,14 @@
 #include "Discs.h"
 #include "Player.h"
 #include "Node.h"
+#include "PlayerManager.h"
 
 class GameSampleState :    public State
 {
 	sf::Sprite mBoardSprite;
 	Discs mDiscSprites;
-	std::vector<Player> mPlayers;
+	PlayerManager mPlayers;
 	// positive values mean active
-	int mActivePlayer = 0;
 	DeltaTimer mAiTimer;
 	sf::Text mEndText;
 
@@ -19,7 +19,6 @@ class GameSampleState :    public State
 	void IncActivePlayer();
 	// sets active player to invalid for update and input logic. sets end text
 	void GameEnded();
-	bool IsActiveGame();
 
 public:
 	GameSampleState(ReversiSFML* app);
