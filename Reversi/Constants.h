@@ -19,6 +19,8 @@ namespace gc
 
 		STATE_INDEX_MAIN_MENU = 0,
 		STATE_INDEX_GAME_SAMPLE = 1,
+		STATE_INDEX_PLAYER_SELECTION = 2,
+		NUM_STATES = 3,
 
 		BOARD_DISC_ROW_SIZE = 8,
 		BOARD_DISC_SIZE = BOARD_DISC_ROW_SIZE * BOARD_DISC_ROW_SIZE,
@@ -74,5 +76,14 @@ namespace gc
 		2, 1, 2, 2, 2, 2, 1, 2,
 		5, 2, 4, 3, 3, 4, 2, 5
 	};
+
+
+	const sf::Color
+		COL_ICON_LIGHT{ 255,255,255,255 },
+		COL_ICON_DARK{ 100, 100, 100,255 },
+
+		COL_DISC_LIGHT{ 255,255,255,255 },
+		COL_DISC_DARK{ 50, 50, 50,255 }
+	;
 
 }

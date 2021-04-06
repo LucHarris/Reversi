@@ -3,12 +3,14 @@
 #include <SFML/System.hpp>
 #include "MainMenuState.h"
 #include "GameSampleState.h"
+#include "SelectionState.h"
 #include "ReversiSFML.h"
 #include "Constants.h"
 void StateManager::InitStates()
 {
 	mStates.at(gc::STATE_INDEX_MAIN_MENU) = std::make_unique<MainMenuState>(mpApp);
 	mStates.at(gc::STATE_INDEX_GAME_SAMPLE) = std::make_unique<GameSampleState>(mpApp);
+	mStates.at(gc::STATE_INDEX_PLAYER_SELECTION) = std::make_unique<SelectionState>(mpApp);
 
 	// first state 
 	mActiveState = gc::STATE_INDEX_MAIN_MENU;
@@ -24,7 +26,7 @@ StateManager::StateManager(ReversiSFML* app)
 	mpApp(app),
 	mHelp(app),
 	mChat(app),
-	mStates(2)
+	mStates(gc::NUM_STATES)
 {
 	assert(app);
 }
@@ -80,7 +82,6 @@ void StateManager::Render(float dt)
 
 	mHelp.Render(dt);
 	mChat.Render(dt);
-
 }
 
 void StateManager::MouseInput(const sf::Vector2f& pos)
@@ -103,11 +104,15 @@ void StateManager::TextEntered(unsigned int key)
 	mChat.mDisplay = true;
 }
 
-void StateManager::ChangeState(size_t s)
+void StateManager::ChangeState(size_t s, bool reset)
 {
 	if (s < mStates.size())
 	{
 		mActiveState = s;
+		if (reset)
+		{
+			mStates.at(mActiveState)->Reset();
+		}
 		mpApp->music.PlayNext();
 	}
 	else

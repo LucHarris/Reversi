@@ -35,5 +35,16 @@ public:
 	{
 		return mActiveSide < 0;
 	}
+
+	std::string GetPlayerList(int side);
+
+	// makes sure there is al least a player on each side
+	void ValidatePlayers();
+
+	// empty player list
+	void ResetSide(int side);
+	// removes last from list
+	// @return successful removal
+	bool RemoveLast(int side);
 };
 

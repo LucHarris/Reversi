@@ -5,6 +5,7 @@
 #include "StateManager.h"
 #include "Board.h"
 #include "MusicEngine.h"
+#include "PlayerManager.h"
 
 class ReversiSFML
 {
@@ -24,6 +25,8 @@ public:
 	sf::Text debugLog;
 	ReversiBoard reversiGame;
 	MusicEngine music;
+	// updates game player manager
+	PlayerManager PlayerSelection;
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume = 30.0f;
 

@@ -150,3 +150,8 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 void GameSampleState::KeyInput(sf::Keyboard::Key key)
 {
 }
+
+void GameSampleState::Reset()
+{
+	mPlayers = mpApp->PlayerSelection;
+}

@@ -90,6 +90,9 @@
     <ClInclude Include="PlayerManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SelectionState.h">
+      <Filter>Header Files\SFML\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionState.cpp">
+      <Filter>Source Files\SFML\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 #include "ToggleButton.h"
 #include "Constants.h"
 
-enum class StateKey : size_t {MENU,GAME_SAMPLE};
+enum class StateKey : size_t {MENU,GAME_SAMPLE,PLAYER_SELECTION};
 
 
 typedef std::vector<std::unique_ptr<State>> StateContainer;
@@ -35,6 +35,6 @@ public:
 	void KeyInput(sf::Keyboard::Key key);
 	void TextEntered(unsigned int key);
 	// Immediately changes active state
-	void ChangeState(size_t s);
+	void ChangeState(size_t s, bool reset = false);
 
 };

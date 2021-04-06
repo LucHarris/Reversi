@@ -20,5 +20,6 @@ public:
 	virtual void MouseInput(const sf::Vector2f& pos) = 0;
 	virtual void KeyInput(sf::Keyboard::Key key) = 0;
 	virtual void TextEntered(unsigned int key) = 0;
+	virtual void Reset() = 0;
 };
 

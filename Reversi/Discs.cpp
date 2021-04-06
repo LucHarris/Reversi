@@ -97,7 +97,7 @@ void Discs::Set(int a, const DiscState& ds)
 				break;
 		case DiscState::BLACK:
 			discState.sprite.setTextureRect(gc::SPRITE_RECT_DISC_ACTIVE);
-			discState.sprite.setColor(sf::Color::Black);
+			discState.sprite.setColor(gc::COL_DISC_DARK);
 				break;
 		case DiscState::SHADOW:
 			discState.sprite.setTextureRect(gc::SPRITE_RECT_DISC_SHADOW);
