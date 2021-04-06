@@ -21,6 +21,7 @@ namespace gc
 		STATE_INDEX_GAME_SAMPLE = 1,
 
 		BOARD_DISC_ROW_SIZE = 8,
+		BOARD_DISC_SIZE = BOARD_DISC_ROW_SIZE * BOARD_DISC_ROW_SIZE,
 
 		CHAT_SIZE = 6
 		;
@@ -62,5 +63,16 @@ namespace gc
 		SPRITE_RECT_DISC_SHADOW{ 144, 384 ,48, 48 }
 	;
 
+	// ai payoff multiplier
+	const int  CORNER_SCORE_MULTPLIER[64]{
+		5, 2, 4, 3, 3, 4, 2, 5,
+		2, 1, 2, 2, 2, 2, 1, 2,
+		4, 2, 4, 3, 3, 4, 2, 4,
+		3, 2, 3, 3, 3, 3, 2, 3,
+		3, 2, 3, 3, 3, 3, 2, 3,
+		4, 2, 4, 3, 3, 4, 2, 4,
+		2, 1, 2, 2, 2, 2, 1, 2,
+		5, 2, 4, 3, 3, 4, 2, 5
+	};
 
 }

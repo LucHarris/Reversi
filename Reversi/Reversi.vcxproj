@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AiAgent.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Constants.h" />
@@ -157,6 +158,8 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MusicEngine.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="NormalForm.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ToggleButton.h" />
     <ClInclude Include="Resources.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="Vector2i.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AiAgent.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="DeltaTimer.cpp" />
@@ -180,6 +184,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MusicEngine.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="NormalForm.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ToggleButton.cpp" />
     <ClCompile Include="Resources.cpp" />

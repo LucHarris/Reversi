@@ -34,12 +34,31 @@ public:
 	{
 	}
 
+	Grid(VALUE v)
+	{
+		fill(v);
+	}
+
+
 	// copy constructor
 	Grid(const Grid& grid)
 		:
 		mTable(grid.mTable)
 	{
 
+	}
+
+	// copy from array
+	Grid(const std::array<VALUE, SIZE* SIZE>& grid)
+		:
+		mTable(grid)
+	{
+
+	}
+
+	void operator*=(const int a[SIZE * SIZE])
+	{
+		std::transform(a, a + SIZE * SIZE, mTable.begin(), std::multiplies);
 	}
 
 	bool operator !=(const Grid& b) const
@@ -54,10 +73,21 @@ public:
 		return mTable.at(x);
 	}
 
+	// value from 1d position
+	const_reference at(size_t x) const
+	{
+		return mTable.at(x);
+	}
+
 	// value at coordinates
 	reference at(size_t x, size_t y)
 	{
 		return mTable.at(y * SIZE + x); 
+	}
+
+	const_reference at(size_t x, size_t y) const
+	{
+		return mTable.at(y * SIZE + x);
 	}
 
 	reference at(COORD v)

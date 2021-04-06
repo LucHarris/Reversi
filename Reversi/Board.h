@@ -109,7 +109,7 @@ public:
 	// Oppenents go
 	void SwapPlayers();
 	bool ValidCellForMove(const Vector2i& v);
-	
+	bool ValidCellForMove(int a);
 	// Post player swap Oppenent buffer to active player buffer
 	// Call after Move and BoardChanged logic
 	void UpdateBoardBackup();
@@ -131,6 +131,11 @@ public:
 	const std::pair<int, int> GetPlayerScores() const;
 
 	DiscGrid& GetDiscGrid()
+	{
+		return mDiscGrid;
+	}
+
+	const DiscGrid& GetDiscGrid() const
 	{
 		return mDiscGrid;
 	}
