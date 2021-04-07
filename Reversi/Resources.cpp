@@ -7,7 +7,7 @@ void Resources::LoadTextures()
 {
 	// define texture data for iteration
 	// mTextures.size() must equal textureData size
-	const TextureData textureData[14]
+	const TextureData textureData[15]
 	{
 		{"Data/Textures/patternBackground.png",true,true },
 		{"Data/Textures/board.png",true,true },
@@ -24,7 +24,8 @@ void Resources::LoadTextures()
 
 		{"Data/Textures/iconPlay.png",false,true },
 		{"Data/Textures/iconMenu.png",false,true },
-		{"Data/Textures/iconAudio.png",false,true }
+		{"Data/Textures/iconAudio.png",false,true },
+		{"Data/Textures/selection.png",false,true }
 
 
 	};
@@ -45,9 +46,10 @@ void Resources::LoadTextures()
 void Resources::LoadFonts()
 {
 	// define list of font data for iteration
-	const FontData fontData[1]
+	const FontData fontData[2]
 	{
-		{"Data/Fonts/Montserrat-Regular.ttf"}
+		{"Data/Fonts/Montserrat-Regular.ttf"},
+		{"Data/Fonts/Scaremate.otf"}
 	};
 
 	const size_t size = sizeof(fontData) / sizeof(fontData[0]); 
@@ -65,12 +67,13 @@ void Resources::LoadFonts()
 
 void Resources::LoadSounds()
 {
-	const char soundPaths[4][128]
+	const char soundPaths[5][128]
 	{
 		{"Data/Audio/Sfx/267931__anagar__knock-the-door.ogg"},
 		{"Data/Audio/Sfx/331339__maurolupo__2-notes-octave-guitar.ogg"},
 		{"Data/Audio/Sfx/511484__mattleschuck__success-bell.ogg"},
 		{"Data/Audio/Sfx/537084__khenshom__guitar-string-snap-or-breaks-various-sounds.ogg"},
+		{"Data/Audio/Sfx/178433__thavis360__writing-with-chalk-chalkboard.ogg"}
 	};
 
 
@@ -80,8 +83,14 @@ void Resources::LoadSounds()
 
 	for (size_t i = 0; i < size; i++)
 	{
-		mSounds.at(i).buffer.loadFromFile(soundPaths[i]);
-		mSounds.at(i).sound.setBuffer(mSounds.at(i).buffer);
+		if (mSounds.at(i).buffer.loadFromFile(soundPaths[i]))
+		{
+			mSounds.at(i).sound.setBuffer(mSounds.at(i).buffer);
+		}
+		else
+		{
+			assert(false);
+		}
 	}
 
 }

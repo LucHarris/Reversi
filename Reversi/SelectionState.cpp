@@ -13,11 +13,11 @@ void SelectionState::Init()
 	// player list
 	for (auto& d : mPlayerDisplay)
 	{
-		d.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
+		d.setFont(mpApp->resources.GetFontAt(Resources::FONT_CHALK));
 	}
 
-	mPlayerDisplay.at(0).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] + sf::Vector2f{-200.0f,40.0f});
-	mPlayerDisplay.at(1).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] + sf::Vector2f{ 200.0f,40.0f});
+	mPlayerDisplay.at(0).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CC] + sf::Vector2f{-190.0f,	-180.0f});
+	mPlayerDisplay.at(1).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CC] + sf::Vector2f{  20.0f,	-180.0f});
 
 	UpdatePlayerList();
 
@@ -34,15 +34,15 @@ void SelectionState::Init()
 
 	mButtons.at(BTN_PLAY).setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_ICON_PLAY));
 
-	mButtons.at(BTN_WHITE_PLAYER_PLUS).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +	sf::Vector2f{ -384.0f,128.0f });
-	mButtons.at(BTN_WHITE_CPU_PLUS).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{ -384.0f,192.0f });//192.0f 
-	mButtons.at(BTN_WHITE_REMOVE_ONE).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +	sf::Vector2f{ -384.0f,256.0f });//256.0f 
-	mButtons.at(BTN_WHITE_REMOVE_ALL).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{ -384.0f,320.0f });
+	mButtons.at(BTN_WHITE_PLAYER_PLUS).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +	sf::Vector2f{ -384.0f,128.0f });
+	mButtons.at(BTN_WHITE_CPU_PLUS).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{ -384.0f,192.0f });//192.0f 
+	mButtons.at(BTN_WHITE_REMOVE_ONE).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +	sf::Vector2f{ -384.0f,256.0f });//256.0f 
+	mButtons.at(BTN_WHITE_REMOVE_ALL).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{ -384.0f,320.0f });
 
-	mButtons.at(BTN_BLACK_PLAYER_PLUS	).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{  384.0f,128.0f });
-	mButtons.at(BTN_BLACK_CPU_PLUS		).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{ 384.0f,192.0f });
-	mButtons.at(BTN_BLACK_REMOVE_ONE	).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{  384.0f,256.0f });
-	mButtons.at(BTN_BLACK_REMOVE_ALL		).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{  384.0f,320.0f });
+	mButtons.at(BTN_BLACK_PLAYER_PLUS).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{  384.0f,128.0f });
+	mButtons.at(BTN_BLACK_CPU_PLUS).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{ 384.0f,192.0f });
+	mButtons.at(BTN_BLACK_REMOVE_ONE).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{  384.0f,256.0f });
+	mButtons.at(BTN_BLACK_REMOVE_ALL).setPosition(	gc::VIEWPORT_PIVOT[gc::PIVOT_TC] +		sf::Vector2f{  384.0f,320.0f });
 
 	mButtons.at(BTN_PLAY).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_BC] + sf::Vector2f{ 0.0f,-128.0f });
 	
@@ -50,6 +50,12 @@ void SelectionState::Init()
 	mButtons.at(BTN_BLACK_CPU_PLUS).setColor(gc::COL_ICON_DARK);
 	mButtons.at(BTN_BLACK_REMOVE_ONE).setColor(gc::COL_ICON_DARK);
 	mButtons.at(BTN_BLACK_REMOVE_ALL).setColor(gc::COL_ICON_DARK);
+
+	const sf::Texture& tex = mpApp->resources.GetTextureAt(Resources::TEXTURE_BLACKBOARD);
+
+	mBlackboard.setTexture(tex);
+	mBlackboard.setOrigin((sf::Vector2f)tex.getSize() * gc::HALF);
+	mBlackboard.setPosition(gc::VIEWPORT_CENTER);
 
 }
 
@@ -59,6 +65,8 @@ void SelectionState::Update(float)
 
 void SelectionState::Render(float)
 {
+	mpApp->window.draw(mBlackboard);
+
 	for (auto& d : mPlayerDisplay)
 	{
 		mpApp->window.draw(d);
@@ -77,41 +85,66 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 	if (mButtons.at(BTN_WHITE_PLAYER_PLUS).getGlobalBounds().contains(mos))
 	{
 		mpApp->PlayerSelection.AddPlayer(Player::Type::HUMAN, 0);
+		mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+
 	}
 
 	if (mButtons.at(BTN_WHITE_REMOVE_ONE).getGlobalBounds().contains(mos))
 	{
-		mpApp->PlayerSelection.RemoveLast(0);
+		if (mpApp->PlayerSelection.RemoveLast(0))
+		{
+			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+		}
+		else
+		{
+			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+		}
 	}
 
 	if (mButtons.at(BTN_WHITE_CPU_PLUS).getGlobalBounds().contains(mos))
 	{
 		mpApp->PlayerSelection.AddPlayer(Player::Type::AI, 0);
+		mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+
 	}
 
 	if (mButtons.at(BTN_WHITE_REMOVE_ALL).getGlobalBounds().contains(mos))
 	{
 		mpApp->PlayerSelection.ResetSide(0);
+		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
 
 	if (mButtons.at(BTN_BLACK_PLAYER_PLUS).getGlobalBounds().contains(mos))
 	{
 		mpApp->PlayerSelection.AddPlayer(Player::Type::HUMAN, 1);
+		mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+
 	}
 
 	if (mButtons.at(BTN_BLACK_REMOVE_ONE).getGlobalBounds().contains(mos))
 	{
-		mpApp->PlayerSelection.RemoveLast(1);
+		if(mpApp->PlayerSelection.RemoveLast(1))
+		{
+			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+		}
+		else
+		{
+			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+		}
 	}
 
 	if (mButtons.at(BTN_BLACK_CPU_PLUS).getGlobalBounds().contains(mos))
 	{
 		mpApp->PlayerSelection.AddPlayer(Player::Type::AI, 1);
+		mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+
 	}
 
 	if (mButtons.at(BTN_BLACK_REMOVE_ALL).getGlobalBounds().contains(mos))
 	{
 		mpApp->PlayerSelection.ResetSide(1);
+		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+
 	}
 
 	if (mButtons.at(BTN_PLAY).getGlobalBounds().contains(mos))
@@ -119,6 +152,8 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 		// if the list is invalid ai players will be defaulted to play
 		mpApp->PlayerSelection.ValidatePlayers();
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE, true);
+		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+
 	}
 
 	UpdatePlayerList();

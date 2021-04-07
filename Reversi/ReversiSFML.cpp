@@ -12,7 +12,7 @@ void ReversiSFML::Init()
 	window.create(sf::VideoMode(gc::VIEWPORT_WIDTH_U, gc::VIEWPORT_HEIGHT_U), gc::AppTitle, sf::Style::Close);
 	resources.Load();
 	music.Init();
-	music.SetMasterVolume(masterVolume);
+	music.SetMasterVolume(masterVolume * gc::HALF);
 	music.PlayNext();
 	reversiGame.Initialize();
 	stateManager.Init();

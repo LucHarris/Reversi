@@ -26,9 +26,9 @@ class Resources
 	};
 
 
-	std::array<sf::Texture, 14> mTextures;
-	std::array<sf::Font, 1> mFonts;
-	std::array<SoundResource, 4> mSounds;
+	std::array<sf::Texture, 15> mTextures;
+	std::array<sf::Font, 2> mFonts;
+	std::array<SoundResource, 5> mSounds;
 	std::default_random_engine generator;
 
 
@@ -44,6 +44,7 @@ public:
 	void Play(size_t p, float vol);
 	enum {
 		FONT_MAIN = 0,
+		FONT_CHALK,
 		TEXTURE_BG = 0,
 		TEXTURE_BOARD,
 		TEXTURE_DISC,
@@ -59,12 +60,14 @@ public:
 		TEXTURE_ICON_PLAY,
 		TEXTURE_ICON_MENU,
 		TEXTURE_ICON_AUDIO,
+		TEXTURE_BLACKBOARD,
 
 
 		SOUND_PLACE = 0,
 		SOUND_CLICK ,
 		SOUND_WIN,
-		SOUND_ERROR
+		SOUND_ERROR,
+		SOUND_CHALK
 	};
 };
 

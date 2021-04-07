@@ -10,6 +10,7 @@ class SelectionState : public State
 	// two lists of players
 	std::array<sf::Text, 2> mPlayerDisplay;
 	std::array<sf::Sprite, 9> mButtons;
+	sf::Sprite mBlackboard;
 
 	enum{
 		BTN_WHITE_PLAYER_PLUS = 0,

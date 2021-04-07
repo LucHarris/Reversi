@@ -15,7 +15,7 @@ class MusicEngine
 	Fader mFader;
 
 	// range 0 to 100.0f
-	float mMasterVolume = 50.0f;
+	float mMasterVolume = 00.0f;
 	// for fading between streams
 	size_t mActiveMusic = 1;
 	// always one behind active music track
