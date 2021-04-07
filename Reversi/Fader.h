@@ -6,30 +6,13 @@ class Fader
 	bool mFading = false;
 	bool mEndState = false;
 	float mRate = 1.0f;
-public:
-	void Reset(float r = 1.0f)
-	{
-		mTimer = 0.0f;
-		mFading = true;
-		mRate = r;
-	}
+	// between 0 and 100
 
-	void Update(float dt)
-	{
-		if (mFading)
-		{
-			mTimer += dt / mRate;
-			if (mTimer >= 1.0f)
-			{
-				mFading = false;
-				mEndState = true; // next frame will be reset
-			}
-		}
-		else
-		{
-			mEndState = false;
-		}
-	}
+public:
+	void Reset(float r = 1.0f);
+
+
+	void Update(float dt);
 
 	// event to set
 	bool EndState() const
@@ -42,14 +25,9 @@ public:
 		return mFading;
 	}
 
-	float GetFade() const
-	{
-		return mTimer;
-	}
+	float GetFade() const;
+	
 
-	float GetInverseFade() const
-	{
-		return 1.0f - mTimer;
-	}
+	float GetInverseFade() const;
 };
 

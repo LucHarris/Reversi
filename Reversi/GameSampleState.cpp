@@ -148,5 +148,6 @@ void GameSampleState::KeyInput(sf::Keyboard::Key key)
 
 void GameSampleState::Reset()
 {
+	mpApp->reversiGame.Initialize();
 	mPlayers = mpApp->PlayerSelection;
 }

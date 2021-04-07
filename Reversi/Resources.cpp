@@ -7,7 +7,7 @@ void Resources::LoadTextures()
 {
 	// define texture data for iteration
 	// mTextures.size() must equal textureData size
-	const TextureData textureData[15]
+	const TextureData textureData[17]
 	{
 		{"Data/Textures/patternBackground.png",true,true },
 		{"Data/Textures/board.png",true,true },
@@ -25,7 +25,10 @@ void Resources::LoadTextures()
 		{"Data/Textures/iconPlay.png",false,true },
 		{"Data/Textures/iconMenu.png",false,true },
 		{"Data/Textures/iconAudio.png",false,true },
-		{"Data/Textures/selection.png",false,true }
+		{"Data/Textures/selection.png",false,true },
+		{"Data/Textures/iconEndGame.png",false,true },
+		{"Data/Textures/iconStats.png",false,true }
+
 
 
 	};

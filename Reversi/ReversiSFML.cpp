@@ -3,7 +3,8 @@
 
 ReversiSFML::ReversiSFML()
 	:
-	stateManager(this)
+	stateManager(this),
+	masterVolume(gc::VOL_TOGGLE)
 {
 }
 

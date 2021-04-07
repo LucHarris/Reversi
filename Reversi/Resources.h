@@ -26,7 +26,7 @@ class Resources
 	};
 
 
-	std::array<sf::Texture, 15> mTextures;
+	std::array<sf::Texture, 17> mTextures;
 	std::array<sf::Font, 2> mFonts;
 	std::array<SoundResource, 5> mSounds;
 	std::default_random_engine generator;
@@ -61,6 +61,8 @@ public:
 		TEXTURE_ICON_MENU,
 		TEXTURE_ICON_AUDIO,
 		TEXTURE_BLACKBOARD,
+		TEXTURE_END_GAME,
+		TEXTURE_STATS,
 
 
 		SOUND_PLACE = 0,

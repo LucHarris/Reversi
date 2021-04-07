@@ -18,7 +18,11 @@ class StateManager
 	ToggleButton mHelp;
 	ToggleButton mChat;
 	ReversiSFML* mpApp;
-	
+	std::array<sf::Sprite,3> mMenuButtons;
+	enum 
+	{
+		BTN_MENU,BTN_STATS,BTN_AUDIO
+	};
 public:
 	// copy, rotate, input
 	std::array<std::string, gc::CHAT_SIZE> chatMessages;
@@ -35,6 +39,7 @@ public:
 	void KeyInput(sf::Keyboard::Key key);
 	void TextEntered(unsigned int key);
 	// Immediately changes active state
+	// only change/reset if the new state isn't the old one
 	void ChangeState(size_t s, bool reset = false);
 
 };
