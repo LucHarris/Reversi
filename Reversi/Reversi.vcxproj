@@ -162,12 +162,15 @@
     <ClInclude Include="NormalForm.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
+    <ClInclude Include="ProfileState.h" />
     <ClInclude Include="SelectionState.h" />
     <ClInclude Include="ToggleButton.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="ReversiSFML.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="Utility.h" />
     <ClInclude Include="Vector2i.h" />
   </ItemGroup>
   <ItemGroup>
@@ -190,12 +193,14 @@
     <ClCompile Include="NormalForm.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
+    <ClCompile Include="ProfileState.cpp" />
     <ClCompile Include="SelectionState.cpp" />
     <ClCompile Include="ToggleButton.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="ReversiSFML.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
+    <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Vector2i.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

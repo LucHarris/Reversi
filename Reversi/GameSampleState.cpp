@@ -3,6 +3,7 @@
 #include "Constants.h"
 
 #include "NormalForm.h"
+#include "Utility.h"
 
 void GameSampleState::IncActivePlayer()
 {
@@ -29,6 +30,31 @@ void GameSampleState::GameEnded()
 	const auto r = mEndText.getGlobalBounds();
 	mEndText.setOrigin(r.width * gc::HALF, r.height * gc::HALF);
 	mEndText.setPosition(gc::VIEWPORT_CENTER);
+
+
+
+	// file out
+
+	if (scores.first > scores.second)
+	{
+		++mpApp->localUser.whiteWin;
+	}
+	else
+	{
+		if (scores.first < scores.second)
+		{
+			++mpApp->localUser.blackWin;
+		}
+		else
+		{
+			++mpApp->localUser.draw;
+		}
+	}
+
+	++mpApp->localUser.gamesPlayed;
+
+	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localUser);
+
 
 }
 
@@ -148,6 +174,7 @@ void GameSampleState::KeyInput(sf::Keyboard::Key key)
 
 void GameSampleState::Reset()
 {
+	mEndText.setString("");
 	mpApp->reversiGame.Initialize();
 	mPlayers = mpApp->PlayerSelection;
 }

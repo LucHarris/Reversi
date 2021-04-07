@@ -4,10 +4,12 @@
 #include <array>
 #include "Player.h"
 
+
 class PlayerManager
 {
 	// players are either on white or black
 	std::array<std::vector< Player>, 2> mPlayerSides;
+	
 	// position in player list
 	std::array<int, 2> mPosition;
 	// white 0, black 1, starts with 0

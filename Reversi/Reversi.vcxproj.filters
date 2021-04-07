@@ -93,6 +93,15 @@
     <ClInclude Include="SelectionState.h">
       <Filter>Header Files\SFML\States</Filter>
     </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfileState.h">
+      <Filter>Header Files\SFML\States</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp">
@@ -162,6 +171,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SelectionState.cpp">
+      <Filter>Source Files\SFML\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfileState.cpp">
       <Filter>Source Files\SFML\States</Filter>
     </ClCompile>
   </ItemGroup>

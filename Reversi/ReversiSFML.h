@@ -6,6 +6,7 @@
 #include "Board.h"
 #include "MusicEngine.h"
 #include "PlayerManager.h"
+#include "User.h"
 
 class ReversiSFML
 {
@@ -27,6 +28,8 @@ public:
 	MusicEngine music;
 	// updates game player manager
 	PlayerManager PlayerSelection;
+	// local for comparasion
+	UserData localUser;
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume;
 

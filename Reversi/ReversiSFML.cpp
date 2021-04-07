@@ -1,5 +1,6 @@
 #include "ReversiSFML.h"
 #include "Constants.h"
+#include "Utility.h"
 
 ReversiSFML::ReversiSFML()
 	:
@@ -17,6 +18,8 @@ void ReversiSFML::Init()
 	music.PlayNext();
 	reversiGame.Initialize();
 	stateManager.Init();
+
+	util::loadFile<UserData>(gc::PATH_LOCAL_USER, localUser);
 
 	InitText(debugLog);
 	debugLog.setString("Debug");
@@ -58,7 +61,6 @@ void ReversiSFML::Run()
 				if (sfEvent.text.unicode < 128 && sfEvent.text.unicode >= 32)
 				{
 					stateManager.TextEntered(sfEvent.text.unicode);
-					//music.PlayNext(5.0f);
 				}
 				break;
 			default:

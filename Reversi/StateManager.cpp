@@ -6,11 +6,14 @@
 #include "SelectionState.h"
 #include "ReversiSFML.h"
 #include "Constants.h"
+#include "ProfileState.h"
+
 void StateManager::InitStates()
 {
 	mStates.at(gc::STATE_INDEX_MAIN_MENU) = std::make_unique<MainMenuState>(mpApp);
 	mStates.at(gc::STATE_INDEX_GAME_SAMPLE) = std::make_unique<GameSampleState>(mpApp);
 	mStates.at(gc::STATE_INDEX_PLAYER_SELECTION) = std::make_unique<SelectionState>(mpApp);
+	mStates.at(gc::STATE_INDEX_PROFILE) = std::make_unique<ProfileState>(mpApp);
 
 	// first state 
 	mActiveState = gc::STATE_INDEX_MAIN_MENU;
@@ -127,7 +130,7 @@ void StateManager::MouseInput(const sf::Vector2f& pos)
 	if (mMenuButtons.at(BTN_STATS).getGlobalBounds().contains(pos))
 	{
 		//todo
-		//mpApp->stateManager.ChangeState(???);
+		mpApp->stateManager.ChangeState(gc::STATE_INDEX_PROFILE,true);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
 
