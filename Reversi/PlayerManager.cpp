@@ -1,5 +1,6 @@
 #include "PlayerManager.h"
 #include <cassert>
+#include "Constants.h"
 
 void PlayerManager::Increment()
 {
@@ -26,11 +27,18 @@ Player& PlayerManager::GetActivePlayer()
 	return mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) );
 }
 
-void PlayerManager::AddPlayer(const Player::Type& t, int side)
+bool PlayerManager::AddPlayer(const Player::Type& t, int side)
 {
 	assert(side < mPlayerSides.size());
-
-	mPlayerSides.at(side).push_back(t);
+	if (mPlayerSides.at(side).size() < gc::MAX_PLAYERS_PER_SIDE)
+	{
+		mPlayerSides.at(side).push_back(t);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 std::string PlayerManager::GetPlayerList(int side)

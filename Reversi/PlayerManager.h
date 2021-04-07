@@ -19,7 +19,7 @@ public:
 	// ref to active player
 	Player& GetActivePlayer();
 
-	void AddPlayer(const Player::Type& t, int side);
+	bool AddPlayer(const Player::Type& t, int side);
 
 	int GetSide() const 
 	{

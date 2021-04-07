@@ -49,11 +49,6 @@ void GameSampleState::Init()
 
 	mDiscSprites.Init();
 
-	// simple human vs ai setup 
-	// todo interface for player setup
-	mPlayers.AddPlayer(Player::Type::HUMAN, 0);
-	mPlayers.AddPlayer(Player::Type::AI, 1);
-
 	mEndText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
 	mEndText.setString("");
 }
