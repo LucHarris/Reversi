@@ -288,3 +288,13 @@ const std::pair<int, int> ReversiBoard::GetPlayerScores() const
 {
 	return { mDiscGrid.count(CELL_WHITE) ,  mDiscGrid.count(CELL_BLACK) };
 }
+
+int ReversiBoard::AvailableMoves() const
+{
+	const int m = std::count_if(mScoreGrid.begin(), mScoreGrid.end(), [](int n) 
+		{
+			return n >= MIN_SCORE;
+		});
+
+	return m;
+}

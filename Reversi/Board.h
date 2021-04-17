@@ -149,5 +149,7 @@ public:
 	{
 		return mPlayerIndex;
 	}
+
+	int AvailableMoves() const;
 };
 

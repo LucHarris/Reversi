@@ -4,6 +4,7 @@
 
 #include "NormalForm.h"
 #include "Utility.h"
+#include "Timer.h"
 
 void GameSampleState::IncActivePlayer()
 {
@@ -87,6 +88,7 @@ void GameSampleState::Update(float dt)
 
 		if (mPlayers.GetActivePlayer().type == Player::Type::AI)
 		{
+			// small delay so not instant
 			if (mAiTimer.HasElapsed())
 			{
 				// todo remove nodes
@@ -94,8 +96,24 @@ void GameSampleState::Update(float dt)
 				// const int moveTest = mPlayers.at(mActivePlayer).EvaluateMoveFromNode(mpApp->reversiGame);;
 
 				NormalForm nf(mPlayers.GetSide(), mpApp->reversiGame);
+				
+				Timer<int,std::micro> analysisTimer;
 
 				const int dominantMove = nf.Dominant();
+
+				const int endTime = analysisTimer.elapsed();
+
+				std::ofstream timerOutFile("Data/Out/aiTimer.csv", std::ios::app);
+				if (timerOutFile.is_open())
+				{
+					timerOutFile << endTime << ',' << mpApp->reversiGame.AvailableMoves() << '\n';
+					timerOutFile.close();
+				}
+				else
+				{
+					assert(false);
+				}
+
 
 				// successful move 
 				if (mDiscSprites.Move(dominantMove))
