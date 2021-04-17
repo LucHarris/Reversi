@@ -12,7 +12,7 @@ class GameSampleState :    public State
 	Discs mDiscSprites;
 	PlayerManager mPlayers;
 	// positive values mean active
-	DeltaTimer mAiTimer;
+	DeltaCountdownTimer mAiTimer;
 	sf::Text mEndText;
 
 	// increments active player for next turn

@@ -164,6 +164,7 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="ProfileState.h" />
     <ClInclude Include="SelectionState.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="ToggleButton.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="ReversiSFML.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="ProfileState.cpp" />
     <ClCompile Include="SelectionState.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="ToggleButton.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="ReversiSFML.cpp" />

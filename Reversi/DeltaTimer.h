@@ -2,11 +2,11 @@
 
 // Counts down using delta time
 
-class DeltaTimer
+class DeltaCountdownTimer
 {
 	float time;
 public:
-	DeltaTimer() = default;
+	DeltaCountdownTimer() = default;
 	// Set seconds to count down from
 	void Restart(float t);
 	// decrements delta time from timer

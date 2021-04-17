@@ -1,18 +1,18 @@
 #include "DeltaTimer.h"
 
 
-void DeltaTimer::Restart(float t)
+void DeltaCountdownTimer::Restart(float t)
 {
 	time = t;
 }
 
 
-void DeltaTimer::Update(float dt)
+void DeltaCountdownTimer::Update(float dt)
 {
 	time -= dt;
 }
 
-bool DeltaTimer::HasElapsed()
+bool DeltaCountdownTimer::HasElapsed()
 {
 	return time <= 0.0f;
 }
