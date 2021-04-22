@@ -109,7 +109,7 @@ public:
 	}
 
 	// total number of cells
-	size_t size()
+	size_t size() const
 	{
 		return mTable.size();
 	}

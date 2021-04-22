@@ -34,7 +34,7 @@ void MusicEngine::Init()
 
 	assert(size > 1);
 
-	srand(time(0));
+	srand(time(NULL));
 	mActiveMusic = 1 + (rand() % (mMusic.size() - 1)); // 1 to (mMusic.size() - 1)
 
 	assert(mActiveMusic > 0);

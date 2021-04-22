@@ -160,6 +160,7 @@
     <ClInclude Include="MusicEngine.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NormalForm.h" />
+    <ClInclude Include="PayoffMultipliers.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="ProfileState.h" />
@@ -187,15 +188,21 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="MusicEngine.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NormalForm.cpp" />
+    <ClCompile Include="PayoffMultipliers.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="ProfileState.cpp" />
     <ClCompile Include="SelectionState.cpp" />
+    <ClCompile Include="ExampleBoard02.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="ToggleButton.cpp" />
     <ClCompile Include="Resources.cpp" />

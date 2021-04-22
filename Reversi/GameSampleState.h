@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Node.h"
 #include "PlayerManager.h"
+#include "PayoffMultipliers.h"
 
 class GameSampleState :    public State
 {
@@ -14,6 +15,8 @@ class GameSampleState :    public State
 	// positive values mean active
 	DeltaCountdownTimer mAiTimer;
 	sf::Text mEndText;
+	PayoffMultipliers mPayoffMulti;
+	
 
 	// increments active player for next turn
 	void IncActivePlayer();

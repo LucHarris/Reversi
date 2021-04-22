@@ -2,6 +2,7 @@
 #include <cmath>
 #include <limits>
 #include "Constants.h"
+#include <fstream>
 
 void ReversiBoard::SwapPlayers()
 {
@@ -104,11 +105,13 @@ void ReversiBoard::GenerateScoreGrid()
 
 bool ReversiBoard::Move(const Vector2i& v)
 {
-	bool m = false;
+	/*bool m = false;
 
 	if (ValidCellForMove(v))
 	{
 		m = PlaceMove(v);
+		
+		mMoveTracker.emplace_back(v);
 
 		SwapPlayers();
 
@@ -116,7 +119,11 @@ bool ReversiBoard::Move(const Vector2i& v)
 
 	}
 
-	return m;
+	return m;*/
+
+	return Move((v.y * GRID_SIZE) + v.x);
+
+
 }
 
 bool ReversiBoard::ValidCellForMove(const Vector2i& v)
@@ -141,7 +148,7 @@ bool ReversiBoard::ValidCellForMove(int a)
 {
 	bool b = false;
 
-	if (a <= 0 && a < (int)gc::BOARD_DISC_SIZE)
+	if (a >= 0 && a < (int)gc::BOARD_DISC_SIZE)
 	{
 		b = mScoreGrid.at(a) >= MIN_SCORE;
 	}
@@ -149,7 +156,7 @@ bool ReversiBoard::ValidCellForMove(int a)
 	return b;
 }
 
-bool ReversiBoard::CanMove()
+bool ReversiBoard::CanMove() const 
 {
 	return mMinMax.first.IsValid() && mMinMax.second.IsValid();
 }
@@ -211,10 +218,30 @@ bool ReversiBoard::Move(int a)
 {
 
 	// to 2d coordinates
-
-	int x = a % 8;
+	/*int x = a % 8;
 	int y = a / 8;
-	return Move({x, y});
+	return Move({x, y});*/
+
+
+	bool m = false;
+
+	if (ValidCellForMove(a))
+	{
+		int x = a % 8;
+		int y = a / 8;
+
+		m = PlaceMove({ x, y });
+
+		mMoveTracker.emplace_back(a);
+
+		SwapPlayers();
+
+		GenerateScoreGrid();
+
+	}
+
+	return m;
+
 }
 
 void ReversiBoard::ToConsole()
@@ -252,6 +279,9 @@ const char ReversiBoard::GetActiveOpponentDisc() const
 
 void ReversiBoard::Initialize()
 {
+	mExportedWinningMoves = false;
+	mMoveTracker.reserve(GRID_SIZE * GRID_SIZE); // won't need more moves than board size
+	mMoveTracker.clear();
 	mDiscGrid.fill(CELL_EMPTY);
 	mDiscGridBackup.fill(CELL_EMPTY);
 	mScoreGrid.fill(ZERO_SCORE);
@@ -289,7 +319,7 @@ const std::pair<int, int> ReversiBoard::GetPlayerScores() const
 	return { mDiscGrid.count(CELL_WHITE) ,  mDiscGrid.count(CELL_BLACK) };
 }
 
-int ReversiBoard::AvailableMoves() const
+int ReversiBoard::AvailableMoveCount() const
 {
 	const int m = std::count_if(mScoreGrid.begin(), mScoreGrid.end(), [](int n) 
 		{
@@ -297,4 +327,105 @@ int ReversiBoard::AvailableMoves() const
 		});
 
 	return m;
+}
+
+std::vector<int> ReversiBoard::GetAvailableMoves() const
+{
+	std::vector<int> moves;
+	moves.reserve(64);
+
+	// add 1d locations of available moves
+	for (size_t i = 0; i < mScoreGrid.size(); i++)
+	{
+		if (mScoreGrid.at(i) >= MIN_SCORE)
+		{
+			moves.push_back(i);
+		}
+	}
+
+	return moves;
+}
+
+void ReversiBoard::ExportWinningMoves()
+{
+	if ( !(CanMove() || mExportedWinningMoves) )
+	{
+		const auto finalScores(GetPlayerScores());
+
+		// don't continue if a draw
+		if (finalScores.first == finalScores.second)
+		{
+			return;
+		}
+
+		// copy of moves for manipulating
+		auto moves = mMoveTracker;
+
+		std::ifstream inputMoveFile("Data/Payoffs/adaptive.csv",std::ios::in);
+
+		if (inputMoveFile.is_open())
+		{
+			// invalid default value
+			std::vector<int> tempMoveHistory(GRID_SIZE * GRID_SIZE, -1);
+
+			// read values to temp vector
+			int pos = 0;
+			while (inputMoveFile.good() && pos < GRID_SIZE * GRID_SIZE)
+			{
+				std::string s;
+				getline(inputMoveFile, s, ',');
+				int i = std::atoi(s.c_str());
+				tempMoveHistory.at(pos) = i;
+				++pos;
+			}
+		
+			inputMoveFile.close();
+
+
+			//starts at location in move list
+			size_t winner = (finalScores.first > finalScores.second)? 0 : 1; // white wins : black wins. draw already evaluated
+
+			while (winner < moves.size())
+			{
+				++tempMoveHistory.at(moves.at(winner));
+				// skip losing scores
+				winner += 2; 
+			}
+
+			std::ofstream outputMovesFile("Data/Payoffs/adaptive.csv", std::ios::out);
+			if (outputMovesFile.is_open())
+			{
+				// reset position
+				pos = 0;
+
+				// output moves
+				while (pos < GRID_SIZE * GRID_SIZE)
+				{
+					outputMovesFile << tempMoveHistory.at(pos);
+
+					if (++pos < GRID_SIZE * GRID_SIZE)
+					{
+						outputMovesFile << ',';
+					}
+				}
+				outputMovesFile.close();
+			}
+			else
+			{
+				assert(false);
+			}
+
+
+
+		}
+		else
+		{
+			assert(false);
+		}
+
+		// mark as exported
+		mExportedWinningMoves = true;
+	}
+
+
 }

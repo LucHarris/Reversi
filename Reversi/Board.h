@@ -1,6 +1,6 @@
 #pragma once
 #include "Grid.h"
-
+#include <vector>
 #ifndef PLAYER_ONE
 #define PLAYER_ONE 0
 #endif // !PLAYER_ONE
@@ -64,12 +64,17 @@ private:
 	// Each cell contains number of cells that can be flipped
 	// Available moves are scores above 0.
 	ScoreGrid mScoreGrid;
+	// history of moves within active game. even elements are white, odd elements are black
+	std::vector<int> mMoveTracker;
 	// first is min second is max. Updated in GenerateScoreGrid()
 	MinMax mMinMax;
-	//Active player for buffer index
+	// Active player for buffer index
 	size_t mPlayerIndex = 0;
-	//Oppenent to active player
+	// Oppenent to active player
 	size_t mOpponentIndex = 1;
+	// validation so winning moves aren't outputted twice
+	bool mExportedWinningMoves = false;
+
 
 	// Dependant on mScoreGird populated and upto date
 	// returns if move is placed
@@ -79,9 +84,9 @@ private:
 	bool WithinLimits(const Vector2i& v)
 	{
 		return
-			v.x < GRID_SIZE&&
+			v.x < GRID_SIZE &&
 			v.x >= 0 &&
-			v.y < GRID_SIZE&&
+			v.y < GRID_SIZE &&
 			v.y >= 0;
 	}
 
@@ -96,7 +101,7 @@ public:
 	void GenerateScoreGrid();
 
 	// Negtive winning condition based on generated score grid has a valid score 
-	bool CanMove();
+	bool CanMove() const;
 
 	// Places a move for player.
 	// Required mScoreGrid to be generated for current player
@@ -150,6 +155,17 @@ public:
 		return mPlayerIndex;
 	}
 
-	int AvailableMoves() const;
+	int AvailableMoveCount() const;
+
+	// based on current scoregrid state
+	std::vector<int> GetAvailableMoves() const;
+
+	// copy of moves
+	std::vector<int> GetMoveHistory() const
+	{
+		return mMoveTracker;
+	}
+
+	void ExportWinningMoves();
 };
 

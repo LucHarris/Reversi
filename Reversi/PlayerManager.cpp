@@ -5,13 +5,13 @@
 void PlayerManager::Increment()
 {
 	// side through sides
-	if (++mActiveSide >= mPlayerSides.size())
+	if (++mActiveSide >= (int)mPlayerSides.size())
 	{
 		mActiveSide = 0;
 	}
 
 	// cycle through players on active side
-	if (++mPosition.at(mActiveSide) >= mPlayerSides.at(mActiveSide).size())
+	if (++mPosition.at(mActiveSide) >= (int)mPlayerSides.at(mActiveSide).size())
 	{
 		mPosition.at(mActiveSide) = 0;
 	}
@@ -21,15 +21,15 @@ void PlayerManager::Increment()
 Player& PlayerManager::GetActivePlayer()
 {
 	// within boundary
-	assert(mActiveSide < mPlayerSides.size());
-	assert(mPosition.at(mActiveSide) < mPlayerSides.at(mActiveSide).size());
+	assert(mActiveSide < (int)mPlayerSides.size());
+	assert(mPosition.at(mActiveSide) < (int)mPlayerSides.at(mActiveSide).size());
 
 	return mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) );
 }
 
 bool PlayerManager::AddPlayer(const Player::Type& t, int side)
 {
-	assert(side < mPlayerSides.size());
+	assert(side < (int)mPlayerSides.size());
 	if (mPlayerSides.at(side).size() < gc::MAX_PLAYERS_PER_SIDE)
 	{
 		mPlayerSides.at(side).push_back(t);
@@ -44,7 +44,7 @@ bool PlayerManager::AddPlayer(const Player::Type& t, int side)
 std::string PlayerManager::GetPlayerList(int side)
 {
 	std::string playerList = "";
-	assert(side < mPlayerSides.size());
+	assert(side < (int)mPlayerSides.size());
 
 	switch (side)
 	{
@@ -86,7 +86,7 @@ void PlayerManager::ValidatePlayers()
 
 bool PlayerManager::RemoveLast(int side)
 {
-	assert(side < mPlayerSides.size());
+	assert(side < (int)mPlayerSides.size());
 
 	if (mPlayerSides.at(side).size() > 0)
 	{
@@ -101,7 +101,7 @@ bool PlayerManager::RemoveLast(int side)
 
 void PlayerManager::ResetSide(int side)
 {
-	assert(side < mPlayerSides.size());
+	assert(side < (int)mPlayerSides.size());
 
 	mPlayerSides.at(side).clear();
 }

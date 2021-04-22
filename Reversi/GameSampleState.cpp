@@ -12,7 +12,7 @@ void GameSampleState::IncActivePlayer()
 
 	if (mPlayers.GetActivePlayer().type == Player::Type::AI)
 	{
-		mAiTimer.Restart(0.3f);
+		mAiTimer.Restart(0.00f);
 	}
 }
 
@@ -78,6 +78,8 @@ void GameSampleState::Init()
 
 	mEndText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
 	mEndText.setString("");
+
+	mPayoffMulti.Load();
 }
 
 void GameSampleState::Update(float dt)
@@ -95,7 +97,14 @@ void GameSampleState::Update(float dt)
 				// const int move = mPlayers.at(mActivePlayer).EvaluateMove(mpApp->reversiGame.GetScoreGrid());
 				// const int moveTest = mPlayers.at(mActivePlayer).EvaluateMoveFromNode(mpApp->reversiGame);;
 
-				NormalForm nf(mPlayers.GetSide(), mpApp->reversiGame);
+				size_t pp = PayoffMultipliers::EVEN;
+
+				if (mPlayers.GetSide())
+				{
+					pp = PayoffMultipliers::ADAPTIVE;
+				}
+
+				NormalForm nf(mPlayers.GetSide(), mpApp->reversiGame, mPayoffMulti.GetAt(pp));
 				
 				Timer<int,std::micro> analysisTimer;
 
@@ -106,7 +115,7 @@ void GameSampleState::Update(float dt)
 				std::ofstream timerOutFile("Data/Out/aiTimer.csv", std::ios::app);
 				if (timerOutFile.is_open())
 				{
-					timerOutFile << endTime << ',' << mpApp->reversiGame.AvailableMoves() << '\n';
+					timerOutFile << endTime << ',' << mpApp->reversiGame.AvailableMoveCount() << '\n';
 					timerOutFile.close();
 				}
 				else
@@ -137,7 +146,8 @@ void GameSampleState::Update(float dt)
 	}
 	else
 	{
-
+		// todo only called once but remove from loop if possible
+		mpApp->reversiGame.ExportWinningMoves();
 	}
 	
 
