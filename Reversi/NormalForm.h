@@ -32,11 +32,18 @@ class NormalForm
 	const std::array<int,64> mPayoffMultiplier;
 	std::vector<Entry> pureNashEqui;
 	std::vector<Entry> dominantStrategy;
+	Entry previousMove;
+	// invalid by default
+	int mOpponentMove = -1;
 
 public:
 
-    NormalForm(int agent, ReversiBoard board, const std::array<int, 64>& );
+    NormalForm( const std::array<int, 64>& );
 	
+
+	int Evalualate(int agent, ReversiBoard board, int opponentMove);
+
+
 	void ToConsole();
 
 	// @return evaluated move. -1 for invalid option

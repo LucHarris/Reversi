@@ -167,5 +167,11 @@ public:
 	}
 
 	void ExportWinningMoves();
+
+	// returns -1 if no moves
+	int GetLastMove()
+	{
+		return (mMoveTracker.empty()) ? -1: mMoveTracker.back();
+	}
 };
 

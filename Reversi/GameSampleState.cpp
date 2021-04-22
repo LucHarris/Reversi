@@ -104,8 +104,12 @@ void GameSampleState::Update(float dt)
 					pp = PayoffMultipliers::ADAPTIVE;
 				}
 
-				NormalForm nf(mPlayers.GetSide(), mpApp->reversiGame, mPayoffMulti.GetAt(pp));
-				
+				NormalForm nf(mPayoffMulti.GetAt(pp));
+
+				auto moves = mpApp->reversiGame.GetMoveHistory();
+
+
+				nf.Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
 				Timer<int,std::micro> analysisTimer;
 
 				const int dominantMove = nf.Dominant();

@@ -3,10 +3,24 @@
 #include <numeric>
 #include <iostream>
 
-NormalForm::NormalForm(int agent, ReversiBoard board, const std::array<int,64>& payoffMulti)
+NormalForm::NormalForm(const std::array<int,64>& payoffMulti)
 	:
 	mPayoffMultiplier(payoffMulti)
 {
+	
+
+}
+
+int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
+{
+	// set up for new round
+	entry.clear();
+	pureNashEqui.clear();
+	dominantStrategy.clear();
+	mOpponentMove = opponentMove;
+
+	// generates normal form based on board scores
+
 	ScoreGrid scoreGrid = board.GetScoreGrid();
 
 	// level 1
@@ -66,11 +80,57 @@ NormalForm::NormalForm(int agent, ReversiBoard board, const std::array<int,64>& 
 
 	ToConsole();
 
+	CalcPureNashMax();
+	CalculateDominantMax();
+	GeneratePureNashEquilib();
+	GenerateDominant();
+
+	bool actDominant = 1;
+
+	// valid
+	if (previousMove.key[0] >= 0 && mOpponentMove >= 0)
+	{
+		// opponent cooperated and available nash
+		if (pureNashEqui.size() > 0 && mOpponentMove == previousMove.key[1])
+		{
+			actDominant = 0;
+		}
+	}
+
+	int move = -1;
+
+	if (actDominant)
+	{
+		int m = dominantStrategy.at(rand() % dominantStrategy.size()).key[0];
+		move = m;
+	}
+	else
+	{
+		int m = pureNashEqui.at(rand() % pureNashEqui.size()).key[0];
+		move = m;
+	}
+
+
+	assert(move >= 0);
+	return move;
 }
 
 void NormalForm::ToConsole()
 {
+	std::cout << "\nall payoff";
 	for (auto& e : entry)
+	{
+		e.ToConsole();
+	}
+
+	std::cout << "\npure nash";
+	for (auto& e : pureNashEqui)
+	{
+		e.ToConsole();
+	}
+	std::cout << "\ndom";
+
+	for (auto& e : dominantStrategy)
 	{
 		e.ToConsole();
 	}
@@ -132,7 +192,9 @@ int NormalForm::Dominant()
 		//entry.push_back({ {2,5},{40,50},{-1,-1} });
 
 		CalcPureNashMax();
+		CalculateDominantMax();
 		GeneratePureNashEquilib();
+		GenerateDominant();
 
 		//CalculateDominantMax();
 		//EliminateActions();
@@ -395,15 +457,6 @@ void NormalForm::GeneratePureNashEquilib()
 {
 	std::copy_if(entry.begin(), entry.end(), std::back_inserter(pureNashEqui), &Entry::IsPureNash);
 
-
-	// copies any pure nash equilib entries
-	/*std::copy_if(entry.begin(), entry.end(),std::back_inserter(pureNashEqui),[](const Entry& e) 
-		{
-			return 
-				e.key[0] == e.nash[0] &&
-				e.key[1] == e.nash[1]
-				;
-		});*/
 }
 
 void Entry::ToConsole() const
@@ -411,7 +464,8 @@ void Entry::ToConsole() const
 	std::cout
 		<< "\nkey[ " << key[0] << " , " << key[1] << " ]"
 		<< " payoff[ " << payoff[0] << " , " << payoff[1] << " ]"
-		<< " max[ " << max[0] << " , " << max[1] << " ]";
+		<< " max[ " << max[0] << " , " << max[1] << " ]" 
+		<< " nask[ " << nash[0] << " , " << nash[1] << " ]";
 
 }
 
