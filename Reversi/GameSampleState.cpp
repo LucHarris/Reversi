@@ -80,6 +80,9 @@ void GameSampleState::Init()
 	mEndText.setString("");
 
 	mPayoffMulti.Load();
+
+	mAiNormalForm[0].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
+	mAiNormalForm[1].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
 }
 
 void GameSampleState::Update(float dt)
@@ -97,22 +100,15 @@ void GameSampleState::Update(float dt)
 				// const int move = mPlayers.at(mActivePlayer).EvaluateMove(mpApp->reversiGame.GetScoreGrid());
 				// const int moveTest = mPlayers.at(mActivePlayer).EvaluateMoveFromNode(mpApp->reversiGame);;
 
-				size_t pp = PayoffMultipliers::EVEN;
-
-				if (mPlayers.GetSide())
-				{
-					pp = PayoffMultipliers::ADAPTIVE;
-				}
-
-				NormalForm nf(mPayoffMulti.GetAt(pp));
-
-				auto moves = mpApp->reversiGame.GetMoveHistory();
-
-
-				nf.Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
+				
 				Timer<int,std::micro> analysisTimer;
 
-				const int dominantMove = nf.Dominant();
+				//NormalForm nf(mPayoffMulti.GetAt(pp),mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
+
+				const int move = mAiNormalForm[mPlayers.GetSide()].Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
+				//const int move = mAiNormalForm.Dominant();
+
+
 
 				const int endTime = analysisTimer.elapsed();
 
@@ -129,7 +125,7 @@ void GameSampleState::Update(float dt)
 
 
 				// successful move 
-				if (mDiscSprites.Move(dominantMove))
+				if (mDiscSprites.Move(move))
 				{
 					if (mpApp->reversiGame.CanMove())
 					{
@@ -206,7 +202,14 @@ void GameSampleState::KeyInput(sf::Keyboard::Key key)
 
 void GameSampleState::Reset()
 {
+	mAiNormalForm[0] = NormalForm();
+	mAiNormalForm[1] = NormalForm();
+
+	mAiNormalForm[0].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
+	mAiNormalForm[1].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
+
 	mEndText.setString("");
 	mpApp->reversiGame.Initialize();
 	mPlayers = mpApp->PlayerSelection;
+
 }

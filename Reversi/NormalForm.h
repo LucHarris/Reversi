@@ -18,7 +18,8 @@ struct Entry
 	int max[2]{ -1,-1 };
 	// when key elements equal nash elements then
 	int nash[2]{ -1,-1 };
-
+	// expected utility for mixed strategy
+	float expUtil[2]{ -1.0f,-1.0f };
     void ToConsole() const;
 
 	//bool IsPureNash() const;
@@ -27,21 +28,24 @@ struct Entry
 
 class NormalForm
 {
-	Matrix mMatrix;
+	ScoreGrid mProb;
 	std::vector<Entry> entry;
-	const std::array<int,64> mPayoffMultiplier;
+	std::array<int,64> mPayoffMultiplier;
 	std::vector<Entry> pureNashEqui;
 	std::vector<Entry> dominantStrategy;
-	Entry previousMove;
+	std::map<int, int> mExpectedUtilTotal[2];
+	std::vector <Entry> previousMove;
 	// invalid by default
 	int mOpponentMove = -1;
 
 public:
 
-    NormalForm( const std::array<int, 64>& );
-	
+	NormalForm();
+    //NormalForm( const std::array<int, 64>& payoffMulti, const ScoreGrid& prob);
 
+	void Init(const std::array<int, 64>&, const ScoreGrid& prob);
 	int Evalualate(int agent, ReversiBoard board, int opponentMove);
+	void Reset();
 
 
 	void ToConsole();
@@ -54,7 +58,6 @@ private:
     void CalculateDominantMax();
 	void CalcPureNashMax();
     
-    void EliminateActions();
    
     void GeneratePayoffs(const ReversiBoard& board,int& p1,int& p2);
 
@@ -62,5 +65,7 @@ private:
 	void GenerateDominant();
 	void GeneratePureNashEquilib();
 
-	void GenerateMixedNashEqilib();
+	std::pair<float,float> CalcMixedNash(std::vector<Entry>& entries);
+	int GetMixedMove(std::vector<Entry>& entries);
+	void Test();
 };

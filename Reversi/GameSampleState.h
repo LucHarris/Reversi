@@ -6,6 +6,7 @@
 #include "Node.h"
 #include "PlayerManager.h"
 #include "PayoffMultipliers.h"
+#include "NormalForm.h"
 
 class GameSampleState :    public State
 {
@@ -16,8 +17,9 @@ class GameSampleState :    public State
 	DeltaCountdownTimer mAiTimer;
 	sf::Text mEndText;
 	PayoffMultipliers mPayoffMulti;
+	// ai structure for each side 
+	NormalForm mAiNormalForm[2];
 	
-
 	// increments active player for next turn
 	void IncActivePlayer();
 	// sets active player to invalid for update and input logic. sets end text
