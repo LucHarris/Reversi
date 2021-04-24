@@ -246,15 +246,13 @@ bool ReversiBoard::Move(int a)
 
 void ReversiBoard::ToConsole()
 {
-	std::cout
+	/*std::cout
 		<< "\n--------------------\n"
 		<< "Player " << GetActivePlayerDisc() << " Turn... mPlayerIndex = " << mPlayerIndex << " "
 		<< "\n--------------------\n"
 		;
 
 	mDiscGrid.to_console();
-	std::cout << "\n";
-	mDiscGridBackup.to_console();
 	std::cout << "\n";
 
 	mScoreGrid.to_console();
@@ -263,7 +261,7 @@ void ReversiBoard::ToConsole()
 		<< "\n\tMin Score: " << mMinMax.first.score << "\tPos:" << mMinMax.first.position.x << "," << mMinMax.first.position.y << "\n"
 		<< "\n\tMax Score: " << mMinMax.second.score << "\tPos:" << mMinMax.second.position.x << "," << mMinMax.second.position.y << "\n"
 		;
-	std::cout << "\n";
+	std::cout << "\n";*/
 }
 
 

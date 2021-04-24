@@ -38,7 +38,6 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 
 	mOpponentMove = opponentMove;
 
-	
 
 	// generates normal form based on board scores
 
@@ -93,18 +92,9 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 		entry.push_back({ {-1,-1},{0,100},{-1,-1} });
 	}
 
-	std::cout << "\n--start---------------------";
-	std::cout << "\nAll entries for agent: " << agent;
+	//std::cout << "\n--start---------------------";
+	//std::cout << "\nAll entries for agent: " << agent;
 
-
-
-
-	CalcPureNashMax();
-	GeneratePureNashEquilib();
-	CalculateDominantMax();
-	GenerateDominant();
-
-	
 
 	ToConsole();
 	bool actDominant = true;
@@ -123,8 +113,18 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 
 		if (found != previousMove.end() )
 		{
-			if (Entry::IsPureNash(*found))
+			if (Entry::IsPureNash(*found) || mOpponentMove < 0)
 			{
+				std::cout
+					<< "\n------------"
+					<< "\n------------"
+					<< "\n------------"
+					<< "\n choice to coop"
+					<< "\n------------"
+					<< "\n------------"
+					<< "\n------------"
+					;
+
 				actDominant = false;
 			}
 		}
@@ -135,14 +135,15 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 		}
 	}
 
-
-
-
+	CalculateDominantMax();
+	CalcPureNashMax();
 
 	int move = -1;
 
 	if (actDominant)
 	{
+		GenerateDominant();
+
 		if (!dominantStrategy.empty())
 		{
 			move = GetMixedMove(dominantStrategy);
@@ -154,6 +155,8 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 	}
 	else
 	{
+		GeneratePureNashEquilib();
+
 		if (!pureNashEqui.empty())
 		{
 			move = GetMixedMove(pureNashEqui);
@@ -179,7 +182,7 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 
 void NormalForm::ToConsole()
 {
-	std::cout << "\nall payoff";
+	/*std::cout << "\nall payoff";
 	for (auto& e : entry)
 	{
 		e.ToConsole();
@@ -195,7 +198,7 @@ void NormalForm::ToConsole()
 	for (auto& e : dominantStrategy)
 	{
 		e.ToConsole();
-	}
+	}*/
 }
 
 void NormalForm::GenerateDominant()
@@ -550,7 +553,9 @@ std::pair<float, float> NormalForm::CalcMixedNash(std::vector<Entry>& entries)
 				}
 			}
 			float sum = 0.0f;
+			
 
+			// sums of all posibilities equals 1.0f
 			for (auto& e : entries)
 			{
 				sum += e.expUtil[0] * e.expUtil[1];
@@ -560,19 +565,21 @@ std::pair<float, float> NormalForm::CalcMixedNash(std::vector<Entry>& entries)
 
 			float chancePlayOptim[2]{ 0,0 };
 
+			prob.first  = 0.0f;
+			prob.second = 0.0f;
+
 			for (auto& e : entries)
 			{
-				chancePlayOptim[0] += e.payoff[0] * e.expUtil[0];
-				chancePlayOptim[1] += e.payoff[1] * e.expUtil[1];
+				prob.first += e.payoff[0] * e.expUtil[0];
+				prob.second += e.payoff[1] * e.expUtil[1];
 
 			}
-			std::cout << "\n mixed [0] = " << chancePlayOptim[0] << " [1] = " << chancePlayOptim[1];
 
 			prob.first = chancePlayOptim[0];
 			prob.second = chancePlayOptim[1];
+
+			std::cout << "\n mixed [0] = " << prob.first << " [1] = " << prob.second;
 		}
-
-
 	}
 
 	return prob;
@@ -595,8 +602,25 @@ int NormalForm::GetMixedMove(std::vector<Entry>& entries)
 		{
 			return e.payoff[maxPlayer] < f.payoff[maxPlayer];
 		});
+
+	std::vector<Entry> maxEntries;
 	
-	return move->key[0];
+	// all emements with max payoff
+	std::copy_if(entries.begin(), entries.end(), std::back_inserter(maxEntries), [&](const Entry& e) 
+		{
+			return e.payoff[maxPlayer] >= move->payoff[maxPlayer];
+		});
+
+	// choose from any element with max payoff for variation
+	if (!maxEntries.empty())
+	{
+		return maxEntries.at(rand() % maxEntries.size()).key[0];
+	}
+	else
+	{
+		return move->key[0];
+		assert(false);
+	}
 }
 
 void NormalForm::Reset()
@@ -608,7 +632,6 @@ void NormalForm::Test()
 {
 	NormalForm nf = *this;
 	
-
 	entry.clear();
 	entry.push_back({ {1,3},{330,10},{-1,-1} });
 	entry.push_back({ {2,3},{20,20},{-1,-1} });
@@ -638,11 +661,10 @@ void Entry::ToConsole() const
 	std::cout
 		<< "\nkey[ " << key[0] << " , " << key[1] << " ]"
 		<< " payoff[ " << payoff[0] << " , " << payoff[1] << " ]"
-		<< " max[ " << max[0] << " , " << max[1] << " ]" 
-		<< " nask[ " << nash[0] << " , " << nash[1] << " ]"
-		<< " nask[ " << expUtil[0] << " , " << expUtil[1] << " ]"
+		<< " max[ " << max[0] << " , " << max[1] << " ]"
+		<< " nash[ " << nash[0] << " , " << nash[1] << " ]"
+		<< " equi[ " << expUtil[0] << " , " << expUtil[1] << " ]"
 		;
-
 }
 
 bool Entry::IsPureNash(const Entry& e)
