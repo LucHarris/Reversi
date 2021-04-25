@@ -18,31 +18,27 @@ void NormalForm::Init(const std::array<int, 64>& payoffMulti, const ScoreGrid& p
 
 	mProb = prob;
 
-	// validate 
+	// validation
 	auto min = std::min_element(mProb.begin(), mProb.end());
 	assert(*min > 0);
-
-	dominantStrategy.reserve(64);
-	pureNashEqui.reserve(64);
-	entry.reserve(64);
 }
 
 int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 {
 	// set up for new round
-	entry.clear();
-	pureNashEqui.clear();
-	dominantStrategy.clear();
+	mAllStrategies.clear();
+	mPureNash.clear();
+	mDominantStrategies.clear();
 	mExpectedUtilTotal[0].clear();
 	mExpectedUtilTotal[1].clear();
 
 	mOpponentMove = opponentMove;
 
-
 	// generates normal form based on board scores
 
 	ScoreGrid scoreGrid = board.GetScoreGrid();
 
+	// simulates all possibilities in the game
 	// level 1
 	if (board.CanMove())
 	{
@@ -75,35 +71,31 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 									std::swap(po1, po2);
 								}
 
-								entry.push_back({ {i,j},{po1,po2},{-1,-1} });
+								mAllStrategies.push_back({ {i,j},{po1,po2},{-1,-1} });
 							}
 						}
 					}
 				}
 				else
 				{
-					entry.push_back({ {i,-1},{100,0},{-1,-1} });
+					mAllStrategies.push_back({ {i,-1},{100,0},{-1,-1} });
 				}
 			}
 		}
 	}
 	else
 	{
-		entry.push_back({ {-1,-1},{0,100},{-1,-1} });
+		// default invalid entry
+		mAllStrategies.push_back({ {-1,-1},{0,100},{-1,-1} });
 	}
 
-	//std::cout << "\n--start---------------------";
-	//std::cout << "\nAll entries for agent: " << agent;
-
-
-	ToConsole();
 	bool actDominant = true;
 
 	// valid
-	if (!previousMove.empty())
+	if (!mPreviousMove.empty())
 	{
-		// looks previous game
-		auto found = std::find_if(previousMove.begin(), previousMove.end(), [&](const Entry& e) 
+		// looks for previous game
+		auto found = std::find_if(mPreviousMove.begin(), mPreviousMove.end(), [&](const Entry& e) 
 			{
 				return
 					mOpponentMove < 0 || // no previous move
@@ -111,20 +103,12 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 					;
 			});
 
-		if (found != previousMove.end() )
+
+		// decide if cooperative
+		if (found != mPreviousMove.end() )
 		{
 			if (Entry::IsPureNash(*found) || mOpponentMove < 0)
 			{
-				std::cout
-					<< "\n------------"
-					<< "\n------------"
-					<< "\n------------"
-					<< "\n choice to coop"
-					<< "\n------------"
-					<< "\n------------"
-					<< "\n------------"
-					;
-
 				actDominant = false;
 			}
 		}
@@ -140,38 +124,40 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 
 	int move = -1;
 
+	// if unable to determine a single course of action evaluate with mixed strategy
 	if (actDominant)
 	{
 		GenerateDominant();
 
-		if (!dominantStrategy.empty())
+		if (!mDominantStrategies.empty())
 		{
-			move = GetMixedMove(dominantStrategy);
+			move = GetMixedMove(mDominantStrategies);
 		}
 		else // empty or multiple 
 		{
-			move = GetMixedMove(entry);
+			move = GetMixedMove(mAllStrategies);
 		}
 	}
 	else
 	{
 		GeneratePureNashEquilib();
 
-		if (!pureNashEqui.empty())
+		if (!mPureNash.empty())
 		{
-			move = GetMixedMove(pureNashEqui);
+			move = GetMixedMove(mPureNash);
 		}
 		else // empty or multiple 
 		{
-			move = GetMixedMove(entry);
+			move = GetMixedMove(mAllStrategies);
 		}
 	}
 
 
 	assert(move >= 0);
 
-	previousMove.clear();
-	std::copy_if(entry.begin(), entry.end(), std::back_inserter(previousMove), [&move](const Entry& e) 
+	// updates previous move for next round
+	mPreviousMove.clear();
+	std::copy_if(mAllStrategies.begin(), mAllStrategies.end(), std::back_inserter(mPreviousMove), [&move](const Entry& e) 
 		{
 			return e.key[0] == move;
 		});
@@ -182,48 +168,50 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 
 void NormalForm::ToConsole()
 {
-	/*std::cout << "\nall payoff";
-	for (auto& e : entry)
+	/*
+	std::cout << "\nall payoff";
+	for (auto& e : mAllStrategies)
 	{
 		e.ToConsole();
 	}
 
 	std::cout << "\npure nash";
-	for (auto& e : pureNashEqui)
+	for (auto& e : mPureNash)
 	{
 		e.ToConsole();
 	}
 	std::cout << "\ndom";
 
-	for (auto& e : dominantStrategy)
+	for (auto& e : mDominantStrategies)
 	{
 		e.ToConsole();
-	}*/
+	}
+	*/
 }
 
 void NormalForm::GenerateDominant()
 {
-	dominantStrategy = entry;
-
+	mDominantStrategies = mAllStrategies;
 
 	int p = 0;
 	bool dominant[2]{ false,false };
 
-	while (!(dominant[0] || dominant[1]) && dominantStrategy.size() > 0)
+	// elimiante strategies
+	while (!(dominant[0] || dominant[1]) && mDominantStrategies.size() > 0)
 	{
 		int player = p % 2;
 
-		auto minmax = std::minmax_element(dominantStrategy.begin(), dominantStrategy.end(), [player](const Entry& lhs, const Entry& rhs)
+		auto minmax = std::minmax_element(mDominantStrategies.begin(), mDominantStrategies.end(), [player](const Entry& lhs, const Entry& rhs)
 			{
 				return lhs.max[player] < rhs.max[player];
 			});
 
 		if (minmax.first->max[player] != minmax.second->max[player])
 		{
-			dominantStrategy.erase(std::remove_if(dominantStrategy.begin(), dominantStrategy.end(), [player, &minmax](const Entry& e)
+			mDominantStrategies.erase(std::remove_if(mDominantStrategies.begin(), mDominantStrategies.end(), [player, &minmax](const Entry& e)
 				{
 					return e.max[player] == minmax.first->max[player];
-				}), dominantStrategy.end());
+				}), mDominantStrategies.end());
 		}
 		else
 		{
@@ -235,125 +223,44 @@ void NormalForm::GenerateDominant()
 	}
 }
 
-int NormalForm::Dominant()
-{
-
-	std::cout << "\nDom start";
-	//todo delete
-	{
-		auto temp = entry;
-
-		std::cout << "\n  eg\n";
-
-		entry.clear();
-		entry.push_back({ {1,3},{30,10},{-1,-1} });
-		entry.push_back({ {2,3},{20,20},{-1,-1} });
-
-		entry.push_back({ {1,4},{00,00},{-1,-1} });
-		entry.push_back({ {2,4},{20,20},{-1,-1} });
-
-		//entry.push_back({ {1,5},{50,40},{-1,-1} });
-		//entry.push_back({ {2,5},{40,50},{-1,-1} });
-
-		CalcPureNashMax();
-		CalculateDominantMax();
-		GeneratePureNashEquilib();
-		GenerateDominant();
-
-		//CalculateDominantMax();
-		//EliminateActions();
-
-		ToConsole();
-		std::cout << "\n";
-		entry = temp;
-	}
-
-
-
-	CalculateDominantMax();
-	std::cout << "\n";
-	ToConsole();
-	std::cout << "\n";
-	std::cout << "\nRemaining entries";
-	ToConsole();
-
-
-	
-
-	// todo remove logic
-	// true chooses max payoff[0]
-	// false randomly selects from remaining options for variety
-	if (false)
-	{
-		// decide on remaining actions
-		auto ret = std::max_element(entry.begin(), entry.end(), [](const Entry& lhs, const Entry& rhs)
-			{
-				return lhs.payoff[0] < rhs.payoff[0];
-			});
-
-		std::cout << "\nReturn entry";
-		if (ret != entry.end())
-		{
-			ret->ToConsole();
-		}
-		else
-		{
-			std::cout << "\nNONE returning -1";
-		}
-
-		std::cout << "\n--end---------------------";
-		std::cout << "\ndom end";
-
-		return (ret != entry.end()) ? ret->key[0] : -1;
-	}
-	else
-	{
-		std::cout << "\ndom end with rand!!!";
-
-		return (entry.size() > 0) ? entry.at(rand() % entry.size()).key[0] : -1;
-	}
-
-
-}
-
 void NormalForm::CalculateDominantMax()
 {
 	// Get max for each action for players
 	for (int p = 2; p > 0; --p)
 	{
 		const int player = p % 2;
-		std::sort(entry.begin(), entry.end(), [player](const Entry& lhs, const Entry& rhs)
+		std::sort(mAllStrategies.begin(), mAllStrategies.end(), [player](const Entry& lhs, const Entry& rhs)
 			{
 				return lhs.key[player] < rhs.key[player];
 			});
 
 		// first of action a
-		std::vector<Entry>::iterator first = entry.begin();
+		std::vector<Entry>::iterator first = mAllStrategies.begin();
 		// last of action a
 		std::vector<Entry>::iterator last = first;
 		// find key for player
 		std::vector <Entry> find(1);
 
-		while (first != entry.end() && last != entry.end())
+		while (first != mAllStrategies.end() && last != mAllStrategies.end())
 		{
 			// set action to find
 			find[0] = *first;
 
-			// find last entry
-			last = std::find_end(entry.begin(), entry.end(), find.begin(), find.end(), [player](const Entry& lhs, const Entry& rhs)
+			// find last mAllStrategies
+			last = std::find_end(mAllStrategies.begin(), mAllStrategies.end(), find.begin(), find.end(), [player](const Entry& lhs, const Entry& rhs)
 				{
 					return lhs.key[player] == rhs.key[player];
 				});
 
 			// set max for each action
-			if (last != entry.end())
+			if (last != mAllStrategies.end())
 			{
 				std::vector<Entry>::iterator max = std::max_element(first, last, [player](const Entry& lhs, const Entry& rhs)
 					{
 						return lhs.payoff[player] < rhs.payoff[player];
 					});
 
-				for (auto& e : entry)
+				for (auto& e : mAllStrategies)
 				{
 					if (e.key[player] == max->key[player])
 					{
@@ -372,7 +279,7 @@ void NormalForm::CalculateDominantMax()
 	// sorted by second player key 
 	// reset sorting for debugging
 	// todo remove 
-	std::sort(entry.begin(), entry.end(), [](const Entry& lhs, const Entry& rhs)
+	std::sort(mAllStrategies.begin(), mAllStrategies.end(), [](const Entry& lhs, const Entry& rhs)
 		{
 			return lhs.key[0] < rhs.key[0];
 		});
@@ -385,33 +292,33 @@ void NormalForm::CalcPureNashMax()
 	{
 		const int player = p % 2; // 2 -> 0 && 1 -> 1
 		const int sortByPlayer = 1 - player;
-		std::sort(entry.begin(), entry.end(), [sortByPlayer](const Entry& lhs, const Entry& rhs)
+		std::sort(mAllStrategies.begin(), mAllStrategies.end(), [sortByPlayer](const Entry& lhs, const Entry& rhs)
 			{
 				return lhs.key[sortByPlayer] < rhs.key[sortByPlayer];
 			});
 
 		// first of action a
-		std::vector<Entry>::iterator first = entry.begin();
+		std::vector<Entry>::iterator first = mAllStrategies.begin();
 		// last of action a
 		std::vector<Entry>::iterator last = first;
 		// find key for player
 		std::vector <Entry> find(1);
 
 		// every opponent strategy
-		while (first != entry.end() && last != entry.end())
+		while (first != mAllStrategies.end() && last != mAllStrategies.end())
 		{
 			// set action to find
 			find[0] = *first;
 
-			// find last entry
-			last = std::find_end(entry.begin(), entry.end(), find.begin(), find.end(), [sortByPlayer](const Entry& lhs, const Entry& rhs)
+			// find last mAllStrategies
+			last = std::find_end(mAllStrategies.begin(), mAllStrategies.end(), find.begin(), find.end(), [sortByPlayer](const Entry& lhs, const Entry& rhs)
 				{
 					return lhs.key[sortByPlayer] == rhs.key[sortByPlayer];
 				});
 
 			// set max for each action
 			// best response first player
-			if (last != entry.end())
+			if (last != mAllStrategies.end())
 			{
 				++last;
 				std::vector<Entry>::iterator max = std::max_element(first, last, [player](const Entry& lhs, const Entry& rhs)
@@ -437,7 +344,7 @@ void NormalForm::CalcPureNashMax()
 	// sorted by second player key 
 	// reset sorting for debugging
 	// todo remove 
-	std::sort(entry.begin(), entry.end(), [](const Entry& lhs, const Entry& rhs)
+	std::sort(mAllStrategies.begin(), mAllStrategies.end(), [](const Entry& lhs, const Entry& rhs)
 		{
 			return lhs.key[0] < rhs.key[0];
 		});
@@ -504,7 +411,7 @@ void NormalForm::GeneratePayoffs(const ReversiBoard& board, int& p1, int& p2)
 
 void NormalForm::GeneratePureNashEquilib()
 {
-	std::copy_if(entry.begin(), entry.end(), std::back_inserter(pureNashEqui), &Entry::IsPureNash);
+	std::copy_if(mAllStrategies.begin(), mAllStrategies.end(), std::back_inserter(mPureNash), &Entry::IsPureNash);
 }
 
 std::pair<float, float> NormalForm::CalcMixedNash(std::vector<Entry>& entries)
@@ -531,12 +438,12 @@ std::pair<float, float> NormalForm::CalcMixedNash(std::vector<Entry>& entries)
 				}
 			}
 
+			// change of action in strategies
 			for (auto& e : entries)
 			{
 				if (e.key[0] >= 0)
 				{
 					e.expUtil[0] = (float)mProb.at(e.key[0]) / (float)mExpectedUtilTotal[0][e.key[0]];
-
 				}
 				else
 				{
@@ -561,10 +468,6 @@ std::pair<float, float> NormalForm::CalcMixedNash(std::vector<Entry>& entries)
 				sum += e.expUtil[0] * e.expUtil[1];
 			}
 
-			std::cout << "\nMixed validation = " << sum;
-
-			float chancePlayOptim[2]{ 0,0 };
-
 			prob.first  = 0.0f;
 			prob.second = 0.0f;
 
@@ -572,26 +475,20 @@ std::pair<float, float> NormalForm::CalcMixedNash(std::vector<Entry>& entries)
 			{
 				prob.first += e.payoff[0] * e.expUtil[0];
 				prob.second += e.payoff[1] * e.expUtil[1];
-
 			}
-
-			prob.first = chancePlayOptim[0];
-			prob.second = chancePlayOptim[1];
-
-			std::cout << "\n mixed [0] = " << prob.first << " [1] = " << prob.second;
 		}
 	}
 
 	return prob;
-
 }
 
 int NormalForm::GetMixedMove(std::vector<Entry>& entries)
 {
-
+	// player 1
 	int maxPlayer = 0;
 	auto p = CalcMixedNash(entries);
 
+	// player 2
 	if (p.second > p.first)
 	{
 		maxPlayer = 1;
@@ -628,34 +525,6 @@ void NormalForm::Reset()
 	mOpponentMove = -1;
 }
 
-void NormalForm::Test()
-{
-	NormalForm nf = *this;
-	
-	entry.clear();
-	entry.push_back({ {1,3},{330,10},{-1,-1} });
-	entry.push_back({ {2,3},{20,20},{-1,-1} });
-
-	entry.push_back({ {1,4},{00,00},{-1,-1} });
-	entry.push_back({ {2,4},{20,20},{-1,-1} });
-
-	//entry.push_back({ {1,5},{50,40},{-1,-1} });
-	//entry.push_back({ {2,5},{40,50},{-1,-1} });
-
-	CalcPureNashMax();
-	CalculateDominantMax();
-	GeneratePureNashEquilib();
-	GenerateDominant();
-	//CalcMixedNash();
-	std::cout << "\n-------test start";
-	ToConsole();
-	std::cout << "\n-------test end";
-
-
-	
-	*this = nf;
-}
-
 void Entry::ToConsole() const
 {
 	std::cout
@@ -678,7 +547,6 @@ bool Entry::IsPureNash(const Entry& e)
 	const bool isNash =
 		e.payoff[0] == e.nash[0] &&
 		e.payoff[1] == e.nash[1];
-
 
 	return valid && isNash;
 }

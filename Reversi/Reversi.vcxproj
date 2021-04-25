@@ -181,6 +181,9 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="DeltaTimer.cpp" />
     <ClCompile Include="Discs.cpp" />
+    <ClCompile Include="ExampleBoard3.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Fader.cpp" />
     <ClCompile Include="GameSampleState.cpp" />
     <ClCompile Include="Grid.cpp" />

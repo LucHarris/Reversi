@@ -29,43 +29,27 @@ struct Entry
 class NormalForm
 {
 	ScoreGrid mProb;
-	std::vector<Entry> entry;
+	std::vector<Entry> mAllStrategies;
 	std::array<int,64> mPayoffMultiplier;
-	std::vector<Entry> pureNashEqui;
-	std::vector<Entry> dominantStrategy;
+	std::vector<Entry> mPureNash;
+	std::vector<Entry> mDominantStrategies;
 	std::map<int, int> mExpectedUtilTotal[2];
-	std::vector <Entry> previousMove;
+	std::vector <Entry> mPreviousMove;
 	// invalid by default
 	int mOpponentMove = -1;
 
 public:
-
 	NormalForm();
-    //NormalForm( const std::array<int, 64>& payoffMulti, const ScoreGrid& prob);
-
-	void Init(const std::array<int, 64>&, const ScoreGrid& prob);
+	void Init(const std::array<int, 64>& payoffMulti, const ScoreGrid& prob);
 	int Evalualate(int agent, ReversiBoard board, int opponentMove);
 	void Reset();
-
-
 	void ToConsole();
-
-	// @return evaluated move. -1 for invalid option
-    int Dominant();
-
-
 private:
     void CalculateDominantMax();
 	void CalcPureNashMax();
-    
-   
     void GeneratePayoffs(const ReversiBoard& board,int& p1,int& p2);
-
-
 	void GenerateDominant();
 	void GeneratePureNashEquilib();
-
 	std::pair<float,float> CalcMixedNash(std::vector<Entry>& entries);
 	int GetMixedMove(std::vector<Entry>& entries);
-	void Test();
 };

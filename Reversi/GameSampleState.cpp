@@ -1,7 +1,6 @@
 #include "GameSampleState.h"
 #include "ReversiSFML.h"
 #include "Constants.h"
-
 #include "NormalForm.h"
 #include "Utility.h"
 #include "Timer.h"
@@ -211,5 +210,5 @@ void GameSampleState::Reset()
 	mEndText.setString("");
 	mpApp->reversiGame.Initialize();
 	mPlayers = mpApp->PlayerSelection;
-
+	mDiscSprites.UpdateDiscs();
 }
