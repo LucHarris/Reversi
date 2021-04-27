@@ -5,9 +5,10 @@
 
 class MainMenuState : public State
 {
+	enum{BTN_SINGLE_GAME = 0, BTN_HOST_GAME,BTN_JOIN_GAME,BTN_COUNT};
 	sf::Sprite mLogoStretch;
 	sf::Sprite mLogo;
-	std::array<MenuButton,2> mButtons;
+	std::array<MenuButton, BTN_COUNT> mButtons;
 public:
 	MainMenuState(ReversiSFML* app) ;
 	virtual void Init() override;

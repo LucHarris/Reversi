@@ -108,6 +108,9 @@
     <ClInclude Include="PayoffMultipliers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkState.h">
+      <Filter>Header Files\SFML\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="ExampleBoard3.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkState.cpp">
+      <Filter>Source Files\SFML\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

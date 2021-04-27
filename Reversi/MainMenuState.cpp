@@ -6,7 +6,7 @@
 MainMenuState::MainMenuState(ReversiSFML* app)
 	:
 	State(app),
-	mButtons{app,app}
+	mButtons{app,app,app}
 {
 }
 
@@ -27,8 +27,9 @@ void MainMenuState::Init()
 	mLogo.setPosition(gc::VIEWPORT_WIDTH_F * 0.5f, gc::VIEWPORT_HEIGHT_F * logoRelPosY);
 	mLogoStretch.setPosition(0.0f, gc::VIEWPORT_HEIGHT_F * logoRelPosY);
 
-	mButtons.at(0).Init("Start 1 Player Game", 0.5f);
-	mButtons.at(1).Init("Start 2 Player Game", 0.65f);
+	mButtons.at(BTN_SINGLE_GAME).Init("Single Player Game", 0.5f);
+	mButtons.at(BTN_HOST_GAME).Init("Host Game", 0.65f);
+	mButtons.at(BTN_JOIN_GAME).Init("Join Game", 0.80f);
 }
 
 void MainMenuState::Update(float dt)
@@ -49,10 +50,26 @@ void MainMenuState::Render(float dt)
 
 void MainMenuState::MouseInput(const sf::Vector2f& pos)
 {
-	if (mButtons.at(0).Contains(pos))
+	if (mButtons.at(BTN_SINGLE_GAME).Contains(pos))
 	{
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_PLAYER_SELECTION);
 		mpApp->resources.Play(Resources::SOUND_CLICK,mpApp->masterVolume);
+	}
+
+	if (mButtons.at(BTN_HOST_GAME).Contains(pos))
+	{
+		// todo start hosting
+		//mpApp->stateManager.ChangeState(???);
+		mpApp->gameType = ReversiSFML::GameType::HOST;
+		mpApp->stateManager.ChangeState(gc::STATE_INDEX_NETWORK, true);
+		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+	}
+
+	if (mButtons.at(BTN_JOIN_GAME).Contains(pos))
+	{
+		mpApp->gameType = ReversiSFML::GameType::JOIN;
+		mpApp->stateManager.ChangeState(gc::STATE_INDEX_NETWORK, true);
+		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
 }
 

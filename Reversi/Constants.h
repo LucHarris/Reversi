@@ -8,8 +8,8 @@
 
 namespace gc
 {
+	// todo rename for naming convention
 	const std::string AppTitle = "Reversi";
-
 
 	const unsigned int
 		VIEWPORT_WIDTH_U = 1280,
@@ -21,7 +21,8 @@ namespace gc
 		STATE_INDEX_GAME_SAMPLE = 1,
 		STATE_INDEX_PLAYER_SELECTION = 2,
 		STATE_INDEX_PROFILE = 3,
-		NUM_STATES = 4,
+		STATE_INDEX_NETWORK = 4,
+		NUM_STATES = 5,
 
 		BOARD_DISC_ROW_SIZE = 8,
 		BOARD_DISC_SIZE = BOARD_DISC_ROW_SIZE * BOARD_DISC_ROW_SIZE,

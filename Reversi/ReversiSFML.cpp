@@ -58,10 +58,12 @@ void ReversiSFML::Run()
 				stateManager.KeyInput(sfEvent.key.code);
 				break;
 			case sf::Event::TextEntered:
-				if (sfEvent.text.unicode < 128 && sfEvent.text.unicode >= 32)
+
+				stateManager.TextEntered(sfEvent.text.unicode);
+				/*if (sfEvent.text.unicode < 128 && sfEvent.text.unicode >= 32)
 				{
 					stateManager.TextEntered(sfEvent.text.unicode);
-				}
+				}*/
 				break;
 			default:
 				break;

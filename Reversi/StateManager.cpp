@@ -7,6 +7,7 @@
 #include "ReversiSFML.h"
 #include "Constants.h"
 #include "ProfileState.h"
+#include "NetworkState.h"
 
 void StateManager::InitStates()
 {
@@ -14,6 +15,7 @@ void StateManager::InitStates()
 	mStates.at(gc::STATE_INDEX_GAME_SAMPLE) = std::make_unique<GameSampleState>(mpApp);
 	mStates.at(gc::STATE_INDEX_PLAYER_SELECTION) = std::make_unique<SelectionState>(mpApp);
 	mStates.at(gc::STATE_INDEX_PROFILE) = std::make_unique<ProfileState>(mpApp);
+	mStates.at(gc::STATE_INDEX_NETWORK) = std::make_unique<NetworkState>(mpApp);
 
 	// first state 
 	mActiveState = gc::STATE_INDEX_MAIN_MENU;
@@ -85,12 +87,6 @@ void StateManager::Init()
 	mChat.show.setOrigin((sf::Vector2f)origin);
 	mChat.show.setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CL]);
 
-	//origin.y = c.getSize().y;
-	
-
-
-
-
 }
 
 void StateManager::Update(float dt)
@@ -151,8 +147,8 @@ void StateManager::TextEntered(unsigned int key)
 {
 	mStates.at(mActiveState)->TextEntered(key);
 
-	// show existing chat
-	mChat.mDisplay = true;
+	//todo add logic for chat to display and enter
+	// mChat.mDisplay = true;
 }
 
 void StateManager::ChangeState(size_t s, bool reset)

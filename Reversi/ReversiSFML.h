@@ -33,5 +33,7 @@ public:
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume;
 
+	enum class GameType{SINGLE,HOST,JOIN};
+	GameType gameType = GameType::SINGLE;
 };
 
