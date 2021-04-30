@@ -8,6 +8,7 @@
 #include "MusicEngine.h"
 #include "PlayerManager.h"
 #include "User.h"
+#include "DeltaTimer.h"
 
 class ReversiSFML
 {
@@ -35,8 +36,15 @@ public:
 	UserData localUser;
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume;
+	
 
 	enum class GameType{SINGLE,HOST,JOIN};
 	GameType gameType = GameType::SINGLE;
+
+private:
+	DeltaCountdownTimer networkDelay;
+	void UpdateClient();
+	void UpdateHost();
+
 };
 

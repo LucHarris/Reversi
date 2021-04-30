@@ -124,7 +124,7 @@ public:
 	// Compares with backup to see if the board has changed
 	bool BoardHasChanged()
 	{
-		return mDiscGrid != mDiscGridBackup;
+		return true;//mDiscGrid != mDiscGridBackup;
 	}
 
 	const char GetActivePlayerDisc() const;

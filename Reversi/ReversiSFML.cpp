@@ -44,6 +44,7 @@ void ReversiSFML::Run()
 		stateManager.Update(dt);
 		music.Update(dt);
 
+		// sf events
 		while (window.pollEvent(sfEvent))
 		{
 			switch (sfEvent.type)
@@ -71,6 +72,30 @@ void ReversiSFML::Run()
 			}
 		}
 
+		networkDelay.Update(dt);
+
+		if (networkDelay.HasElapsed())
+		{
+			networkDelay.Restart(0.1f);
+
+			// general network update
+			switch (gameType)
+			{
+			case ReversiSFML::GameType::SINGLE:
+				break;
+			case ReversiSFML::GameType::HOST:
+				UpdateHost();
+				break;
+			case ReversiSFML::GameType::JOIN:
+				UpdateClient();
+				break;
+			default:
+				break;
+			};
+		}
+
+		
+
 		//render
 		Render(dt);
 	}
@@ -92,4 +117,42 @@ void ReversiSFML::InitText(sf::Text& t)
 	t.setFont(resources.GetFontAt(Resources::FONT_MAIN));
 	t.setCharacterSize(gc::CHAR_SIZE_REG);
 	t.setFillColor(sf::Color::Magenta);
+}
+
+
+
+void ReversiSFML::UpdateClient()
+{
+	// send data
+	ClientSendData sendData;
+	threadPool.PushInputQueue(sendData);
+	threadPool.PushInputQueue(sendData);
+	threadPool.PushInputQueue(sendData);
+	threadPool.PushInputQueue(sendData);
+	threadPool.PushInputQueue(sendData);
+	// recv data
+	ServerSendData updateClient = threadPool.GetServerData();
+	updateClient(this);
+
+
+
+}
+
+void ReversiSFML::UpdateHost()
+{
+	// recv
+	OutputJob j;
+	if (threadPool.PopOutputQueue(j))
+	{
+		j(this);
+	}
+
+	// send
+
+	ServerSendData sendData;
+	//sendData.mBoard = reversiGame;
+	//sendData.mPlayerManagerSelect = PlayerSelection;
+
+	threadPool.UpdateServerData(sendData);
+
 }

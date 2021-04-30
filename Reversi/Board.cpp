@@ -211,7 +211,7 @@ bool ReversiBoard::PlaceMove(const Vector2i& v)
 void ReversiBoard::UpdateBoardBackup()
 {
 	// override old buffer
-	mDiscGridBackup = mDiscGrid;
+	//mDiscGridBackup = mDiscGrid;
 }
 
 bool ReversiBoard::Move(int a)

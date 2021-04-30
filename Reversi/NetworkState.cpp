@@ -26,7 +26,6 @@ void NetworkState::Init()
 	mText.at(TEXT_PROMPT).setString("Host IP Address:\nPort:\n\nType IP address and Port\nEnter key to switch between inputs\nClick Play Icon to Start");
 	mText.at(TEXT_PROMPT).setPosition({ 200,100 });
 
-	
 	mText.at(TEXT_TITLE).setPosition({ 150,50 });
 
 	// default selected input
@@ -105,6 +104,7 @@ void NetworkState::TextEntered(unsigned int key)
 	mText.at(mActiveText).setString(mInputString.at(mActiveText));
 
 }
+
 
 void NetworkState::Reset()
 {

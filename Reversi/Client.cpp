@@ -49,9 +49,7 @@ void ClientSocket::Body()
 		if (mThreadPool->PopInputQueue(j))
 		{
 			std::cout << "\nPop to send";
-			j.ToConsole();
-			// validate size
-			//assert(sizeof(j) == (size_t)sSize && "Client send sizes doesnt match");
+
 			// convert to buffer
 			CopyMemory(sBuffer, &j, sSize);
 			//CopyMemory(sData, &j, sizeof(sData));
@@ -60,7 +58,6 @@ void ClientSocket::Body()
 			result = send(mSocket, sBuffer, sSize, 0);
 			std::cout << "\nSent";
 
-
 			if (result > 0)
 			{
 
@@ -68,7 +65,7 @@ void ClientSocket::Body()
 				result = recv(mSocket, rBuffer, rSize, 0);
 				std::cout << "\nRecv'ed";
 
-				assert(rSize == sizeof(ServerSendData) && "Client recv sizes doesnt match");
+				//assert(rSize == sizeof(ServerSendData) && "Client recv sizes doesnt match");
 
 				ServerSendData r(rBuffer, rSize);
 
@@ -93,11 +90,15 @@ void ClientSocket::Body()
 				std::cout << "Client: send failed " << WSAGetLastError() << "\t" << result << "\n";
 			}
 		}
+		else
+		{
+			std::cout << "\nnothing to pop";
+		}
 
 	} while (result > 0 && mThreadPool->socketType == ThreadPool::Type::CLIENT_SOCKET);
 	
 	std::cout << "\nClient body end";
-	
+
 }
 
 //todo remove

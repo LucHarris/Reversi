@@ -29,9 +29,9 @@ int ServerSocket::RecvSend(char* rData, int rSize, char* sData, int sSize)
 void ServerSocket::Body()
 {
 	const int rSize = sizeof(ClientSendData);
-	const int sSize = sizeof(ReversiSFML);
-	char rBuffer[rSize] = "[?]";
-	char sBuffer[sSize] = "[send from server]";
+	const int sSize = sizeof(ServerSendData);
+	char rBuffer[rSize];
+	char sBuffer[sSize];
 
 	int result = 1;
 	do
@@ -40,14 +40,14 @@ void ServerSocket::Body()
 		result = recv(mSocket, rBuffer, rSize, 0);
 		std::cout << "\nrecv'd";
 
-		if (result == rSize)
+		if (result > 0)
 		{
 			ClientSendData data;
 			CopyMemory(&data, rBuffer, sizeof(ClientSendData));
 
 			data.ToConsole();
 
-			mpThreadPool->PushOutputQueue(data);
+			//mpThreadPool->PushOutputQueue(data);
 
 			Sleep(50); // allow to be processed
 
@@ -69,6 +69,11 @@ void ServerSocket::Body()
 			}
 
 		}
+		else
+		{
+			std::cout << "\n   result == rSize = false result: " << result << "rSize: "<< rSize << " error: " << WSAGetLastError() << "  ";
+		}
+
 		Sleep(100);
 
 	} while (result > 0 && mpThreadPool->socketType >= ThreadPool::Type::SERVER_LISTEN);
@@ -79,7 +84,6 @@ void ServerSocket::Body()
 void ServerSocket::operator()()
 {
 	std::cout << "\n ServerClient::operator()() Thread process begin \n";
-
 	Body();
 
 }

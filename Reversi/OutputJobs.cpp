@@ -28,8 +28,10 @@ void ClientSendData::ToConsole()
 
 void ServerSendData::operator()(ReversiSFML* pd)
 {
-	pd->PlayerSelection = mPlayerManagerSelect;
-	pd->reversiGame = mBoard;
+	//pd->PlayerSelection = mPlayerManagerSelect;
+	//pd->reversiGame = mBoard;
+
+	std::cout << "\nServerSendData::operator()(ReversiSFML* pd)";
 }
 
 ServerSendData::ServerSendData(const char buffer[], size_t size)
