@@ -4,6 +4,7 @@
 
 ReversiSFML::ReversiSFML()
 	:
+	threadPool(this),
 	stateManager(this),
 	masterVolume(gc::VOL_TOGGLE)
 {

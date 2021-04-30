@@ -2,6 +2,7 @@
 
 #include <random>
 #include "Resources.h"
+#include "ThreadPool.h"
 #include "StateManager.h"
 #include "Board.h"
 #include "MusicEngine.h"
@@ -13,6 +14,7 @@ class ReversiSFML
 
 public:
 	ReversiSFML();
+	ReversiSFML(const ReversiSFML& r) = delete;
 	void Init();
 	void Run();
 	void Render(float);
@@ -20,6 +22,7 @@ public:
 	// sets up text elements with common state
 	void InitText(sf::Text& t);
 	
+	ThreadPool threadPool;
 	StateManager stateManager;
 	sf::RenderWindow window;
 	Resources resources;

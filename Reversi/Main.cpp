@@ -6,8 +6,10 @@
 
 int main()
 {
-	ReversiSFML app;
 
+
+	ReversiSFML app;
+	
 	app.Init();
 	app.Run();
 

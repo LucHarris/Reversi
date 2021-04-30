@@ -1,54 +1,90 @@
 #include <mutex>		// std::mutex std::condition_variable std::atomic std::thread
 #include <queue>		// std::queue std::vector
 #include<functional>	// std::function
+#include "OutputJobs.h"
+//#include "ReversiSFML.h"
 //#include <thread>
 
-typedef std::function<void()> Job;
+class ReversiSFML;
+
+typedef std::function<void()> ThreadJob;
+typedef std::function<void(ReversiSFML*)> OutputJob;
+//typedef std::function<void(ReversiSFML*)> InputJob;
+typedef ClientSendData InputJob;
+
+
+template<class J>
+struct MutexQueue
+{
+	std::mutex mut;
+	std::queue<J> jobQueue;
+};
 
 class ThreadPool
 {
 private:
 	// for thread safe queue
-	std::mutex mut;
+
+	MutexQueue<ThreadJob> mThreadQueue;
+	MutexQueue<OutputJob> mOutputQueue;
+	MutexQueue<ClientSendData> mInputQueue;
+	//std::mutex mut;
 	// notify one thread when job is available
 	std::condition_variable condition;
 	//for queue
-	std::queue<Job> jobQueue;
+	//std::queue<ThreadJob> jobQueue;
 	// a thread in the container is nofified when a job becomes available
 	std::vector<std::thread> threads;
+	ReversiSFML* const pMainData;
+
+	std::mutex mServerDataMutex;
+	ServerSendData mServerData;
 public:
+
 	// mod in producer
-	std::atomic_int producerCount;
+	//std::atomic_int producerCount;
 	// on last consumer of each chain
-	std::atomic_int consumerCount;
-	std::atomic_bool producerDone;
+	//std::atomic_int consumerCount;
+	//std::atomic_bool producerDone;
+
+
+	enum Type{END = -1, NONE = 0,CLIENT_SOCKET,SERVER_LISTEN,SERVER_SOCKETS};
+	// 
+	std::atomic_int socketType = Type::NONE;
+
 private:
 	// Thread takes a job from the queue and executes it
 	void WorkThread();
-	// attempts to pop a job off the queue with lock guard. Returns if successed
-	bool HasPopped(Job& job);
+	// attempts to PopOutputQueue a job off the queue with lock guard. Returns if successed
+	// from input queue
+	bool HasPopped(ThreadJob& job);
+
+	bool ValidateThread(Type t);
+
 public:
 	// constructs threads based on thread::hardware_concurrency
-	ThreadPool();
-	//	:
-	//	producerDone(false),
-	//	producerCount(0),
-	//	consumerCount(0)
-	//{
-	//	// define minimum number of threads if hardware_concurrency value cannot be computed 
-	//	const size_t count = std::max(std::thread::hardware_concurrency(), 4U);
-
-	//	threads.reserve(count);
-
-	//	for (size_t i = 0; i < count; ++i)
-	//	{
-	//		threads.emplace_back(std::thread(&ThreadPool::WorkThread, this));
-	//	}
-	//}
+	ThreadPool(ReversiSFML* pld);
 		
 	// joins threads when jobs have been completed
 	~ThreadPool();
 	// adds rvalue jobs to the queue and notifies an available thread
-	void submit(Job&& f);
+	// to input queue
+	void PushThreadQueue(const ThreadJob& f, Type t);
+
+	// from outputQueue to be used in main thread 
+	bool PopOutputQueue(OutputJob& job);
+
+	// to outputQueue to be used in thread jobs for exporting data to main thread
+	void PushOutputQueue(const OutputJob& job);
+
+
+	bool PopInputQueue(InputJob& job);
+
+	void PushInputQueue(const InputJob& job);
+
+	void UpdateServerData(const ServerSendData& l);
+
+	ServerSendData GetServerData();
+	//ReversiSFML GetMainData() const;
 };
 
