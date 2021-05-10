@@ -232,7 +232,13 @@ bool ReversiBoard::Move(int a)
 
 		m = PlaceMove({ x, y });
 
-		mMoveTracker.emplace_back(a);
+		// update move tracker
+		auto f = std::find(mMoveTracker.begin(), mMoveTracker.end(), -1);
+		// will always contain at least one -1
+		assert(f != mMoveTracker.end());
+		// update element with move
+		*f = m;
+		//todo remove vector deadcode mMoveTracker.emplace_back(a);
 
 		SwapPlayers();
 
@@ -278,8 +284,9 @@ const char ReversiBoard::GetActiveOpponentDisc() const
 void ReversiBoard::Initialize()
 {
 	mExportedWinningMoves = false;
-	mMoveTracker.reserve(GRID_SIZE * GRID_SIZE); // won't need more moves than board size
-	mMoveTracker.clear();
+	//mMoveTracker.reserve(GRID_SIZE * GRID_SIZE); // won't need more moves than board size
+	//mMoveTracker.clear();
+	mMoveTracker.fill(-1);
 	mDiscGrid.fill(CELL_EMPTY);
 	mDiscGridBackup.fill(CELL_EMPTY);
 	mScoreGrid.fill(ZERO_SCORE);
@@ -344,6 +351,20 @@ std::vector<int> ReversiBoard::GetAvailableMoves() const
 	return moves;
 }
 
+std::vector<int> ReversiBoard::GetMoveHistory() const
+{
+	std::vector<int> m;
+
+	m.reserve(64);
+
+	auto end = std::find(mMoveTracker.begin(), mMoveTracker.end(), -1);
+
+	// copy on
+	std::copy(mMoveTracker.begin(), end, std::back_inserter(m));
+
+	return std::vector<int>();
+}
+
 void ReversiBoard::ExportWinningMoves()
 {
 	if ( !(CanMove() || mExportedWinningMoves) )
@@ -357,7 +378,7 @@ void ReversiBoard::ExportWinningMoves()
 		}
 
 		// copy of moves for manipulating
-		auto moves = mMoveTracker;
+		auto moves = GetMoveHistory();
 
 		std::ifstream inputMoveFile("Data/Payoffs/adaptive.csv",std::ios::in);
 

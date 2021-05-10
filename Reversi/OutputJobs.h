@@ -22,15 +22,16 @@ struct ClientSendData
 // functor applies changes to the client main application 
 struct ServerSendData
 {
-	//PlayerManager mPlayerManagerSelect;
-	std::array<int,20> moo;
-	//ReversiBoard mBoard;
+	// temp data
+	//std::array<int,20> moo;
+	PlayerManager mPlayerManagerSelect;
+	ReversiBoard mBoard;
 	//char a[500];
 	// updates client application
 	void operator()(ReversiSFML* pd);
 	ServerSendData() = default;
 
-	// copy client recv buffer
+	//  client recv buffer to state
 	ServerSendData(const char buffer[], size_t size);
 
 };

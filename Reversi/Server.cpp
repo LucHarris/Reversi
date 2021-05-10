@@ -47,7 +47,7 @@ void ServerSocket::Body()
 
 			data.ToConsole();
 
-			//mpThreadPool->PushOutputQueue(data);
+			mpThreadPool->PushOutputQueue(data);
 
 			Sleep(50); // allow to be processed
 

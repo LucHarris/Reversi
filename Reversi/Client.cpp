@@ -48,7 +48,7 @@ void ClientSocket::Body()
 		ClientSendData j;
 		if (mThreadPool->PopInputQueue(j))
 		{
-			std::cout << "\nPop to send";
+			std::cout << "\nPop to send from input queue";
 
 			// convert to buffer
 			CopyMemory(sBuffer, &j, sSize);
@@ -92,7 +92,7 @@ void ClientSocket::Body()
 		}
 		else
 		{
-			std::cout << "\nnothing to pop";
+			//std::cout << "\nnothing to pop from input queue";
 		}
 
 	} while (result > 0 && mThreadPool->socketType == ThreadPool::Type::CLIENT_SOCKET);

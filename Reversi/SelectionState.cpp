@@ -64,6 +64,10 @@ void SelectionState::Init()
 
 void SelectionState::Update(float)
 {
+
+	UpdatePlayerList();
+
+
 }
 
 void SelectionState::Render(float)
@@ -179,7 +183,8 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	}
 
-	UpdatePlayerList();
+	// todo remove dead code ... moved to update for networking
+	//UpdatePlayerList();
 }
 
 void SelectionState::KeyInput(sf::Keyboard::Key)

@@ -1,6 +1,12 @@
 #include "Player.h"
 #include "Node.h"
 
+Player::Player()
+	:
+	type(Type::DEFAULT)
+{
+}
+
 Player::Player(const Player::Type& t)
 	:
 	type(t)

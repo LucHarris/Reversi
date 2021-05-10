@@ -90,58 +90,62 @@ void GameSampleState::Update(float dt)
 	{
 		mAiTimer.Update(dt);
 
-		if (mPlayers.GetActivePlayer().type == Player::Type::AI)
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			// small delay so not instant
-			if (mAiTimer.HasElapsed())
+			if (mPlayers.GetActivePlayer().type == Player::Type::AI)
 			{
-				// todo remove nodes
-				// const int move = mPlayers.at(mActivePlayer).EvaluateMove(mpApp->reversiGame.GetScoreGrid());
-				// const int moveTest = mPlayers.at(mActivePlayer).EvaluateMoveFromNode(mpApp->reversiGame);;
-
-				
-				Timer<int,std::micro> analysisTimer;
-
-				//NormalForm nf(mPayoffMulti.GetAt(pp),mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
-
-				const int move = mAiNormalForm[mPlayers.GetSide()].Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
-				//const int move = mAiNormalForm.Dominant();
-
-
-
-				const int endTime = analysisTimer.elapsed();
-
-				std::ofstream timerOutFile("Data/Out/aiTimer.csv", std::ios::app);
-				if (timerOutFile.is_open())
+				// small delay so not instant
+				if (mAiTimer.HasElapsed())
 				{
-					timerOutFile << endTime << ',' << mpApp->reversiGame.AvailableMoveCount() << '\n';
-					timerOutFile.close();
-				}
-				else
-				{
-					assert(false);
-				}
+
+					Timer<int, std::micro> analysisTimer;
+
+					//NormalForm nf(mPayoffMulti.GetAt(pp),mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
+
+					const int move = mAiNormalForm[mPlayers.GetSide()].Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
+					//const int move = mAiNormalForm.Dominant();
 
 
-				// successful move 
-				if (mDiscSprites.Move(move))
-				{
-					if (mpApp->reversiGame.CanMove())
+
+					const int endTime = analysisTimer.elapsed();
+
+					std::ofstream timerOutFile("Data/Out/aiTimer.csv", std::ios::app);
+					if (timerOutFile.is_open())
 					{
-
-						IncActivePlayer();
+						timerOutFile << endTime << ',' << mpApp->reversiGame.AvailableMoveCount() << '\n';
+						timerOutFile.close();
 					}
 					else
 					{
-						GameEnded();
+						assert(false);
 					}
-				}
-				else
-				{
-					assert(false && "AI should always have make a valid more if there is one");
+
+
+					// successful move 
+					if (mDiscSprites.Move(move))
+					{
+						if (mpApp->reversiGame.CanMove())
+						{
+
+							IncActivePlayer();
+						}
+						else
+						{
+							GameEnded();
+						}
+					}
+					else
+					{
+						assert(false && "AI should always have make a valid more if there is one");
+					}
 				}
 			}
 		}
+		else
+		{
+			// client
+		}
+		
 	}
 	else
 	{
@@ -149,8 +153,10 @@ void GameSampleState::Update(float dt)
 		mpApp->reversiGame.ExportWinningMoves();
 	}
 	
-
+	
 	mDiscSprites.Update(dt);
+
+	mDiscSprites.UpdateDiscs();
 }
 
 void GameSampleState::Render(float dt)
@@ -163,34 +169,51 @@ void GameSampleState::Render(float dt)
 
 void GameSampleState::MouseInput(const sf::Vector2f& pos)
 {
-	if (!mPlayers.HasGameEnded())
+	if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 	{
-		if (mPlayers.GetActivePlayer().type == Player::Type::HUMAN && mpApp->reversiGame.CanMove())
+		if (!mPlayers.HasGameEnded())
 		{
-			const int move = mDiscSprites.MoveByMoooouse(pos);;
-
-			// successful move
-			if (move >= 0)
+			if (mPlayers.GetActivePlayer().type == Player::Type::HUMAN && mpApp->reversiGame.CanMove())
 			{
-				// try again if move invalid
-				if (mDiscSprites.Move(move))
+				const int move = mDiscSprites.MoveByMoooouse(pos);;
+
+				// successful move
+				if (move >= 0)
 				{
-					// next player or game ended
-					if (mpApp->reversiGame.CanMove())
+					// try again if move invalid
+					if (mDiscSprites.Move(move))
 					{
-						IncActivePlayer();
-					}
-					else
-					{
-						GameEnded();
+						// next player or game ended
+						if (mpApp->reversiGame.CanMove())
+						{
+							IncActivePlayer();
+						}
+						else
+						{
+							GameEnded();
+						}
 					}
 				}
 			}
 		}
-
-		//mDiscSprites.MoveByMousePos(pos);
-		//mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU);
 	}
+	else
+	{
+		// client input
+		const int move = mDiscSprites.MoveByMoooouse(pos);
+
+		// validation
+		if (move >= 0 && move < 64)
+		{
+			ClientSendData sendData;
+			sendData.move = move;
+
+			// send to host
+			mpApp->threadPool.PushInputQueue(sendData);
+		}
+	}
+
+	
 
 	
 }
@@ -208,7 +231,16 @@ void GameSampleState::Reset()
 	mAiNormalForm[1].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
 
 	mEndText.setString("");
-	mpApp->reversiGame.Initialize();
-	mPlayers = mpApp->PlayerSelection;
-	mDiscSprites.UpdateDiscs();
+
+	if (mpApp->gameType != ReversiSFML::GameType::JOIN)
+	{
+		mpApp->reversiGame.Initialize();
+		mPlayers = mpApp->PlayerSelection;
+		mDiscSprites.UpdateDiscs();
+	}
+	else
+	{
+
+	}
+	
 }

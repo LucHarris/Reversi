@@ -65,7 +65,7 @@ private:
 	// Available moves are scores above 0.
 	ScoreGrid mScoreGrid;
 	// history of moves within active game. even elements are white, odd elements are black
-	std::vector<int> mMoveTracker;
+	std::array<int,64> mMoveTracker;
 	// first is min second is max. Updated in GenerateScoreGrid()
 	MinMax mMinMax;
 	// Active player for buffer index
@@ -160,11 +160,8 @@ public:
 	// based on current scoregrid state
 	std::vector<int> GetAvailableMoves() const;
 
-	// copy of moves
-	std::vector<int> GetMoveHistory() const
-	{
-		return mMoveTracker;
-	}
+	// copy of moves without padding from array
+	std::vector<int> GetMoveHistory() const;
 
 	void ExportWinningMoves();
 

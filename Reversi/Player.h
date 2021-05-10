@@ -6,7 +6,8 @@
 class Player
 {
 public:		
-	enum class Type{HUMAN,AI};
+	enum class Type{HUMAN,AI,DEFAULT};
+	Player();
 	Player(const Player::Type& t);
 	// local data
 	UserData userData;

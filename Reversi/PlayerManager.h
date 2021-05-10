@@ -8,13 +8,16 @@
 class PlayerManager
 {
 	// players are either on white or black
-	std::array<std::vector< Player>, 2> mPlayerSides;
-	
+	std::array<std::array<Player,8>, 2> mPlayerSides;
+	// iterator for player sides
+	std::array<int, 2> mSideCount;
 	// position in player list
 	std::array<int, 2> mPosition;
 	// white 0, black 1, starts with 0
 	int mActiveSide = 0;
 public:
+	PlayerManager();
+
 	// side/colour match active game 
 	void Increment();
 
