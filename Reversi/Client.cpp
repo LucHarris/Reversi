@@ -48,7 +48,7 @@ void ClientSocket::Body()
 		ClientSendData j;
 		if (mThreadPool->PopInputQueue(j))
 		{
-			std::cout << "\nPop to send from input queue";
+			//std::cout << "\nPop to send from input queue";
 
 			// convert to buffer
 			CopyMemory(sBuffer, &j, sSize);
@@ -56,14 +56,14 @@ void ClientSocket::Body()
 			// send
 			std::cout << "\nSend";
 			result = send(mSocket, sBuffer, sSize, 0);
-			std::cout << "\nSent";
+			std::cout << "\tSent";
 
 			if (result > 0)
 			{
 
-				std::cout << "\nRecv";
+				std::cout << "\tRecv";
 				result = recv(mSocket, rBuffer, rSize, 0);
-				std::cout << "\nRecv'ed";
+				std::cout << "\tRecv'ed";
 
 				//assert(rSize == sizeof(ServerSendData) && "Client recv sizes doesnt match");
 
@@ -74,20 +74,20 @@ void ClientSocket::Body()
 
 				if (result == SOCKET_ERROR)
 				{
-					std::cout << "Client: socket error " << WSAGetLastError() << "\n";
+					std::cout << "\tClient: socket error " << WSAGetLastError() ;
 				}
 				else
 				{
-					std::cout << "Recieved: " << rBuffer << "\t" << result << "\n";
+					std::cout << "\tRecieved data. Size " << rBuffer << "\t" << result;
 				}
 			}
 			else if (result == 0)
 			{
-				std::cout << "Client: Connection to clent closing " << result << "\n";
+				std::cout << "\tClient: Connection to clent closing " << result;
 			}
 			else
 			{
-				std::cout << "Client: send failed " << WSAGetLastError() << "\t" << result << "\n";
+				std::cout << "\tClient: send failed " << WSAGetLastError() << "\t" << result;
 			}
 		}
 		else

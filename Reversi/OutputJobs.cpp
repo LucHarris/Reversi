@@ -8,42 +8,48 @@
 // called in host to update main game
 void ClientSendData::operator()(ReversiSFML* d)
 {
-	std::cout << "\nApply to main data here";
-	
-	//todo apply client message
-	//todo apply client mouse pos 
-	//todo apply client player
-	//todo apply client move
-	if (move >= 0 && move < 64)
+	if (!dummy)
 	{
-		if (d->reversiGame.CanMove())
+		//todo apply client message
+		//todo apply client mouse pos 
+		//todo apply client player
+		//todo apply client move
+		if (move >= 0 && move < 64)
 		{
-			d->reversiGame.Move(move);
+			if (d->reversiGame.CanMove())
+			{
+				d->reversiGame.Move(move);
+			}
+			//std::cout << "\nclient move to " << move;
 		}
-
-		std::cout << "\nclient move to " << move;
+		ToConsole();
 	}
-	ToConsole();
-
 }
 
 void ClientSendData::ToConsole()
 {
-	std::cout <<'\n'
+	if (!dummy)
+	{
+	std::cout <<'\t'
+		<< dummy << '\t'
 		<< msg << '\t'
 		<< mouse[0] << '\t'
 		<< mouse[1] << '\t'
 		<< player << '\t'
 		<< move << '\t'
 		;
+	}
+	else
+	{
+		std::cout << "\t\t\t\t\t\t\t";
+	}
 }
 
 void ServerSendData::operator()(ReversiSFML* pd)
 {
 	pd->PlayerSelection = mPlayerManagerSelect;
 	pd->reversiGame = mBoard;
-
-	std::cout << "\nServerSendData::operator()(ReversiSFML* pd)";
+	//std::cout << "\nServerSendData::operator()(ReversiSFML* pd)";
 }
 
 ServerSendData::ServerSendData(const char buffer[], size_t size)

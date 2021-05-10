@@ -38,7 +38,7 @@ void ServerSocket::Body()
 	{
 		std::cout << "\nrecv";
 		result = recv(mSocket, rBuffer, rSize, 0);
-		std::cout << "\nrecv'd";
+		std::cout << "\t recv'd";
 
 		if (result > 0)
 		{
@@ -55,30 +55,30 @@ void ServerSocket::Body()
 			ServerSendData sendData = mpThreadPool->GetServerData();
 			CopyMemory(sBuffer, &sendData, sSize);
 
-			std::cout << "\nsend";
+			std::cout << "\t send";
 			result = send(mSocket, sBuffer, sSize, 0);
-			std::cout << "\nsent";
+			std::cout << "\t sent";
 
 			if (result == SOCKET_ERROR)
 			{
-				std::cout << "\nServer: socket error  " << WSAGetLastError() << "\n";
+				std::cout << "\t Server: socket error  " << WSAGetLastError() << "\n";
 			}
 			else
 			{
-				std::cout << "Send: " << sBuffer << "\t " << result << "\n"; // same line as recieved
+				std::cout << "\t Send data. Size " << result; // same line as recieved
 			}
 
 		}
 		else
 		{
-			std::cout << "\n   result == rSize = false result: " << result << "rSize: "<< rSize << " error: " << WSAGetLastError() << "  ";
+			std::cout << "\t result == rSize = false result: " << result << "rSize: "<< rSize << " error: " << WSAGetLastError() << "  ";
 		}
 
 		Sleep(100);
 
 	} while (result > 0 && mpThreadPool->socketType >= ThreadPool::Type::SERVER_LISTEN);
 
-	std::cout << "do while ended";
+	std::cout << "\ndo while ended";
 }
 
 void ServerSocket::operator()()

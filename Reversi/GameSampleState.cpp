@@ -207,6 +207,7 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 		{
 			ClientSendData sendData;
 			sendData.move = move;
+			sendData.dummy = false;
 
 			// send to host
 			mpApp->threadPool.PushInputQueue(sendData);

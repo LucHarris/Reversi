@@ -45,6 +45,7 @@ private:
 	DeltaCountdownTimer networkDelay;
 	void UpdateClient();
 	void UpdateHost();
+	void SendDummyClientData();
 
 };
 

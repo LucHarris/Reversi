@@ -76,8 +76,7 @@ void ReversiSFML::Run()
 		networkDelay.Update(dt);
 		if (networkDelay.HasElapsed())
 		{
-			networkDelay.Restart(0.01f);
-			// general network update
+			networkDelay.Restart(0.5f);
 			switch (gameType)
 			{
 			case ReversiSFML::GameType::SINGLE:
@@ -86,6 +85,7 @@ void ReversiSFML::Run()
 				UpdateHost();
 				break;
 			case ReversiSFML::GameType::JOIN:
+				SendDummyClientData();
 				UpdateClient();
 				break;
 			default:
@@ -93,19 +93,7 @@ void ReversiSFML::Run()
 			};
 		}
 
-		/*switch (gameType)
-		{
-		case ReversiSFML::GameType::SINGLE:
-			break;
-		case ReversiSFML::GameType::HOST:
-			UpdateHost();
-			break;
-		case ReversiSFML::GameType::JOIN:
-			UpdateClient();
-			break;
-		default:
-			break;
-		};*/
+		
 		
 		//render
 		Render(dt);
@@ -134,16 +122,9 @@ void ReversiSFML::InitText(sf::Text& t)
 
 void ReversiSFML::UpdateClient()
 {
-	// send data
-	// sent on input
-	//ClientSendData sendData;
-	//threadPool.PushInputQueue(sendData);
-
 	// recv data
 	ServerSendData updateClient = threadPool.GetServerData();
 	updateClient(this);
-
-
 
 }
 
@@ -151,7 +132,7 @@ void ReversiSFML::UpdateHost()
 {
 	// recv
 	OutputJob j;
-	if (threadPool.PopOutputQueue(j))
+	while(threadPool.PopOutputQueue(j)) // if
 	{
 		j(this);
 	}
@@ -164,4 +145,12 @@ void ReversiSFML::UpdateHost()
 
 	threadPool.UpdateServerData(sendData);
 
+}
+
+void ReversiSFML::SendDummyClientData()
+{
+	// send dummy data for host to recv to keep windows updated
+	ClientSendData sendData;
+	sendData.dummy = true;
+	threadPool.PushInputQueue(sendData);
 }

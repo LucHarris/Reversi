@@ -12,6 +12,8 @@ struct ClientSendData
 	float mouse[2]{ -1.0f,-1.0f };
 	int player = -1;
 	int move = -1;
+	// to stop other member variables being evaluated/applied in operator()
+	bool dummy = false;
 
 	void operator()(ReversiSFML* d);
 
