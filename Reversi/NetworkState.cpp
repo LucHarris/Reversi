@@ -85,7 +85,7 @@ void NetworkState::TextEntered(unsigned int key)
 	switch (key)
 	{
 	case '\b':// backspace
-		if (!mInputString.empty())
+		if (!mInputString.at(mActiveText).empty())
 		{
 			mInputString.at(mActiveText).erase(mInputString.at(mActiveText).size() - 1, 1);
 		}

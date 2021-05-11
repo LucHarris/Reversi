@@ -11,6 +11,10 @@ void ClientSendData::operator()(ReversiSFML* d)
 	if (!dummy)
 	{
 		//todo apply client message
+		if (msg[0] != '\0')
+		{
+			d->chat.AddMessage(msg);
+		}
 		//todo apply client mouse pos 
 		//todo apply client player
 		//todo apply client move

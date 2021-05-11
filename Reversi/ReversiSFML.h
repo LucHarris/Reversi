@@ -9,6 +9,7 @@
 #include "PlayerManager.h"
 #include "User.h"
 #include "DeltaTimer.h"
+#include "Chat.h"
 
 class ReversiSFML
 {
@@ -32,6 +33,7 @@ public:
 	MusicEngine music;
 	// updates game player manager
 	PlayerManager PlayerSelection;
+	Chat chat;
 	// local for comparasion
 	UserData localUser;
 	// sf volume range from 0.0f - 100.0f

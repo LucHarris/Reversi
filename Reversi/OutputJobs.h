@@ -8,7 +8,7 @@ class ReversiSFML;
 
 struct ClientSendData
 {
-	unsigned char msg[32] {0};
+	char msg[32] {'\0'};
 	float mouse[2]{ -1.0f,-1.0f };
 	int player = -1;
 	int move = -1;

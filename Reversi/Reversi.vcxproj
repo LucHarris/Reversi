@@ -150,6 +150,7 @@
     <ClInclude Include="AiAgent.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Chat.h" />
     <ClInclude Include="Client.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
@@ -201,6 +202,7 @@
     <ClCompile Include="AiAgent.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Chat.cpp" />
     <ClCompile Include="Client.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>

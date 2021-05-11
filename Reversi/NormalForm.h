@@ -41,7 +41,7 @@ class NormalForm
 public:
 	NormalForm();
 	void Init(const std::array<int, 64>& payoffMulti, const ScoreGrid& prob);
-	// evaluates the game based on the current move. Called in GameSampleState::Update()
+	// evaluates the game based on the current move. Called in GameSampleState::UpdateLog()
 	int Evalualate(int agent, ReversiBoard board, int opponentMove);
 	void Reset();
 	void ToConsole();

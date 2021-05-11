@@ -6,7 +6,8 @@ ReversiSFML::ReversiSFML()
 	:
 	threadPool(this),
 	stateManager(this),
-	masterVolume(gc::VOL_TOGGLE)
+	masterVolume(gc::VOL_TOGGLE),
+	chat(this)
 {
 }
 
@@ -25,6 +26,8 @@ void ReversiSFML::Init()
 	InitText(debugLog);
 	debugLog.setString("Debug");
 
+
+	chat.Init();
 }
 
 void ReversiSFML::Run()
@@ -44,6 +47,10 @@ void ReversiSFML::Run()
 		stateManager.Update(dt);
 		music.Update(dt);
 
+		//todo remove
+		const char msg[2][15] = { "Moo...\0\0\0\0\0","Woof!\0\0\0\0\0" };
+
+
 		// sf events
 		while (window.pollEvent(sfEvent))
 		{
@@ -60,8 +67,16 @@ void ReversiSFML::Run()
 				stateManager.KeyInput(sfEvent.key.code);
 				break;
 			case sf::Event::TextEntered:
+				// visable chat overrides state 
+				if (chat.display)
+				{
+					chat.TextEntered(sfEvent.text.unicode);
+				}
+				else
+				{
+					stateManager.TextEntered(sfEvent.text.unicode);
+				}
 
-				stateManager.TextEntered(sfEvent.text.unicode);
 				/*if (sfEvent.text.unicode < 128 && sfEvent.text.unicode >= 32)
 				{
 					stateManager.TextEntered(sfEvent.text.unicode);
@@ -105,6 +120,8 @@ void ReversiSFML::Render(float dt)
 	window.clear(sf::Color::Black);
 
 	stateManager.Render(dt);
+
+	chat.Render();
 
 	window.draw(debugLog);
 

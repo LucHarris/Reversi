@@ -138,6 +138,9 @@
     <ClInclude Include="Server.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
+    <ClInclude Include="Chat.h">
+      <Filter>Header Files\SFML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Grid.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="Server.cpp">
       <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Chat.cpp">
+      <Filter>Source Files\SFML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
