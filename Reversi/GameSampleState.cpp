@@ -37,23 +37,23 @@ void GameSampleState::GameEnded()
 
 	if (scores.first > scores.second)
 	{
-		++mpApp->localUser.whiteWin;
+		++mpApp->localPlayer.userData.whiteWin;
 	}
 	else
 	{
 		if (scores.first < scores.second)
 		{
-			++mpApp->localUser.blackWin;
+			++mpApp->localPlayer.userData.blackWin;
 		}
 		else
 		{
-			++mpApp->localUser.draw;
+			++mpApp->localPlayer.userData.draw;
 		}
 	}
 
-	++mpApp->localUser.gamesPlayed;
+	++mpApp->localPlayer.userData.gamesPlayed;
 
-	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localUser);
+	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
 
 
 }
@@ -236,7 +236,7 @@ void GameSampleState::Reset()
 	if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 	{
 		mpApp->reversiGame.Initialize();
-		mPlayers = mpApp->PlayerSelection;
+		mPlayers = mpApp->playerSelection;
 		mDiscSprites.UpdateDiscs();
 	}
 	else

@@ -51,7 +51,7 @@ void ClientSendData::ToConsole()
 
 void ServerSendData::operator()(ReversiSFML* pd)
 {
-	pd->PlayerSelection = mPlayerManagerSelect;
+	pd->playerSelection = mPlayerManagerSelect;
 	pd->reversiGame = mBoard;
 	
 	// chat update

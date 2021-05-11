@@ -32,10 +32,11 @@ public:
 	ReversiBoard reversiGame;
 	MusicEngine music;
 	// updates game player manager
-	PlayerManager PlayerSelection;
+	PlayerManager playerSelection;
+	Player localPlayer;
+	int localAiPlayerIndex = 1;
 	Chat chat;
 	// local for comparasion
-	UserData localUser;
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume;
 	

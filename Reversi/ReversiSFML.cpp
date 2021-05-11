@@ -21,13 +21,29 @@ void ReversiSFML::Init()
 	reversiGame.Initialize();
 	stateManager.Init();
 
-	util::loadFile<UserData>(gc::PATH_LOCAL_USER, localUser);
+	util::loadFile<UserData>(gc::PATH_LOCAL_USER, localPlayer.userData);
+	localPlayer.type = Player::Type::HUMAN;
+	
+	if(!playerSelection.AddPlayer(localPlayer)) // index 0
+	{
+		assert(false);
+	}
+
+	// ai player
+	Player ai(Player::Type::AI);
+	if (!playerSelection.AddPlayer(ai))// index 1
+	{
+		assert(false);
+	}
+	localAiPlayerIndex = 1;
 
 	InitText(debugLog);
 	debugLog.setString("Debug");
 
-
 	chat.Init();
+
+
+
 }
 
 void ReversiSFML::Run()
@@ -158,7 +174,7 @@ void ReversiSFML::UpdateHost()
 
 	ServerSendData sendData;
 	sendData.mBoard = reversiGame;
-	sendData.mPlayerManagerSelect = PlayerSelection;
+	sendData.mPlayerManagerSelect = playerSelection;
 	sendData.mChatLog = chat.GetChatMessages();
 	threadPool.UpdateServerData(sendData);
 

@@ -89,7 +89,7 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 {
 	if (mButtons.at(BTN_WHITE_PLAYER_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->PlayerSelection.AddPlayer(Player::Type::HUMAN, 0))
+		if (mpApp->playerSelection.PlayerToSide(mpApp->localPlayer, 0))
 		{
 			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
 		}
@@ -102,7 +102,7 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	if (mButtons.at(BTN_WHITE_REMOVE_ONE).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->PlayerSelection.RemoveLast(0))
+		if (mpApp->playerSelection.RemoveLast(0))
 		{
 			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 		}
@@ -114,7 +114,7 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	if (mButtons.at(BTN_WHITE_CPU_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->PlayerSelection.AddPlayer(Player::Type::AI, 0))
+		if (mpApp->playerSelection.PlayerToSide(mpApp->playerSelection.GetAiPlayerIndex(), 0))
 		{
 			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
 		}
@@ -127,13 +127,13 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	if (mButtons.at(BTN_WHITE_REMOVE_ALL).getGlobalBounds().contains(mos))
 	{
-		mpApp->PlayerSelection.ResetSide(0);
+		mpApp->playerSelection.ResetSide(0);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
 
 	if (mButtons.at(BTN_BLACK_PLAYER_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->PlayerSelection.AddPlayer(Player::Type::HUMAN, 1))
+		if (mpApp->playerSelection.PlayerToSide(mpApp->localPlayer, 1))
 		{
 			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
 		}
@@ -146,7 +146,7 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	if (mButtons.at(BTN_BLACK_REMOVE_ONE).getGlobalBounds().contains(mos))
 	{
-		if(mpApp->PlayerSelection.RemoveLast(1))
+		if(mpApp->playerSelection.RemoveLast(1))
 		{
 			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 		}
@@ -158,7 +158,7 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	if (mButtons.at(BTN_BLACK_CPU_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->PlayerSelection.AddPlayer(Player::Type::AI, 1))
+		if (mpApp->playerSelection.PlayerToSide(mpApp->playerSelection.GetAiPlayerIndex(), 1))
 		{
 			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
 		}
@@ -170,14 +170,14 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	if (mButtons.at(BTN_BLACK_REMOVE_ALL).getGlobalBounds().contains(mos))
 	{
-		mpApp->PlayerSelection.ResetSide(1);
+		mpApp->playerSelection.ResetSide(1);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
 
 	if (mButtons.at(BTN_PLAY).getGlobalBounds().contains(mos))
 	{
 		// if the list is invalid ai players will be defaulted to play
-		mpApp->PlayerSelection.ValidatePlayers();
+		mpApp->playerSelection.ValidatePlayers();
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE, true);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 
@@ -199,7 +199,7 @@ void SelectionState::UpdatePlayerList()
 {
 	for (int i = 0; i < 2; i++)
 	{
-		mPlayerDisplay.at(i).setString(mpApp->PlayerSelection.GetPlayerList(i));
+		mPlayerDisplay.at(i).setString(mpApp->playerSelection.GetPlayerList(i));
 	}
 }
 

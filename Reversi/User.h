@@ -9,4 +9,9 @@ struct UserData
 	int draw = 0;
 	int gamesPlayed = 0;
 	int gamesAbandoned = 0;
+
+	static size_t GetMaxNameSize()
+	{
+		return sizeof(name) / sizeof(name[0]);
+	}
 };

@@ -47,7 +47,7 @@ void Chat::UpdateLog()
 
 			int i = 0;
 			// stops at EOT
-			while (i < msg.size() && msg.at(i) != '\0')
+			while (i < (int)msg.size() && msg.at(i) != '\0')
 			{
 				oss << msg.at(i);
 				++i;

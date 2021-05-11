@@ -1,18 +1,22 @@
 #include "PlayerManager.h"
 #include <cassert>
 #include "Constants.h"
-
+#include <sstream>
+#include <algorithm>
 PlayerManager::PlayerManager()
 {
+	for (auto& side : mPlayerSides)
+	{
+		for (auto& pos : side)
+		{
+			pos = -1;
+		}
+	}
+
 }
 
 void PlayerManager::Increment()
 {
-	// todo test and remove deadcode
-	/*if (++mActiveSide >= (int)mPlayerSides.size())
-	{
-		mActiveSide = 0;
-	}*/
 
 	// toggles between sides
 	mActiveSide = 1 - mActiveSide;
@@ -31,17 +35,54 @@ Player& PlayerManager::GetActivePlayer()
 	assert(mActiveSide < (int)mPlayerSides.size()); // less than 2
 	assert(mPosition.at(mActiveSide) < mSideCount.at(mActiveSide));// within active player range // todo remove dead code(int)mPlayerSides.at(mActiveSide).size());
 
-	return mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) );
+	return  mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) );
 }
 
-bool PlayerManager::AddPlayer(const Player::Type& t, int side)
-{
-	assert(side < (int)mPlayerSides.size() && side >= 0); // 0 or 1
+//todo remove old member function
+//bool PlayerManager::AddPlayer(const Player::Type& t, int side)
+//{
+//	assert(side < (int)mPlayerSides.size() && side >= 0); // 0 or 1
+//
+//	// adds player
+//	if (mSideCount.at(side) < gc::MAX_PLAYERS_PER_SIDE)
+//	{
+//		mPlayerSides.at(side).at(mSideCount.at(side)) = Player(t);
+//		++mSideCount.at(side);
+//		return true;
+//	}
+//	else
+//	{
+//		// invalid range
+//		return false;
+//	}
+//}
 
-	// adds player
+bool PlayerManager::AddPlayer(const Player& p)
+{
+
+	auto it = std::find_if(mPlayers.begin(), mPlayers.end(), [](const Player& pl) 
+		{
+			return pl.type == Player::Type::DEFAULT;
+		});
+
+	if (it == mPlayers.end())
+	{
+		return false;
+	}
+
+	// assign player
+	*it = p;
+
+	return true;
+}
+
+bool PlayerManager::PlayerToSide(int playerIndex, int side)
+{
+	assert(playerIndex < (int)mPlayers.size());
+
 	if (mSideCount.at(side) < gc::MAX_PLAYERS_PER_SIDE)
 	{
-		mPlayerSides.at(side).at(mSideCount.at(side)) = Player(t);
+		mPlayerSides.at(side).at(mSideCount.at(side)) = playerIndex;
 		++mSideCount.at(side);
 		return true;
 	}
@@ -50,50 +91,80 @@ bool PlayerManager::AddPlayer(const Player::Type& t, int side)
 		// invalid range
 		return false;
 	}
+
+	return false;
+}
+
+bool PlayerManager::PlayerToSide(const Player& pl, int side)
+{
+	auto it = find_if(mPlayers.begin(), mPlayers.end(), [&pl](const Player& p) 
+		{
+			return p.userData.id == pl.userData.id;
+		});
+
+	// cannot find player in mPlayers
+	if (it == mPlayers.end())
+	{
+		return false;
+	}
+
+	const int i = std::distance(mPlayers.begin(), it);
+
+	return PlayerToSide(i, side);
+}
+
+int PlayerManager::GetAiPlayerIndex() const
+{
+	auto it = find_if(mPlayers.begin(), mPlayers.end(), [](const Player& p)
+		{
+			return p.type == Player::Type::AI;
+		});
+
+	// Needs to be an ai in the player list
+	assert(it != mPlayers.end());
+
+	return std::distance(mPlayers.begin(), it);
 }
 
 std::string PlayerManager::GetPlayerList(int side)
 {
-	std::string playerList = "";
+	//std::string playerList = "";
+	std::ostringstream playerList;
 	assert(side < (int)mPlayerSides.size());
 
 	switch (side)
 	{
 	case PLAYER_ONE: 
-		playerList += "White"; 
+		playerList << "White"; 
 		break;
 	case PLAYER_TWO: 
-		playerList += "Black"; 
+		playerList << "Black"; 
 		break;
 	default:
-		playerList += "???"; 
+		playerList << "???"; 
 		break;
 	}
 
 	for (auto& p : mPlayerSides.at(side))
 	{
 		// indent
-		playerList += "\n  ";
+		playerList << "\n";
 
-		// todo add player name
-
-		switch (p.type)
+		if (p >= 0)
 		{
-		case Player::Type::AI: 
-			playerList += "CPU";
-			break;
-		case Player::Type::HUMAN: 
-			playerList += "Player";
-			break;
-		case Player::Type::DEFAULT: 
-			// nothing
-			break;
-		default:
-			break;
+			playerList << mPlayers.at(p).userData.name;
+
+			if (mPlayers.at(p).type == Player::Type::AI)
+			{
+				playerList << " (CPU)";
+			}
 		}
+
+		
+		
 	}
 
-	return playerList;
+	return playerList.str();
 }
 
 void PlayerManager::ValidatePlayers()
@@ -103,7 +174,9 @@ void PlayerManager::ValidatePlayers()
 		assert(i < (int)mPlayerSides.size());
 		if (mSideCount.at(i) == 0)// (mPlayerSides.at(0).size() == 0)
 		{
-			AddPlayer(Player::Type::AI, i);
+			int lookup = GetAiPlayerIndex();
+			// lookup assigned to side
+			PlayerToSide(lookup,i);
 		}
 	}
 }
@@ -115,7 +188,7 @@ bool PlayerManager::RemoveLast(int side)
 	if (mSideCount.at(side) > 0)
 	{
 		--mSideCount.at(side);
-		mPlayerSides.at(side).at(mSideCount.at(side)) = Player(Player::Type::DEFAULT);
+		mPlayerSides.at(side).at(mSideCount.at(side)) = -1;
 		return true;
 	}
 	else
@@ -132,7 +205,7 @@ void PlayerManager::ResetSide(int side)
 
 	for (auto& p : mPlayerSides.at(side))
 	{
-		p = Player(Player::Type::DEFAULT);
+		p = -1;
 	}
 }
 

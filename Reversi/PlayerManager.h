@@ -8,7 +8,9 @@
 class PlayerManager
 {
 	// players are either on white or black
-	std::array<std::array<Player,8>, 2> mPlayerSides;
+	std::array<std::array<int, 8>, 2> mPlayerSides ;
+	// local, host, client, ai
+	std::array<Player, 8> mPlayers;
 	// iterator for player sides
 	std::array<int, 2> mSideCount;
 	// position in player list
@@ -24,8 +26,11 @@ public:
 	// ref to active player
 	Player& GetActivePlayer();
 
-	bool AddPlayer(const Player::Type& t, int side);
-
+	//bool AddPlayer(const Player::Type& t, int side);
+	bool AddPlayer(const Player&);
+	bool PlayerToSide(int playerIndex, int side);
+	bool PlayerToSide(const Player& pl, int side);
+	int GetAiPlayerIndex() const;
 	int GetSide() const 
 	{
 		return mActiveSide;

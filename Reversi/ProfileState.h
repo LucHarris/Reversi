@@ -1,9 +1,14 @@
 #pragma once
 #include "State.h"
+#include <array>
 class ProfileState :
     public State
 {
-	sf::Text mUserText;
+
+	enum{TEXT_USER_OUT,TEXT_INPUT};
+	std::array<sf::Text,2> mText;
+	std::string mInputString;
+	
 public:
 	ProfileState(ReversiSFML* app);
 	virtual void Init() override;
