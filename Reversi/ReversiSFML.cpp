@@ -42,7 +42,7 @@ void ReversiSFML::Init()
 
 	chat.Init();
 
-
+	chat.display = false;
 
 }
 

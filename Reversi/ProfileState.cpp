@@ -64,9 +64,14 @@ void ProfileState::TextEntered(unsigned int key)
 				// host or local
 				if (mInputString.length() > 0)
 				{
-					std::copy(mInputString.begin(), mInputString.end(), mpApp->localPlayer.userData.name);
-
+					// erase old name
+					std::fill(mpApp->localPlayer.userData.name, mpApp->localPlayer.userData.name + UserData::GetMaxNameSize(), '\0');
+					// assign new name
+					std::copy(mInputString.begin(), mInputString.begin() + (mInputString.length() - 1), mpApp->localPlayer.userData.name);
+					// update file
 					util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+					// return to main menu
+					mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU, true);
 				}
 			}
 			else
