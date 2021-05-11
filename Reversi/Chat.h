@@ -30,5 +30,8 @@ public:
 	void TextEntered(unsigned int key);
 
 	void AddMessage(const char msg[]);
+	void SetChatLog(const std::array<std::array<char, MSG_LENGTH>, MSG_COUNT>& msgs);
+	const std::array<char, MSG_LENGTH>& GetRecentChatEntry() const;
+	const std::array<std::array<char, MSG_LENGTH>, MSG_COUNT>& GetChatMessages();
 };
 

@@ -44,9 +44,13 @@ void Chat::UpdateLog()
 		std::ostringstream oss;
 		for (auto& msg : mMessages)
 		{
-			for (auto& c : msg)
+
+			int i = 0;
+			// stops at EOT
+			while (i < msg.size() && msg.at(i) != '\0')
 			{
-				oss << c;
+				oss << msg.at(i);
+				++i;
 			}
 
 			oss << '\n';
@@ -98,6 +102,7 @@ void Chat::TextEntered(unsigned int key)
 
 			mpApp->threadPool.PushInputQueue(clientSend);
 		}
+		std::fill(mInputString.begin(), mInputString.end(), '\0');
 		mInputString.clear();
 		// todo send message (client) or add message (host) then clear
 		break;
@@ -130,3 +135,21 @@ void Chat::AddMessage(const char msg[])
 
 	UpdateLog();
 }
+
+void Chat::SetChatLog(const std::array<std::array<char, MSG_LENGTH>, MSG_COUNT>& msgs)
+{
+	mMessages = msgs;
+}
+
+const std::array<char, Chat::MSG_LENGTH>& Chat::GetRecentChatEntry() const
+{
+	return mMessages.back();
+}
+
+const std::array<std::array<char, Chat::MSG_LENGTH>, Chat::MSG_COUNT>& Chat::GetChatMessages()
+{
+	return mMessages;
+	// TODO: insert return statement here
+}
+
+

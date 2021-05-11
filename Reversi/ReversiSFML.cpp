@@ -159,7 +159,7 @@ void ReversiSFML::UpdateHost()
 	ServerSendData sendData;
 	sendData.mBoard = reversiGame;
 	sendData.mPlayerManagerSelect = PlayerSelection;
-
+	sendData.mChatLog = chat.GetChatMessages();
 	threadPool.UpdateServerData(sendData);
 
 }

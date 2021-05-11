@@ -53,6 +53,18 @@ void ServerSendData::operator()(ReversiSFML* pd)
 {
 	pd->PlayerSelection = mPlayerManagerSelect;
 	pd->reversiGame = mBoard;
+	
+	// chat update
+	const auto& localRecentMsg = pd->chat.GetRecentChatEntry();
+	// validate string length matches
+	assert(mChatLog.back().size() == localRecentMsg.size());
+	// if last elements dont match then update client chat
+	if (localRecentMsg != mChatLog.back())
+	{
+		pd->chat.SetChatLog(mChatLog);
+		pd->chat.UpdateLog();
+	}
+
 	//std::cout << "\nServerSendData::operator()(ReversiSFML* pd)";
 }
 

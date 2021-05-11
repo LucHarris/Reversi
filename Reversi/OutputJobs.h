@@ -14,7 +14,6 @@ struct ClientSendData
 	int move = -1;
 	// to stop other member variables being evaluated/applied in operator()
 	bool dummy = false;
-
 	void operator()(ReversiSFML* d);
 
 	void ToConsole();
@@ -24,10 +23,12 @@ struct ClientSendData
 // functor applies changes to the client main application 
 struct ServerSendData
 {
+	enum {	MSG_LENGTH = 15, MSG_COUNT = 9	}; // match size of chat messages
 	// temp data
 	//std::array<int,20> moo;
 	PlayerManager mPlayerManagerSelect;
 	ReversiBoard mBoard;
+	std::array<std::array<char, MSG_LENGTH>, MSG_COUNT> mChatLog;
 	//char a[500];
 	// updates client application
 	void operator()(ReversiSFML* pd);
