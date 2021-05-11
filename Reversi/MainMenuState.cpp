@@ -80,3 +80,10 @@ void MainMenuState::KeyInput(sf::Keyboard::Key key)
 void MainMenuState::TextEntered(unsigned int key)
 {
 }
+
+void MainMenuState::Reset()
+{
+	// ends client/server threads
+	mpApp->gameType = ReversiSFML::GameType::SINGLE;
+	mpApp->threadPool.socketType = ThreadPool::Type::NONE;
+}

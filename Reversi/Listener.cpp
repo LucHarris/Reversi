@@ -15,6 +15,11 @@ void ServerListener::operator()()
 {
 	Init();
 	Body(); // listen loop
+
+	//shutdown(mSocket, SD_SEND);
+	closesocket(mSocket);
+	mClosed = true;
+	//Close();
 }
 
 void ServerListener::Listen()
@@ -38,12 +43,12 @@ void ServerListener::Listen()
 	}
 
 	
-	while(mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN)
+	while(mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN && mSocketCount < MAX_COUNT)
 	{
 
-		result = listen(mSocket, 5);
+		result = listen(mSocket, 2);
 
-		std::cout << "Server: listen() for a single conection " << result << "\n";
+		std::cout << "Server: listen() for a conection " << result << "\n";
 
 		if (result == SOCKET_ERROR)
 		{
@@ -78,12 +83,14 @@ void ServerListener::Listen()
 				// assign a client to a thread
 				ServerSocket sc(clientSocket, mThreadPool);
 				mThreadPool->PushThreadQueue(sc,ThreadPool::Type::SERVER_LISTEN);
+				++mSocketCount;
 			}
 
 
 		}
-
 	}
+
+	int z = 0;
 }
 
 void ServerListener::Body()

@@ -14,6 +14,8 @@ void ClientSocket::operator()()
 	Init();
 	Connect();
 	Body();
+
+	shutdown(mSocket, SD_SEND);
 	Close();
 }
 

@@ -85,5 +85,4 @@ void ServerSocket::operator()()
 {
 	std::cout << "\n ServerClient::operator()() Thread process begin \n";
 	Body();
-
 }

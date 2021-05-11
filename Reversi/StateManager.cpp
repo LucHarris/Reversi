@@ -119,7 +119,7 @@ void StateManager::MouseInput(const sf::Vector2f& pos)
 
 	if (mMenuButtons.at(BTN_MENU).getGlobalBounds().contains(pos))
 	{
-		mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU);
+		mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU, true);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
 

@@ -17,7 +17,7 @@ public:
 	virtual void MouseInput(const sf::Vector2f&) override;
 	virtual void KeyInput(sf::Keyboard::Key) override;
 	virtual void TextEntered(unsigned int key) override;
-	virtual void Reset() override {};
+	virtual void Reset() override;
 
 };
 

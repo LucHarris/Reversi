@@ -3,6 +3,8 @@
 
 class ServerListener : public ClientServer
 {
+	int mSocketCount = 0;
+	const int MAX_COUNT = 2;
 public:
 	ServerListener(ThreadPool* const tp)
 		:
