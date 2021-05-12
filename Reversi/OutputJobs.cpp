@@ -10,22 +10,10 @@ void ClientSendData::operator()(ReversiSFML* d)
 {
 	if (!dummy)
 	{
-		//todo apply client message
-		if (msg[0] != '\0')
-		{
-			d->chat.AddMessage(msg);
-		}
-		//todo apply client mouse pos 
-		//todo apply client player
-		//todo apply client move
-		if (move >= 0 && move < 64)
-		{
-			if (d->reversiGame.CanMove())
-			{
-				d->reversiGame.Move(move);
-			}
-			//std::cout << "\nclient move to " << move;
-		}
+		UpdateHostChat(d);
+		UpdateHostPlayers(d);
+		UpdateHostMoves(d);
+		//todo stretch UpdateHostMousePos(d)... 
 		ToConsole();
 	}
 }
@@ -39,7 +27,7 @@ void ClientSendData::ToConsole()
 		<< msg << '\t'
 		<< mouse[0] << '\t'
 		<< mouse[1] << '\t'
-		<< player << '\t'
+		<< player.userData.id << '\t'
 		<< move << '\t'
 		;
 	}
@@ -49,11 +37,54 @@ void ClientSendData::ToConsole()
 	}
 }
 
+void ClientSendData::UpdateHostChat(ReversiSFML* d)
+{
+	if (msg[0] != '\0')
+	{
+		d->chat.AddMessage(msg);
+	}
+}
+
+void ClientSendData::UpdateHostPlayers(ReversiSFML* d)
+{
+	if (player.type == Player::Type::HUMAN)
+	{
+		// player not present
+		if (!d->playerSelection.PlayerPresent(player))
+		{
+			if (!d->playerSelection.AddPlayer(player))
+			{
+				d->chat.AddMessage("Can't add Plyr");
+				std::cout << "\ncan't add player";
+			}
+		}
+		else
+		{
+			std::cout << "\nplayer already present";
+		}
+	}
+	else
+	{
+		std::cout << "\ncan't add non human player";
+	}
+}
+
+void ClientSendData::UpdateHostMoves(ReversiSFML* d)
+{
+	if (move >= 0 && move < 64)
+	{
+		if (d->reversiGame.CanMove())
+		{
+			d->reversiGame.Move(move);
+			//todo further operations required?
+		}
+	}
+}
+// updates client application 
 void ServerSendData::operator()(ReversiSFML* pd)
 {
 	pd->playerSelection = mPlayerManagerSelect;
 	pd->reversiGame = mBoard;
-	
 	// chat update
 	const auto& localRecentMsg = pd->chat.GetRecentChatEntry();
 	// validate string length matches

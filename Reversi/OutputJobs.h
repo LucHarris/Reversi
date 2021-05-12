@@ -8,15 +8,29 @@ class ReversiSFML;
 
 struct ClientSendData
 {
+	// button actions performed by client that are registered by the host
+	enum class ButtonOp{NO_OP = -1, 
+		SIDE_ADD_WHITE_PL,SIDE_ADD_BLACK_PL, 
+		SIDE_ADD_WHITE_AI,SIDE_ADD_BLACK_AI, 
+		SIDE_REMOVE_ONE_WHITE,SIDE_REMOVE_ONE_BLACK,
+		SIDE_REMOVE_ALL_WHITE,SIDE_REMOVE_ALL_BLACK
+	};
 	char msg[32] {'\0'};
+	Player player;
 	float mouse[2]{ -1.0f,-1.0f };
-	int player = -1;
 	int move = -1;
+	ButtonOp op = ButtonOp::NO_OP;
 	// to stop other member variables being evaluated/applied in operator()
 	bool dummy = false;
 	void operator()(ReversiSFML* d);
 
 	void ToConsole();
+	// clients submitted chat messages updates host chat log
+	void UpdateHostChat(ReversiSFML* d);
+	// clients user data updates host player manager 
+	void UpdateHostPlayers(ReversiSFML* d);
+	// client board move updates host board
+	void UpdateHostMoves(ReversiSFML* d);
 };
 
 // members are copied from the main application

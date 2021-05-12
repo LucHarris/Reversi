@@ -31,6 +31,8 @@ public:
 	bool PlayerToSide(int playerIndex, int side);
 	bool PlayerToSide(const Player& pl, int side);
 	int GetAiPlayerIndex() const;
+	// Searches for players by id. return found returns success
+	bool PlayerPresent(const Player& pl) const;
 	int GetSide() const 
 	{
 		return mActiveSide;
@@ -48,7 +50,7 @@ public:
 
 	std::string GetPlayerList(int side);
 
-	// makes sure there is al least a player on each side
+	// makes sure there is al least a player on each side before starting a game
 	void ValidatePlayers();
 
 	// empty player list
@@ -56,5 +58,11 @@ public:
 	// removes last from list
 	// @return successful removal
 	bool RemoveLast(int side);
+
+	const std::array<Player, 8>& GetPlayerList() const
+	{
+		return mPlayers;
+	}
+
 };
 

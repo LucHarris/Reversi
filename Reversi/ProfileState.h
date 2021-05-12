@@ -5,8 +5,8 @@ class ProfileState :
     public State
 {
 
-	enum{TEXT_USER_OUT,TEXT_INPUT};
-	std::array<sf::Text,2> mText;
+	enum{TEXT_USER_OUT,TEXT_INPUT,TEXT_PROMPT};
+	std::array<sf::Text,3> mText;
 	std::string mInputString;
 	
 public:

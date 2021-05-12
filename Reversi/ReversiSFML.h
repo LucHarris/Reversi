@@ -39,6 +39,7 @@ public:
 	// local for comparasion
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume;
+	bool sentPlayerDataToHost = false;
 	
 
 	enum class GameType{SINGLE,HOST,JOIN};
@@ -48,6 +49,7 @@ private:
 	DeltaCountdownTimer networkDelay;
 	void UpdateClient();
 	void UpdateHost();
+	// send dummy data if client profile hasn't been sent
 	void SendDummyClientData();
 
 };

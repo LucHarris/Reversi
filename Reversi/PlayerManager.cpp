@@ -126,6 +126,17 @@ int PlayerManager::GetAiPlayerIndex() const
 	return std::distance(mPlayers.begin(), it);
 }
 
+bool PlayerManager::PlayerPresent(const Player& pl) const
+{
+	// match by id as stats may be outdated
+	auto it = find_if(mPlayers.begin(), mPlayers.end(), [&pl](const Player& p)
+		{
+			return p.userData.id == pl.userData.id;
+		});
+	
+	return it != mPlayers.end();
+}
+
 std::string PlayerManager::GetPlayerList(int side)
 {
 	//std::string playerList = "";

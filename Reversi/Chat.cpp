@@ -59,6 +59,7 @@ void Chat::UpdateLog()
 		}
 
 		mText.at(TEXT_LOG).setString(oss.str());
+		// scroll up each message
 		mText.at(TEXT_LOG).setOrigin({ 0.0f,mText.at(TEXT_LOG).getGlobalBounds().height });
 
 	}
