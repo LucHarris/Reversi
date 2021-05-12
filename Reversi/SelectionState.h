@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include <array>
 #include <string>
+#include "OutputJobs.h"
 
 // players/cpu selected for a game
 class SelectionState : public State
@@ -35,5 +36,7 @@ public:
 	virtual void Reset() override;
 
 	void UpdatePlayerList();
+private:
+	void ClientSendOperation(ClientSendData::ButtonOp op);
 };
 

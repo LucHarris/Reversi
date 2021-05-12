@@ -35,7 +35,6 @@ void ReversiSFML::Init()
 	{
 		assert(false);
 	}
-	localAiPlayerIndex = 1;
 
 	InitText(debugLog);
 	debugLog.setString("Debug");
@@ -67,7 +66,6 @@ void ReversiSFML::Run()
 
 		//todo remove
 		const char msg[2][15] = { "Moo...\0\0\0\0\0","Woof!\0\0\0\0\0" };
-
 
 		// sf events
 		while (window.pollEvent(sfEvent))
@@ -125,8 +123,6 @@ void ReversiSFML::Run()
 				break;
 			};
 		}
-
-		
 		
 		//render
 		Render(dt);

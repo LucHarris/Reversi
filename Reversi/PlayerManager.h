@@ -33,6 +33,9 @@ public:
 	int GetAiPlayerIndex() const;
 	// Searches for players by id. return found returns success
 	bool PlayerPresent(const Player& pl) const;
+	// Searchs by player id. invalid result returns a negative value
+	int GetPlayerIndex(const Player& pl) const;
+
 	int GetSide() const 
 	{
 		return mActiveSide;
@@ -63,6 +66,7 @@ public:
 	{
 		return mPlayers;
 	}
+
 
 };
 

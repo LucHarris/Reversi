@@ -137,6 +137,21 @@ bool PlayerManager::PlayerPresent(const Player& pl) const
 	return it != mPlayers.end();
 }
 
+
+int PlayerManager::GetPlayerIndex(const Player& pl) const
+{
+	// finds player in list by id
+	auto it = find_if(mPlayers.begin(), mPlayers.end(), [&pl](const Player& p)
+		{
+			return p.userData.id == pl.userData.id;
+		});
+
+	// gets index in player list.
+	const int index = (it != mPlayers.end())? std::distance(mPlayers.begin(), it) : -1;
+
+	return index;
+}
+
 std::string PlayerManager::GetPlayerList(int side)
 {
 	//std::string playerList = "";

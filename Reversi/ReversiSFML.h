@@ -34,7 +34,8 @@ public:
 	// updates game player manager
 	PlayerManager playerSelection;
 	Player localPlayer;
-	int localAiPlayerIndex = 1;
+	const int localAiPlayerIndex = 1;
+	int clientPlayerIndex = -1;
 	Chat chat;
 	// local for comparasion
 	// sf volume range from 0.0f - 100.0f

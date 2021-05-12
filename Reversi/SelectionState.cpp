@@ -4,6 +4,7 @@
 
 #include "Listener.h"
 #include "client.h"
+#include "OutputJobs.h"
 
 SelectionState::SelectionState(ReversiSFML* app)
 	:
@@ -89,97 +90,171 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 {
 	if (mButtons.at(BTN_WHITE_PLAYER_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->playerSelection.PlayerToSide(mpApp->localPlayer, 0))
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			if (mpApp->playerSelection.PlayerToSide(mpApp->localPlayer, 0))
+			{
+				mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			}
+			else
+			{
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			}
 		}
 		else
 		{
-			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_ADD_WHITE_PL);
 		}
+		
 
 	}
 
 	if (mButtons.at(BTN_WHITE_REMOVE_ONE).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->playerSelection.RemoveLast(0))
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+			if (mpApp->playerSelection.RemoveLast(0))
+			{
+				mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+			}
+			else
+			{
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			}
+
 		}
 		else
 		{
-			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_REMOVE_ONE_WHITE);
 		}
 	}
 
 	if (mButtons.at(BTN_WHITE_CPU_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->playerSelection.PlayerToSide(mpApp->playerSelection.GetAiPlayerIndex(), 0))
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			if (mpApp->playerSelection.PlayerToSide(mpApp->playerSelection.GetAiPlayerIndex(), 0))
+			{
+				mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			}
+			else
+			{
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			}
 		}
 		else
 		{
-			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_ADD_WHITE_AI);
+
 		}
 
 	}
 
 	if (mButtons.at(BTN_WHITE_REMOVE_ALL).getGlobalBounds().contains(mos))
 	{
-		mpApp->playerSelection.ResetSide(0);
-		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
+		{
+			mpApp->playerSelection.ResetSide(0);
+			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+		}
+		else
+		{
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_REMOVE_ALL_WHITE);
+		}
+
 	}
 
 	if (mButtons.at(BTN_BLACK_PLAYER_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->playerSelection.PlayerToSide(mpApp->localPlayer, 1))
+
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			if (mpApp->playerSelection.PlayerToSide(mpApp->localPlayer, 1))
+			{
+				mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			}
+			else
+			{
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			}
 		}
 		else
 		{
-			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_ADD_BLACK_PL);
 		}
 
 	}
 
 	if (mButtons.at(BTN_BLACK_REMOVE_ONE).getGlobalBounds().contains(mos))
 	{
-		if(mpApp->playerSelection.RemoveLast(1))
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+			if(mpApp->playerSelection.RemoveLast(1))
+			{
+				mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+			}
+			else
+			{
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			}
+
 		}
 		else
 		{
-			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_REMOVE_ONE_BLACK);
+
 		}
+
 	}
 
 	if (mButtons.at(BTN_BLACK_CPU_PLUS).getGlobalBounds().contains(mos))
 	{
-		if (mpApp->playerSelection.PlayerToSide(mpApp->playerSelection.GetAiPlayerIndex(), 1))
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			if (mpApp->playerSelection.PlayerToSide(mpApp->playerSelection.GetAiPlayerIndex(), 1))
+			{
+				mpApp->resources.Play(Resources::SOUND_CHALK, mpApp->masterVolume);
+			}
+			else
+			{
+				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			}
+
 		}
 		else
 		{
-			mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_ADD_BLACK_AI);
 		}
 	}
 
 	if (mButtons.at(BTN_BLACK_REMOVE_ALL).getGlobalBounds().contains(mos))
 	{
-		mpApp->playerSelection.ResetSide(1);
-		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
+		{
+			mpApp->playerSelection.ResetSide(1);
+			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+
+		}
+		else
+		{
+			ClientSendOperation(ClientSendData::ButtonOp::SIDE_REMOVE_ALL_BLACK);
+		}
 	}
 
 	if (mButtons.at(BTN_PLAY).getGlobalBounds().contains(mos))
 	{
-		// if the list is invalid ai players will be defaulted to play
-		mpApp->playerSelection.ValidatePlayers();
-		mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE, true);
-		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
+		{
+			// if the list is invalid ai players will be defaulted to play
+			mpApp->playerSelection.ValidatePlayers();
+			mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE, true);
+			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
+
+		}
+		else
+		{
+			ClientSendOperation(ClientSendData::ButtonOp::START_GAME);
+		}
 
 	}
 
@@ -201,6 +276,16 @@ void SelectionState::UpdatePlayerList()
 	{
 		mPlayerDisplay.at(i).setString(mpApp->playerSelection.GetPlayerList(i));
 	}
+}
+
+void SelectionState::ClientSendOperation(ClientSendData::ButtonOp op)
+{
+	ClientSendData csd;
+	// required for adding specific player if required
+	csd.netPlayerIndex = mpApp->clientPlayerIndex;
+	csd.op = op;
+	// sends the host to update player manager server side
+	mpApp->threadPool.PushInputQueue(csd);
 }
 
 void SelectionState::Reset()

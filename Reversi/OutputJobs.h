@@ -13,13 +13,15 @@ struct ClientSendData
 		SIDE_ADD_WHITE_PL,SIDE_ADD_BLACK_PL, 
 		SIDE_ADD_WHITE_AI,SIDE_ADD_BLACK_AI, 
 		SIDE_REMOVE_ONE_WHITE,SIDE_REMOVE_ONE_BLACK,
-		SIDE_REMOVE_ALL_WHITE,SIDE_REMOVE_ALL_BLACK
+		SIDE_REMOVE_ALL_WHITE,SIDE_REMOVE_ALL_BLACK,
+		START_GAME
 	};
 	char msg[32] {'\0'};
 	Player player;
 	float mouse[2]{ -1.0f,-1.0f };
 	int move = -1;
 	ButtonOp op = ButtonOp::NO_OP;
+	int netPlayerIndex = -1;
 	// to stop other member variables being evaluated/applied in operator()
 	bool dummy = false;
 	void operator()(ReversiSFML* d);
@@ -31,6 +33,8 @@ struct ClientSendData
 	void UpdateHostPlayers(ReversiSFML* d);
 	// client board move updates host board
 	void UpdateHostMoves(ReversiSFML* d);
+	// client button updates host to submit operations
+	void UpdateHostButtons(ReversiSFML* d);
 };
 
 // members are copied from the main application

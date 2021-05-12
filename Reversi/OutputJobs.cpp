@@ -13,6 +13,7 @@ void ClientSendData::operator()(ReversiSFML* d)
 		UpdateHostChat(d);
 		UpdateHostPlayers(d);
 		UpdateHostMoves(d);
+		UpdateHostButtons(d);
 		//todo stretch UpdateHostMousePos(d)... 
 		ToConsole();
 	}
@@ -47,9 +48,10 @@ void ClientSendData::UpdateHostChat(ReversiSFML* d)
 
 void ClientSendData::UpdateHostPlayers(ReversiSFML* d)
 {
+	// if the player is human a request has been made to add a player to list
 	if (player.type == Player::Type::HUMAN)
 	{
-		// player not present
+		// already there?
 		if (!d->playerSelection.PlayerPresent(player))
 		{
 			if (!d->playerSelection.AddPlayer(player))
@@ -62,10 +64,6 @@ void ClientSendData::UpdateHostPlayers(ReversiSFML* d)
 		{
 			std::cout << "\nplayer already present";
 		}
-	}
-	else
-	{
-		std::cout << "\ncan't add non human player";
 	}
 }
 
@@ -80,11 +78,63 @@ void ClientSendData::UpdateHostMoves(ReversiSFML* d)
 		}
 	}
 }
+void ClientSendData::UpdateHostButtons(ReversiSFML* d)
+{
+	switch (op)
+	{
+	case ClientSendData::ButtonOp::SIDE_ADD_WHITE_PL:
+
+		if (netPlayerIndex > 0)
+		{
+			d->playerSelection.PlayerToSide(netPlayerIndex, 0);
+		}
+		break;
+	case ClientSendData::ButtonOp::SIDE_ADD_BLACK_PL:
+		if (netPlayerIndex > 0)
+		{
+			d->playerSelection.PlayerToSide(netPlayerIndex, 1);
+		}
+		break;
+	case ClientSendData::ButtonOp::SIDE_ADD_WHITE_AI:
+		d->playerSelection.PlayerToSide(d->playerSelection.GetAiPlayerIndex(),0);
+		break;
+	case ClientSendData::ButtonOp::SIDE_ADD_BLACK_AI:
+		d->playerSelection.PlayerToSide(d->playerSelection.GetAiPlayerIndex(),1);
+		break;
+	case ClientSendData::ButtonOp::SIDE_REMOVE_ONE_WHITE:
+		d->playerSelection.RemoveLast(0);
+		break;
+	case ClientSendData::ButtonOp::SIDE_REMOVE_ONE_BLACK:
+		d->playerSelection.RemoveLast(1);
+		break;
+	case ClientSendData::ButtonOp::SIDE_REMOVE_ALL_WHITE:
+		d->playerSelection.ResetSide(0);
+		break;
+	case ClientSendData::ButtonOp::SIDE_REMOVE_ALL_BLACK:
+		d->playerSelection.ResetSide(1);
+		break;
+	case ClientSendData::ButtonOp::START_GAME:
+		d->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE, true);
+		break;
+	case ClientSendData::ButtonOp::NO_OP:
+		break;
+	default:
+		break;
+	}
+}
 // updates client application 
 void ServerSendData::operator()(ReversiSFML* pd)
 {
 	pd->playerSelection = mPlayerManagerSelect;
 	pd->reversiGame = mBoard;
+
+	// updates client index is neccessary
+	if (pd->clientPlayerIndex < 0)
+	{
+		// search pm for id
+		pd->clientPlayerIndex = mPlayerManagerSelect.GetPlayerIndex(pd->localPlayer);
+	}
+
 	// chat update
 	const auto& localRecentMsg = pd->chat.GetRecentChatEntry();
 	// validate string length matches
