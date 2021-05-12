@@ -15,8 +15,8 @@ class StateManager
 {
 	StateContainer mStates;
 	sf::Sprite mBackground;
-	ToggleButton mHelp;
-	ToggleButton mChat;
+	ToggleButton mHelpBtn;
+	ToggleButton mChatBtn;
 	ReversiSFML* mpApp;
 	std::array<sf::Sprite,3> mMenuButtons;
 	enum 

@@ -44,6 +44,8 @@ void ReversiSFML::Init()
 
 	chat.display = false;
 
+	
+
 }
 
 void ReversiSFML::Run()

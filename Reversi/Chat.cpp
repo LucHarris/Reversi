@@ -25,8 +25,9 @@ void Chat::Init()
 	mText.at(TEXT_LOG).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
 	mText.at(TEXT_LOG).setCharacterSize(gc::CHAR_SIZE_REG);
 	mText.at(TEXT_LOG).setFillColor(sf::Color::Black);
-	mText.at(TEXT_LOG).setString("<No Chat>");
-	mText.at(TEXT_LOG).setOrigin({ 0.0f,0.0f });
+	mText.at(TEXT_LOG).setString("<No Chat>\n\n\n\n\n\n\n");
+	mText.at(TEXT_LOG).setOrigin({ 0.0f,mText.at(TEXT_LOG).getGlobalBounds().height});
+	mText.at(TEXT_LOG).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_BL] + sf::Vector2f{ 64.0f,-128.0f });
 
 	mText.at(TEXT_INPUT).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
 	mText.at(TEXT_INPUT).setCharacterSize(gc::CHAR_SIZE_REG);
@@ -34,6 +35,7 @@ void Chat::Init()
 	mText.at(TEXT_INPUT).setString("Type Here.");
 	mText.at(TEXT_INPUT).setPosition({ 300.0f,400.0f });
 	mText.at(TEXT_INPUT).setOrigin({ 0.0f,0.0f });
+	mText.at(TEXT_INPUT).setPosition(mText.at(TEXT_LOG).getPosition());
 
 }
 
@@ -57,6 +59,8 @@ void Chat::UpdateLog()
 		}
 
 		mText.at(TEXT_LOG).setString(oss.str());
+		mText.at(TEXT_LOG).setOrigin({ 0.0f,mText.at(TEXT_LOG).getGlobalBounds().height });
+
 	}
 }
 void Chat::Render()
