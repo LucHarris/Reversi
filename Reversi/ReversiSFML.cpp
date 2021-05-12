@@ -157,13 +157,6 @@ void ReversiSFML::InitText(sf::Text& t)
 
 void ReversiSFML::UpdateClient()
 {
-	// send
-	if (!sentPlayerDataToHost)
-	{
-		sentPlayerDataToHost = true;
-	}
-
-
 
 	// recv data
 	ServerSendData updateClient = threadPool.GetServerData();
@@ -203,9 +196,13 @@ void ReversiSFML::SendDummyClientData()
 	}
 	else
 	{
+		sendData.dummy = false;
 		// send profile
 		sendData.player = localPlayer;
 		sentPlayerDataToHost = true;
+		threadPool.PushInputQueue(sendData);
+
+		std::cout << "\n\n\n\n\n CLIENT SENDS USER DATA \n\n\n\n\n\n";
 	}
 	
 
