@@ -1,10 +1,10 @@
+#include "ReversiSFML.h"
 #include "PlayerManager.h"
 #include <cassert>
 #include "Constants.h"
 #include <sstream>
 #include <algorithm>
 #include <set>
-#include "ReversiSFML.h"
 
 PlayerManager::PlayerManager()
 {
@@ -400,4 +400,19 @@ std::vector<Player> PlayerManager::GetHumanPlayers() const
 		});
 
 	return pl;
+}
+
+
+void PlayerManager::ReplacePlayersInSides(int search, int replace)
+{
+	for (auto& side : mPlayerSides)
+	{
+		for (auto& pl : side)
+		{
+			if (search == pl)
+			{
+				pl = replace;
+			}
+		}
+	}
 }

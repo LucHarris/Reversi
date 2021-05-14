@@ -101,6 +101,6 @@ public:
 	// server thread pool client tracker removed
 	void PopSockerTracker(SOCKET s);
 
-	bool SockerActive(SOCKET s);
+	bool SocketActive(SOCKET s);
 };
 

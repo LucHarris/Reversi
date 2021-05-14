@@ -184,6 +184,8 @@ void ReversiSFML::UpdateHost()
 	sendData.mChatLog = chat.GetChatMessages();
 	threadPool.UpdateServerData(sendData);
 
+	ValidateSockets();
+
 }
 
 void ReversiSFML::SendDummyClientData()
@@ -207,5 +209,38 @@ void ReversiSFML::SendDummyClientData()
 	}
 	
 
+	
+}
+
+void ReversiSFML::ValidateSockets()
+{
+	for (size_t i = 0; i < playerSelection.GetPlayerSize(); i++)
+	{
+		auto& pl = playerSelection.GetPlayerAt(i);
+
+		if (pl.IsType(Player::Type::HUMAN) && pl.userData.id != localPlayer.userData.id)
+		{
+			if (!threadPool.SocketActive(pl.serverSocket))
+			{
+				// replace players assigned to a side with cpu player
+				playerSelection.ReplacePlayersInSides(i, localAiPlayerIndex);
+
+				// chat message
+				std::ostringstream msg;
+				msg << pl.userData.name << " left...";
+				chat.AddMessage(msg.str().c_str());
+
+				// set player in list as default
+				Player p;
+				pl = p;
+
+			}
+		}
+	}
+
+	if (playerSelection.HasGameEnded())
+	{
+		
+	}
 	
 }

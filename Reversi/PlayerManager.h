@@ -89,5 +89,17 @@ public:
 	{
 		mActiveSide = 0;
 	}
+
+	void ReplacePlayersInSides(int search, int replace);
+
+	Player& GetPlayerAt(size_t i)
+	{
+		return mPlayers.at(i);
+	}
+
+	size_t GetPlayerSize()
+	{
+		return mPlayers.size();
+	}
 };
 

@@ -50,8 +50,11 @@ void ServerSocket::Body()
 		{
 			ClientSendData data;
 			CopyMemory(&data, rBuffer, sizeof(ClientSendData));
-
+			// to compare against thread pool active socket list
+			data.player.serverSocket = mSocket;
 			data.ToConsole();
+
+
 			mpThreadPool->PushOutputQueue(data);
 
 			Sleep(50); // allow to be processed

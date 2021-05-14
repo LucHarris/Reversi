@@ -52,6 +52,8 @@ private:
 	void UpdateHost();
 	// send dummy data if client profile hasn't been sent
 	void SendDummyClientData();
+	// host
+	void ValidateSockets();
 
 };
 

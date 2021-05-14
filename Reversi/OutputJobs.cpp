@@ -1,5 +1,5 @@
-#include "OutputJobs.h"
 #include "ReversiSFML.h"
+#include "OutputJobs.h"
 #include <WS2tcpip.h>
 #include <string>
 #include <iostream>

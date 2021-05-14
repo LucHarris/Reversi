@@ -183,7 +183,7 @@ void ThreadPool::PopSockerTracker(SOCKET s)
 
 }
 
-bool ThreadPool::SockerActive(SOCKET s)
+bool ThreadPool::SocketActive(SOCKET s)
 {
 	std::lock_guard<std::mutex> lock(mSocketTracker.mut);
 	const auto it = std::find(mSocketTracker.container.begin(), mSocketTracker.container.end(), s);
@@ -191,7 +191,4 @@ bool ThreadPool::SockerActive(SOCKET s)
 	return it != mSocketTracker.container.end();
 }
 
-//ReversiSFML ThreadPool::GetMainData() const
-//{
-//	return *pMainData;
-//}
+

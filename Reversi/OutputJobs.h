@@ -22,8 +22,10 @@ struct ClientSendData
 	int move = -1;
 	ButtonOp op = ButtonOp::NO_OP;
 	int netPlayerIndex = -1;
+	
 	// to stop other member variables being evaluated/applied in operator()
 	bool dummy = false;
+
 	void operator()(ReversiSFML* d);
 
 	void ToConsole();
