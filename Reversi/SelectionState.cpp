@@ -252,6 +252,7 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 		else
 		{
 			ClientSendOperation(ClientSendData::ButtonOp::START_GAME);
+			mpApp->stateManager.ChangeState(gc::STATE_INDEX_GAME_SAMPLE, false);
 		}
 
 	}

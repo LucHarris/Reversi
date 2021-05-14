@@ -12,7 +12,7 @@ class GameSampleState :    public State
 {
 	sf::Sprite mBoardSprite;
 	Discs mDiscSprites;
-	PlayerManager mPlayers;
+	PlayerManager* mpSelectionPlayers;
 	// positive values mean active
 	DeltaCountdownTimer mAiTimer;
 	sf::Text mEndText;

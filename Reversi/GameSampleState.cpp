@@ -7,9 +7,9 @@
 
 void GameSampleState::IncActivePlayer()
 {
-	mPlayers.Increment();
+	mpSelectionPlayers->Increment();
 
-	if (mPlayers.GetActivePlayer().type == Player::Type::AI)
+	if (mpSelectionPlayers->GetActivePlayer().type == Player::Type::AI)
 	{
 		mAiTimer.Restart(0.00f);
 	}
@@ -17,7 +17,7 @@ void GameSampleState::IncActivePlayer()
 
 void GameSampleState::GameEnded()
 {
-	mPlayers.EndGame();
+	mpSelectionPlayers->EndGame();
 
 	std::string str("White:\t");
 
@@ -48,37 +48,16 @@ void GameSampleState::GameEnded()
 	mpApp->playerSelection.IncrementWinnerData(winSide);
 	mpApp->playerSelection.PlayerListToLocalUser(mpApp->localPlayer);
 
+	// output local user data
 	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
-	// file out
-
-	// todo test code above and remove deadcode below
-	/*if (scores.first > scores.second)
-	{
-		++mpApp->localPlayer.userData.whiteWin;
-	}
-	else
-	{
-		if (scores.first < scores.second)
-		{
-			++mpApp->localPlayer.userData.blackWin;
-		}
-		else
-		{
-			++mpApp->localPlayer.userData.draw;
-		}
-	}
-
-	++mpApp->localPlayer.userData.gamesPlayed;
-
-	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);*/
-
 
 }
 
 GameSampleState::GameSampleState(ReversiSFML* app)
 	:
 	State(app),
-	mDiscSprites(app)
+	mDiscSprites(app),
+	mpSelectionPlayers(&app->playerSelection)
 {
 
 }
@@ -103,20 +82,20 @@ void GameSampleState::Init()
 
 void GameSampleState::Update(float dt)
 {
-	if (!mPlayers.HasGameEnded())
+	if (!mpSelectionPlayers->HasGameEnded())
 	{
 		mAiTimer.Update(dt);
 
 		// todo move !join logic?
 		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			if (mPlayers.GetActivePlayer().IsType( Player::Type::AI))
+			if (mpSelectionPlayers->GetActivePlayer().IsType( Player::Type::AI))
 			{
 				// small delay so not instant
 				if (mAiTimer.HasElapsed())
 				{
 					Timer<int, std::micro> analysisTimer;
-					const int move = mAiNormalForm[mPlayers.GetSide()].Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
+					const int move = mAiNormalForm[mpSelectionPlayers->GetSide()].Evalualate(mpSelectionPlayers->GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
 					const int endTime = analysisTimer.elapsed();
 
 					std::ofstream timerOutFile("Data/Out/aiTimer.csv", std::ios::app);
@@ -179,9 +158,12 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 {
 	if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 	{
-		if (!mPlayers.HasGameEnded())
+		if (!mpSelectionPlayers->HasGameEnded())
 		{
-			if (mPlayers.GetActivePlayer().type == Player::Type::HUMAN && mpApp->reversiGame.CanMove())
+			// valid active player able to move
+			if (mpSelectionPlayers->GetActivePlayer().type == Player::Type::HUMAN &&  
+				mpApp->reversiGame.CanMove() && 
+				mpSelectionPlayers->GetActivePlayer().userData.id == mpApp->localPlayer.userData.id)
 			{
 				const int move = mDiscSprites.MoveByMoooouse(pos);;
 
@@ -216,13 +198,14 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 			ClientSendData sendData;
 			sendData.move = move;
 			sendData.dummy = false;
+			sendData.player = mpApp->localPlayer;
 
 			// send to host
 			mpApp->threadPool.PushInputQueue(sendData);
 		}
 	}
 
-	
+	mpApp->debugLog.setString(mpApp->playerSelection.DebugSideInfo());
 
 	
 }
@@ -244,12 +227,13 @@ void GameSampleState::Reset()
 	if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 	{
 		mpApp->reversiGame.Initialize();
-		mPlayers = mpApp->playerSelection;
 		mDiscSprites.UpdateDiscs();
 	}
 	else
 	{
 
 	}
-	
+
+	mpApp->debugLog.setString(mpApp->playerSelection.DebugSideInfo());
+
 }

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <array>
+#include <string>
 #include "Player.h"
 
 class ReversiSFML;
@@ -81,5 +82,7 @@ public:
 
 	bool PlayerUpdatesPlayerList(Player& localUser);
 	// 
+
+	std::string DebugSideInfo();
 };
 

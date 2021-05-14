@@ -19,16 +19,14 @@ PlayerManager::PlayerManager()
 
 void PlayerManager::Increment()
 {
-
-	// toggles between sides
-	mActiveSide = 1 - mActiveSide;
-
 	// cycle through players on active side
 	if (++mPosition.at(mActiveSide) >=   mSideCount.at(mActiveSide))//todo remove   (int)mPlayerSides.at(mActiveSide).size())
 	{
 		mPosition.at(mActiveSide) = 0;
 	}
 
+	// toggles between sides
+	mActiveSide = 1 - mActiveSide;
 }
 
 Player& PlayerManager::GetActivePlayer()
@@ -39,25 +37,6 @@ Player& PlayerManager::GetActivePlayer()
 
 	return  mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) );
 }
-
-//todo remove old member function
-//bool PlayerManager::AddPlayer(const Player::Type& t, int side)
-//{
-//	assert(side < (int)mPlayerSides.size() && side >= 0); // 0 or 1
-//
-//	// adds player
-//	if (mSideCount.at(side) < gc::MAX_PLAYERS_PER_SIDE)
-//	{
-//		mPlayerSides.at(side).at(mSideCount.at(side)) = Player(t);
-//		++mSideCount.at(side);
-//		return true;
-//	}
-//	else
-//	{
-//		// invalid range
-//		return false;
-//	}
-//}
 
 bool PlayerManager::AddPlayer(const Player& p)
 {
@@ -104,7 +83,7 @@ bool PlayerManager::PlayerToSide(const Player& pl, int side)
 			return p.userData.id == pl.userData.id;
 		});
 
-	// cannot find player in mPlayers
+	// cannot find player in mpSelectionPlayers
 	if (it == mPlayers.end())
 	{
 		return false;
@@ -336,6 +315,31 @@ void PlayerManager::IncrementWinnerData(int side)
 		assert(false);
 		break;
 	}
+}
+
+std::string PlayerManager::DebugSideInfo()
+{
+	std::ostringstream oss;
+
+	oss
+		<< "\nWhite pos: " << mPosition.at(0)
+		<< "\tBlack pos:" << mPosition.at(1) 
+		<< "\nWhite sCount: " << mSideCount.at(0)
+		<< "\tBlack sCount:" << mSideCount.at(1)
+		<< "\nActive Side:" << mActiveSide 
+		<< "\tActive Pos@side:" << mPosition.at(mActiveSide)
+		<< "\nActive id:" << mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) ).userData.id
+		<< "\nActive nm:" << mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) ).userData.name
+		<< "\n\n"
+		;
+
+	oss 
+		<< GetPlayerListString(0)  
+		<< GetPlayerListString(1)  
+		;
+
+	return oss.str();
+	
 }
 
 bool PlayerManager::PlayerListToLocalUser(Player& localUser) const

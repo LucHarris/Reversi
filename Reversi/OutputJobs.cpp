@@ -71,12 +71,21 @@ void ClientSendData::UpdateHostMoves(ReversiSFML* d)
 {
 	if (move >= 0 && move < 64)
 	{
-		if (d->reversiGame.CanMove())
+		const Player& activePlayer = d->playerSelection.GetActivePlayer();
+		if (player.userData.id == activePlayer.userData.id)
 		{
-			d->reversiGame.Move(move);
-			d->playerSelection.Increment();
-			//todo further operations required?
+			if (d->reversiGame.CanMove())
+			{
+				d->reversiGame.Move(move);
+				d->playerSelection.Increment();
+				//todo further operations required?
+			}
 		}
+		else
+		{
+			// not that players turn
+		}
+		
 	}
 }
 void ClientSendData::UpdateHostButtons(ReversiSFML* d)
