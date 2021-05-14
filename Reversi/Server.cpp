@@ -7,17 +7,20 @@
 #include "OutputJobs.h"
 #include "ReversiSFML.h"
 
+
 ServerSocket::ServerSocket(const SOCKET& s, ThreadPool* ptp)
 	:
 	mSocket(s),
 	mResult(0),
 	mpThreadPool(ptp)
 {
+	
 }
 
 ServerSocket::~ServerSocket()
 {
 	std::cout << "\nServer: ~ServerClient() ";
+
 }
 
 // 
@@ -34,6 +37,9 @@ void ServerSocket::Body()
 	char sBuffer[sSize];
 
 	int result = 1;
+
+	mpThreadPool->PushSocketTracker(mSocket);
+
 	do
 	{
 		std::cout << "\nrecv";
@@ -46,7 +52,6 @@ void ServerSocket::Body()
 			CopyMemory(&data, rBuffer, sizeof(ClientSendData));
 
 			data.ToConsole();
-
 			mpThreadPool->PushOutputQueue(data);
 
 			Sleep(50); // allow to be processed
@@ -77,6 +82,9 @@ void ServerSocket::Body()
 		Sleep(100);
 
 	} while (result > 0 && mpThreadPool->socketType >= ThreadPool::Type::SERVER_LISTEN);
+
+	mpThreadPool->PopSockerTracker(mSocket);
+
 
 	std::cout << "\ndo while ended";
 }

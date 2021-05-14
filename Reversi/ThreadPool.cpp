@@ -24,12 +24,12 @@ void ThreadPool::WorkThread()
 bool ThreadPool::HasPopped(ThreadJob& job)
 {
 	std::lock_guard<std::mutex> lock(mThreadQueue.mut);
-	if (mThreadQueue.jobQueue.empty())
+	if (mThreadQueue.container.empty())
 	{
 		return false;
 	}
-	job = mThreadQueue.jobQueue.front();
-	mThreadQueue.jobQueue.pop();
+	job = mThreadQueue.container.front();
+	mThreadQueue.container.pop();
 	return true;
 }
 
@@ -71,7 +71,13 @@ ThreadPool::ThreadPool(ReversiSFML* pld)
 	pMainData(pld)
 {
 	// define minimum number of threads if hardware_concurrency value cannot be computed 
-	const size_t count = std::max(std::thread::hardware_concurrency(), 4U);
+	const size_t count = 8;
+	
+	{
+		std::lock_guard<std::mutex> lock(mOutputQueue.mut);
+		//mSocketTracker.reserve(16);
+
+	}
 
 	threads.reserve(count);
 
@@ -103,7 +109,7 @@ void ThreadPool::PushThreadQueue(const ThreadJob& job, Type t)
 	{
 		socketType = t;
 		std::lock_guard<std::mutex> lock(mThreadQueue.mut);
-		mThreadQueue.jobQueue.push(job);
+		mThreadQueue.container.push(job);
 		condition.notify_one();
 	}
 	else
@@ -115,37 +121,37 @@ void ThreadPool::PushThreadQueue(const ThreadJob& job, Type t)
 bool ThreadPool::PopOutputQueue(OutputJob& job)
 {
 	std::lock_guard<std::mutex> lock(mOutputQueue.mut);
-	if (mOutputQueue.jobQueue.empty())
+	if (mOutputQueue.container.empty())
 	{
 		return false;
 	}
-	job = mOutputQueue.jobQueue.front();
-	mOutputQueue.jobQueue.pop();
+	job = mOutputQueue.container.front();
+	mOutputQueue.container.pop();
 	return true;
 }
 
 void ThreadPool::PushOutputQueue(const OutputJob& job)
 {
 	std::lock_guard<std::mutex> lock(mOutputQueue.mut);
-	mOutputQueue.jobQueue.push(job);
+	mOutputQueue.container.push(job);
 }
 
 bool ThreadPool::PopInputQueue(InputJob& job)
 {
 	std::lock_guard<std::mutex> lock(mInputQueue.mut);
-	if (mInputQueue.jobQueue.empty())
+	if (mInputQueue.container.empty())
 	{
 		return false;
 	}
-	job = mInputQueue.jobQueue.front();
-	mInputQueue.jobQueue.pop();
+	job = mInputQueue.container.front();
+	mInputQueue.container.pop();
 	return true;
 }
 
 void ThreadPool::PushInputQueue(const InputJob& job)
 {
 	std::lock_guard<std::mutex> lock(mInputQueue.mut);
-	mInputQueue.jobQueue.push(job);
+	mInputQueue.container.push(job);
 }
 
 void ThreadPool::UpdateServerData(const ServerSendData& l)
@@ -158,6 +164,31 @@ ServerSendData ThreadPool::GetServerData()
 {
 	std::lock_guard<std::mutex> lock(mServerDataMutex);
 	return mServerData;
+}
+
+void ThreadPool::PushSocketTracker(SOCKET s)
+{
+	std::lock_guard<std::mutex> lock(mSocketTracker.mut);
+	mSocketTracker.container.emplace_back(s);
+}
+
+void ThreadPool::PopSockerTracker(SOCKET s)
+{
+	std::lock_guard<std::mutex> lock(mSocketTracker.mut);
+	auto it = std::find(mSocketTracker.container.begin(), mSocketTracker.container.end(), s);
+
+	auto eee = mSocketTracker.container.end();
+	assert(it != mSocketTracker.container.end());
+	mSocketTracker.container.erase(it);
+
+}
+
+bool ThreadPool::SockerActive(SOCKET s)
+{
+	std::lock_guard<std::mutex> lock(mSocketTracker.mut);
+	const auto it = std::find(mSocketTracker.container.begin(), mSocketTracker.container.end(), s);
+
+	return it != mSocketTracker.container.end();
 }
 
 //ReversiSFML ThreadPool::GetMainData() const

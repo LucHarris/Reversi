@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include "DeltaTimer.h"
 #include "State.h"
 #include "Discs.h"
@@ -10,20 +11,17 @@
 
 class GameSampleState :    public State
 {
+	enum{TEXT_END,TEXT_TURN};
 	sf::Sprite mBoardSprite;
 	Discs mDiscSprites;
 	PlayerManager* mpSelectionPlayers;
 	// positive values mean active
 	DeltaCountdownTimer mAiTimer;
-	sf::Text mEndText;
+	std::array<sf::Text,2> mText;
 	PayoffMultipliers mPayoffMulti;
 	// ai structure for each side 
 	NormalForm mAiNormalForm[2];
 	
-	// increments active player for next turn
-	void IncActivePlayer();
-	// sets active player to invalid for update and input logic. sets end text
-	void GameEnded();
 
 public:
 	GameSampleState(ReversiSFML* app);
@@ -35,5 +33,13 @@ public:
 	virtual void TextEntered(unsigned int key) override {};
 
 	virtual void Reset() override;
+private:
+	// increments active player for next turn
+	void IncActivePlayer();
+	// sets active player to invalid for update and input logic. sets end text
+	void GameEnded();
+
+	void UpdateTurnList();
+
 };
 

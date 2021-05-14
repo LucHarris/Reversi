@@ -4,6 +4,8 @@
 #include "OutputJobs.h"
 //#include "ReversiSFML.h"
 //#include <thread>
+#include <WinSock2.h>
+
 
 class ReversiSFML;
 
@@ -17,7 +19,14 @@ template<class J>
 struct MutexQueue
 {
 	std::mutex mut;
-	std::queue<J> jobQueue;
+	std::queue<J> container;
+};
+
+template<class J>
+struct MutexVector
+{
+	std::mutex mut;
+	std::vector<J> container;
 };
 
 class ThreadPool
@@ -32,9 +41,10 @@ private:
 	// notify one thread when job is available
 	std::condition_variable condition;
 	//for queue
-	//std::queue<ThreadJob> jobQueue;
+	//std::queue<ThreadJob> container;
 	// a thread in the container is nofified when a job becomes available
 	std::vector<std::thread> threads;
+	MutexVector<SOCKET> mSocketTracker;
 	ReversiSFML* const pMainData;
 
 	std::mutex mServerDataMutex;
@@ -85,6 +95,12 @@ public:
 	void UpdateServerData(const ServerSendData& l);
 
 	ServerSendData GetServerData();
-	//ReversiSFML GetMainData() const;
+
+	// server thread pool new client tracker
+	void PushSocketTracker(SOCKET s);
+	// server thread pool client tracker removed
+	void PopSockerTracker(SOCKET s);
+
+	bool SockerActive(SOCKET s);
 };
 

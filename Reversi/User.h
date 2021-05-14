@@ -2,7 +2,7 @@
 
 struct UserData
 {
-	char name[16] = "Unnamed";
+	char name[16] = "-\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 	unsigned int id;
 	int whiteWin = 0;
 	int blackWin = 0;

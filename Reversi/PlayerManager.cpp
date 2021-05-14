@@ -160,11 +160,6 @@ std::string PlayerManager::GetPlayerListString(int side)
 		if (p >= 0)
 		{
 			playerList << mPlayers.at(p).userData.name;
-
-			if (mPlayers.at(p).type == Player::Type::AI)
-			{
-				playerList << " (CPU)";
-			}
 		}
 
 		
@@ -320,23 +315,32 @@ void PlayerManager::IncrementWinnerData(int side)
 std::string PlayerManager::DebugSideInfo()
 {
 	std::ostringstream oss;
+	if (!HasGameEnded())
+	{
+		oss
+			<< "\nWhite pos: " << mPosition.at(0)
+			<< "\tBlack pos:" << mPosition.at(1)
+			<< "\nWhite sCount: " << mSideCount.at(0)
+			<< "\tBlack sCount:" << mSideCount.at(1)
+			<< "\nActive Side:" << mActiveSide
+			<< "\tActive Pos@side:" << mPosition.at(mActiveSide)
+			<< "\nActive id:" << mPlayers.at(mPlayerSides.at(mActiveSide).at(mPosition.at(mActiveSide))).userData.id
+			<< "\nActive nm:" << mPlayers.at(mPlayerSides.at(mActiveSide).at(mPosition.at(mActiveSide))).userData.name
+			<< "\n\n"
+			;
 
-	oss
-		<< "\nWhite pos: " << mPosition.at(0)
-		<< "\tBlack pos:" << mPosition.at(1) 
-		<< "\nWhite sCount: " << mSideCount.at(0)
-		<< "\tBlack sCount:" << mSideCount.at(1)
-		<< "\nActive Side:" << mActiveSide 
-		<< "\tActive Pos@side:" << mPosition.at(mActiveSide)
-		<< "\nActive id:" << mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) ).userData.id
-		<< "\nActive nm:" << mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) ).userData.name
-		<< "\n\n"
-		;
+		oss
+			<< GetPlayerListString(0)
+			<< GetPlayerListString(1)
+			;
+	}
+	else
+	{
+		oss
+			<< "game ended";
+	}
 
-	oss 
-		<< GetPlayerListString(0)  
-		<< GetPlayerListString(1)  
-		;
+	
 
 	return oss.str();
 	

@@ -84,5 +84,10 @@ public:
 	// 
 
 	std::string DebugSideInfo();
+
+	void NewGame()
+	{
+		mActiveSide = 0;
+	}
 };
 

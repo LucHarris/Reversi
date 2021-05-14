@@ -12,6 +12,7 @@ public:
 	// local data
 	UserData userData;
 	Type type;
+	
 	// determines strategy
 	// simple max position
 	int EvaluateMove(const ScoreGrid& sg);

@@ -25,11 +25,14 @@ void GameSampleState::GameEnded()
 	str += std::to_string(scores.first);
 	str += "\nBlack:\t";
 	str += std::to_string(scores.second);
-	mEndText.setString(str);
+	mText.at(TEXT_END).setString(str);
 
-	const auto r = mEndText.getGlobalBounds();
-	mEndText.setOrigin(r.width * gc::HALF, r.height * gc::HALF);
-	mEndText.setPosition(gc::VIEWPORT_CENTER);
+	const auto r = mText.at(TEXT_END).getGlobalBounds();
+	mText.at(TEXT_END).setOrigin(r.width * gc::HALF, r.height * gc::HALF);
+	mText.at(TEXT_END).setPosition(gc::VIEWPORT_CENTER);
+
+	// no more goes
+	mText.at(TEXT_TURN).setString("");
 
 	int winSide = -1; // draw by default
 
@@ -50,7 +53,32 @@ void GameSampleState::GameEnded()
 
 	// output local user data
 	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+}
 
+void GameSampleState::UpdateTurnList()
+{
+	if (!mpApp->playerSelection.HasGameEnded())
+	{
+		std::ostringstream oss;
+
+		oss << "Next Turn:\n";
+		PlayerManager pm = *mpSelectionPlayers;
+		for (size_t i = 0; i < 5;)
+		{
+			oss << ++i
+				<< "\t"
+				<< pm.GetActivePlayer().userData.name
+				<< "\n";
+			pm.Increment();
+		}
+
+		mText.at(TEXT_TURN).setString(oss.str());
+	}
+	else
+	{
+		mText.at(TEXT_TURN).setString("");
+	}
+	
 }
 
 GameSampleState::GameSampleState(ReversiSFML* app)
@@ -71,8 +99,11 @@ void GameSampleState::Init()
 
 	mDiscSprites.Init();
 
-	mEndText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
-	mEndText.setString("");
+	mText.at(TEXT_END).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
+	mText.at(TEXT_END).setString("");
+
+	mText.at(TEXT_TURN).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
+	mText.at(TEXT_END).setString("");
 
 	mPayoffMulti.Load();
 
@@ -127,19 +158,22 @@ void GameSampleState::Update(float dt)
 					}
 				}
 			}
+
+			UpdateTurnList();
 		}
 		else
 		{
 			// client
 		}
 		
+		
+
 	}
 	else
 	{
 		// todo only called once but remove from loop if possible
 		mpApp->reversiGame.ExportWinningMoves();
 	}
-	
 	
 	mDiscSprites.Update(dt);
 
@@ -150,7 +184,10 @@ void GameSampleState::Render(float dt)
 {
 	mpApp->window.draw(mBoardSprite);
 	mDiscSprites.Render(dt);
-	mpApp->window.draw(mEndText);
+	for (auto& t : mText)
+	{
+		mpApp->window.draw(t);
+	}
 
 }
 
@@ -222,11 +259,12 @@ void GameSampleState::Reset()
 	mAiNormalForm[0].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
 	mAiNormalForm[1].Init(mPayoffMulti.GetAt(PayoffMultipliers::PREDEFINED), mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
 
-	mEndText.setString("");
+	mText.at(TEXT_END).setString("");
 
 	if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 	{
 		mpApp->reversiGame.Initialize();
+		mpApp->playerSelection.NewGame();
 		mDiscSprites.UpdateDiscs();
 	}
 	else

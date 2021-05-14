@@ -31,6 +31,11 @@ void ReversiSFML::Init()
 
 	// ai player
 	Player ai(Player::Type::AI);
+
+	ai.userData.name[0] = 'C';
+	ai.userData.name[1] = 'P';
+	ai.userData.name[2] = 'U';
+
 	if (!playerSelection.AddPlayer(ai))// index 1
 	{
 		assert(false);
