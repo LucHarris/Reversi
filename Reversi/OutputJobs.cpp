@@ -74,6 +74,7 @@ void ClientSendData::UpdateHostMoves(ReversiSFML* d)
 		if (d->reversiGame.CanMove())
 		{
 			d->reversiGame.Move(move);
+			d->playerSelection.Increment();
 			//todo further operations required?
 		}
 	}

@@ -3,6 +3,9 @@
 #include "Constants.h"
 #include <sstream>
 #include <algorithm>
+#include <set>
+#include "ReversiSFML.h"
+
 PlayerManager::PlayerManager()
 {
 	for (auto& side : mPlayerSides)
@@ -12,7 +15,6 @@ PlayerManager::PlayerManager()
 			pos = -1;
 		}
 	}
-
 }
 
 void PlayerManager::Increment()
@@ -152,7 +154,7 @@ int PlayerManager::GetPlayerIndex(const Player& pl) const
 	return index;
 }
 
-std::string PlayerManager::GetPlayerList(int side)
+std::string PlayerManager::GetPlayerListString(int side)
 {
 	//std::string playerList = "";
 	std::ostringstream playerList;
@@ -235,4 +237,159 @@ void PlayerManager::ResetSide(int side)
 	}
 }
 
+void PlayerManager::IncrementWinnerData(int side)
+{
+	std::set<int> modifyPlayers;
 
+	// updates winner data
+	switch (side)
+	{
+	case PLAYER_ONE:
+		// avoid duplication
+		for (auto& wPlayer : mPlayerSides.at(side))
+		{
+			if (wPlayer >= 0)
+			{
+				if (mPlayers.at(wPlayer).type == Player::Type::HUMAN)
+				{
+					modifyPlayers.insert(wPlayer);
+				}
+			}
+		}
+		for (auto& wPlayer : modifyPlayers)
+		{
+			++mPlayers.at(wPlayer).userData.whiteWin;
+		}
+		break;
+	case PLAYER_TWO:
+		// avoid duplication
+		for (auto& bPlayer : mPlayerSides.at(side))
+		{
+			// valid player
+			if (bPlayer >= 0)
+			{
+				if (mPlayers.at(bPlayer).type == Player::Type::HUMAN)
+				{
+					modifyPlayers.insert(bPlayer);
+				}
+
+			}
+		}
+
+		for (auto& wPlayer : modifyPlayers)
+		{
+			++mPlayers.at(wPlayer).userData.blackWin;
+		}
+
+		break;
+	case -1: // draw
+		for (auto& side : mPlayerSides)
+		{
+			for (auto& dPlayer : side)
+			{
+				if (dPlayer >= 0)
+				{
+					if (mPlayers.at(dPlayer).type == Player::Type::HUMAN)
+					{
+						modifyPlayers.insert(dPlayer);
+					}
+				}
+			}
+		}
+
+		for (auto& dPlayer : mPlayerSides.at(side))
+		{
+			++mPlayers.at(dPlayer).userData.draw;
+			++mPlayers.at(dPlayer).userData.gamesPlayed;
+
+		}
+
+		break;
+	default:
+		assert(false);
+		break;
+	}
+
+	// increment games played and total wins
+	switch (side)
+	{
+	case PLAYER_ONE:;
+	case PLAYER_TWO:
+
+		modifyPlayers.clear();
+		for (auto& player : mPlayerSides.at(side))
+		{
+			if (player >= 0)
+			{
+				if (mPlayers.at(player).type == Player::Type::HUMAN)
+				{
+					++mPlayers.at(player).userData.gamesPlayed;
+					mPlayers.at(player).userData.totalWins = mPlayers.at(player).userData.whiteWin + mPlayers.at(player).userData.blackWin;
+				}
+			}
+		}
+		break;
+	case -1:
+		// already incremented games played and total wins don't change
+		break;
+	default:
+		assert(false);
+		break;
+	}
+}
+
+bool PlayerManager::PlayerListToLocalUser(Player& localUser) const
+{
+	auto foundUser = std::find_if(mPlayers.begin(), mPlayers.end(), [&localUser](const Player& pl) 
+		{
+			return localUser.userData.id == pl.userData.id;
+		});
+
+	if (foundUser != mPlayers.end())
+	{
+		localUser = *foundUser;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+bool PlayerManager::PlayerUpdatesPlayerList(Player& localUser)
+{
+	auto foundUser = std::find_if(mPlayers.begin(), mPlayers.end(), [&localUser](const Player& pl)
+		{
+			return localUser.userData.id == pl.userData.id;
+		});
+
+	if (foundUser != mPlayers.end())
+	{
+		*foundUser = localUser;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
+std::vector<Player> PlayerManager::GetHumanPlayers() const
+{
+	std::vector<Player> pl;
+
+	std::copy_if(mPlayers.begin(), mPlayers.end(), std::back_inserter(pl), [](const Player& p)
+		{
+			return p.IsType(Player::Type::HUMAN);
+		});
+	
+	std::sort(pl.begin(), pl.end(), [](const Player& a, const Player& b) 
+		{
+			return a.userData.totalWins > b.userData.totalWins;
+		});
+
+	return pl;
+}

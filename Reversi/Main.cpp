@@ -6,7 +6,7 @@
 
 int main()
 {
-
+	srand((unsigned)time(NULL));
 
 	ReversiSFML app;
 	

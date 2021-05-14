@@ -219,7 +219,6 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 			{
 				mpApp->resources.Play(Resources::SOUND_ERROR, mpApp->masterVolume);
 			}
-
 		}
 		else
 		{
@@ -233,7 +232,6 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 		{
 			mpApp->playerSelection.ResetSide(1);
 			mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
-
 		}
 		else
 		{
@@ -274,7 +272,7 @@ void SelectionState::UpdatePlayerList()
 {
 	for (int i = 0; i < 2; i++)
 	{
-		mPlayerDisplay.at(i).setString(mpApp->playerSelection.GetPlayerList(i));
+		mPlayerDisplay.at(i).setString(mpApp->playerSelection.GetPlayerListString(i));
 	}
 }
 

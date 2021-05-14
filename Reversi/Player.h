@@ -16,6 +16,6 @@ public:
 	// simple max position
 	int EvaluateMove(const ScoreGrid& sg);
 	int EvaluateMoveFromNode(const ReversiBoard& board);
-
+	bool IsType(Type t) const;
 };
 

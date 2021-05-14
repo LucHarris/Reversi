@@ -31,11 +31,28 @@ void GameSampleState::GameEnded()
 	mEndText.setOrigin(r.width * gc::HALF, r.height * gc::HALF);
 	mEndText.setPosition(gc::VIEWPORT_CENTER);
 
-
-
-	// file out
+	int winSide = -1; // draw by default
 
 	if (scores.first > scores.second)
+	{
+		winSide = PLAYER_ONE;
+	}
+	else
+	{
+		if (scores.first < scores.second)
+		{
+			winSide = PLAYER_TWO;
+		}
+	}
+
+	mpApp->playerSelection.IncrementWinnerData(winSide);
+	mpApp->playerSelection.PlayerListToLocalUser(mpApp->localPlayer);
+
+	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+	// file out
+
+	// todo test code above and remove deadcode below
+	/*if (scores.first > scores.second)
 	{
 		++mpApp->localPlayer.userData.whiteWin;
 	}
@@ -53,7 +70,7 @@ void GameSampleState::GameEnded()
 
 	++mpApp->localPlayer.userData.gamesPlayed;
 
-	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);*/
 
 
 }
@@ -90,23 +107,16 @@ void GameSampleState::Update(float dt)
 	{
 		mAiTimer.Update(dt);
 
+		// todo move !join logic?
 		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
-			if (mPlayers.GetActivePlayer().type == Player::Type::AI)
+			if (mPlayers.GetActivePlayer().IsType( Player::Type::AI))
 			{
 				// small delay so not instant
 				if (mAiTimer.HasElapsed())
 				{
-
 					Timer<int, std::micro> analysisTimer;
-
-					//NormalForm nf(mPayoffMulti.GetAt(pp),mPayoffMulti.GetAt(PayoffMultipliers::ADAPTIVE));
-
 					const int move = mAiNormalForm[mPlayers.GetSide()].Evalualate(mPlayers.GetSide(), mpApp->reversiGame, mpApp->reversiGame.GetLastMove());
-					//const int move = mAiNormalForm.Dominant();
-
-
-
 					const int endTime = analysisTimer.elapsed();
 
 					std::ofstream timerOutFile("Data/Out/aiTimer.csv", std::ios::app);
@@ -120,13 +130,11 @@ void GameSampleState::Update(float dt)
 						assert(false);
 					}
 
-
 					// successful move 
 					if (mDiscSprites.Move(move))
 					{
 						if (mpApp->reversiGame.CanMove())
 						{
-
 							IncActivePlayer();
 						}
 						else

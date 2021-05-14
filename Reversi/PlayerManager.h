@@ -4,6 +4,7 @@
 #include <array>
 #include "Player.h"
 
+class ReversiSFML;
 
 class PlayerManager
 {
@@ -51,7 +52,7 @@ public:
 		return mActiveSide < 0;
 	}
 
-	std::string GetPlayerList(int side);
+	std::string GetPlayerListString(int side);
 
 	// makes sure there is al least a player on each side before starting a game
 	void ValidatePlayers();
@@ -67,6 +68,18 @@ public:
 		return mPlayers;
 	}
 
+	std::vector<Player> GetHumanPlayers() const;
 
+	// draw is -1
+	void IncrementWinnerData(int side);
+
+	// updates param with element matching id in player list.
+	// for local user data
+	bool PlayerListToLocalUser(Player& localUser) const;
+
+	// param updates element in player list. match with id
+
+	bool PlayerUpdatesPlayerList(Player& localUser);
+	// 
 };
 

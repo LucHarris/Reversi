@@ -8,7 +8,7 @@ struct UserData
 	int blackWin = 0;
 	int draw = 0;
 	int gamesPlayed = 0;
-	int gamesAbandoned = 0;
+	int totalWins = 0;
 
 	UserData()
 		:

@@ -51,10 +51,8 @@ void ProfileState::KeyInput(sf::Keyboard::Key key)
 
 void ProfileState::TextEntered(unsigned int key)
 {
-
 	if (mpApp->gameType == ReversiSFML::GameType::SINGLE)
 	{
-
 		const bool canType = mInputString.length() < UserData::GetMaxNameSize();
 
 		ClientSendData clientSend;
@@ -80,6 +78,8 @@ void ProfileState::TextEntered(unsigned int key)
 					std::copy(mInputString.begin(), mInputString.begin() + (mInputString.length() ), mpApp->localPlayer.userData.name);
 					// update file
 					util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+					// update Player list
+					mpApp->playerSelection.PlayerUpdatesPlayerList(mpApp->localPlayer);
 					// return to main menu
 					mpApp->stateManager.ChangeState(gc::STATE_INDEX_MAIN_MENU, true);
 				}
@@ -115,26 +115,29 @@ void ProfileState::Reset()
 	mText.at(TEXT_INPUT).setString(mInputString);
 	std::ostringstream oss;
 
-	const auto& playerList = mpApp->playerSelection.GetPlayerList();
+	const auto& playerList = mpApp->playerSelection.GetHumanPlayers();
 
 	// field names
-	oss << "Player Profiles\n\nWW\tBW\tD\tPLY\tName\n";
+	oss << "Player Profiles\n\n#\tTW\tWW\tBW\tD\tPLY\tName\tid\n";
+
+	int position = 0;
 
 	for (auto& player : playerList)
 	{
-		if(player.type == Player::Type::HUMAN)
-		{
-			// row entry
-			oss
-				<< player.userData.whiteWin << "\t\t"
-				<< player.userData.blackWin <<		"\t\t"
-				<< player.userData.draw <<			"\t\t"
-				<< player.userData.gamesPlayed <<	"\t\t"
-				<< player.userData.name << '\n'
-				;
-		}
+		// row entry
+		oss
+			<< ++position << "\t\t"
+			<< player.userData.totalWins << "\t\t"
+			<< player.userData.whiteWin << "\t\t"
+			<< player.userData.blackWin <<		"\t\t"
+			<< player.userData.draw <<			"\t\t"
+			<< player.userData.gamesPlayed <<	"\t\t"
+			<< player.userData.name << '\t' 
+			<< player.userData.id << '\n'
+			;
+		
 	}
-	oss << "\n\nWW - WhtWin\t\tBW - BlkWin\nD-Draw\t\tPLY - Played";
+	oss << "\n\nTW - Total Wins\t\tWW - WhtWin\t\tBW - BlkWin\nD-Draw\t\tPLY - Played";
 
 	mText.at(TEXT_USER_OUT).setString(oss.str().c_str());
 

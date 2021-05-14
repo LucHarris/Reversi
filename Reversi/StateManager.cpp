@@ -75,10 +75,10 @@ void StateManager::Init()
 	mHelpBtn.show.setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CR]);
 
 	// Chat
-	mChatBtn.icon.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_HELP_ICON));
+	mChatBtn.icon.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_ICON_CHAT));
 	mChatBtn.icon.setPosition(0, gc::VIEWPORT_HEIGHT_F - 64.0f);
 
-	const sf::Texture& c = mpApp->resources.GetTextureAt(Resources::TEXTURE_HELP_1);
+	const sf::Texture& c = mpApp->resources.GetTextureAt(Resources::TEXTURE_CHAT_BG);
 
 	origin.x = 0;
 	origin.y = c.getSize().y / 2;

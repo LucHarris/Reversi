@@ -31,3 +31,8 @@ int Player::EvaluateMoveFromNode(const ReversiBoard& board)
 
 	return -1;
 }
+
+bool Player::IsType(Type t) const
+{
+	return t == type;
+}
