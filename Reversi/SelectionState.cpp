@@ -1,9 +1,8 @@
 #include "SelectionState.h"
 #include "ReversiSFML.h"
 #include "Constants.h"
-
 #include "Listener.h"
-#include "client.h"
+#include "Client.h"
 #include "OutputJobs.h"
 
 SelectionState::SelectionState(ReversiSFML* app)
@@ -289,17 +288,7 @@ void SelectionState::ClientSendOperation(ClientSendData::ButtonOp op)
 
 void SelectionState::Reset()
 {
+	// todo note moved to 
 
-
-	switch (mpApp->gameType)
-	{
-	case ReversiSFML::GameType::HOST:
-		mpApp->threadPool.PushThreadQueue(ServerListener(&mpApp->threadPool), ThreadPool::Type::SERVER_LISTEN);
-		break;
-	case ReversiSFML::GameType::JOIN:
-		mpApp->threadPool.PushThreadQueue(ClientSocket(&mpApp->threadPool), ThreadPool::Type::CLIENT_SOCKET);
-		break;
-	default:
-		break;
-	}
+	
 }

@@ -71,17 +71,10 @@ ThreadPool::ThreadPool(ReversiSFML* pld)
 	pMainData(pld)
 {
 	// define minimum number of threads if hardware_concurrency value cannot be computed 
-	const size_t count = 8;
-	
-	{
-		std::lock_guard<std::mutex> lock(mOutputQueue.mut);
-		//mSocketTracker.reserve(16);
 
-	}
+	threads.reserve(THREAD_SIZE);
 
-	threads.reserve(count);
-
-	for (size_t i = 0; i < count; ++i)
+	for (size_t i = 0; i < THREAD_SIZE; ++i)
 	{
 		threads.emplace_back(std::thread(&ThreadPool::WorkThread, this));
 	}

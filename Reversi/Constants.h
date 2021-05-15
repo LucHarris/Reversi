@@ -94,6 +94,13 @@ namespace gc
 		COL_DISC_DARK{ 50, 50, 50,255 }
 	;
 
-	const char PATH_LOCAL_USER[]{ "Data/User/local.bin" };
+
+	const char PATH_LOCAL_USER[][21]{
+		"Data/User/local0.bin" ,
+		"Data/User/local1.bin" ,
+		"Data/User/local2.bin" ,
+		"Data/User/local3.bin" ,
+		"Data/User/local4.bin" 
+	};
 
 }

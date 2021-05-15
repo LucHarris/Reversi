@@ -12,14 +12,16 @@ class ThreadPool;
 
 class ClientServer
 {
+public:
+	enum{PORT_SIZE = 6, ADDRESS_SIZE = 16};
 protected:
 	WSAData mWsaData;
 	// bind listen for server, connect for client
 	SOCKET mSocket;
 	//int mResult;
 	bool mClosed = false;
-	char mPort[6];
-	char mAddress[16];
+	char mPort[PORT_SIZE];
+	char mAddress[ADDRESS_SIZE];
 	addrinfo* mInfo = nullptr;
 	ThreadPool* const mThreadPool;
 
@@ -29,8 +31,8 @@ public:
 
 	ClientServer(ThreadPool* const tp)
 		:
-		mPort("8888"),
-		mAddress("localhost"),
+		mPort("8888"), // overriden in nextowk state
+		mAddress("localhost"), // overriden in nextowk state
 		mThreadPool(tp)
 	{
 	}
@@ -43,7 +45,7 @@ public:
 
 	void Close();
 
-	void SetAddressAndPort();
+	void SetAddressAndPort(const char p[PORT_SIZE],const char a[ADDRESS_SIZE]);
 
 	virtual bool Body() = 0;
 

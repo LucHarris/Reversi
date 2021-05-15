@@ -1,7 +1,9 @@
 #include "NetworkState.h"
-#include "Board.h"
 #include "ReversiSFML.h"
+#include "Board.h"
 #include <algorithm>
+#include "Listener.h"
+#include "Client.h"
 
 NetworkState::NetworkState(ReversiSFML* app)
 	:
@@ -57,17 +59,35 @@ void NetworkState::MouseInput(const sf::Vector2f& mos)
 {
 	if (mButtons.at(BTN_PLAY).getGlobalBounds().contains(mos))
 	{
-
 		switch (mpApp->gameType)
 		{
 		case ReversiSFML::GameType::HOST:
-			//todo host setup
+			{
+				ServerListener listener(&mpApp->threadPool);
+				listener.SetAddressAndPort(mInputString.at(TEXT_INPUT_PORT).c_str(), mInputString.at(TEXT_INPUT_IP).c_str());
+				mpApp->threadPool.PushThreadQueue(listener, ThreadPool::Type::SERVER_LISTEN);
+			}
 			break;
 		case ReversiSFML::GameType::JOIN:
-			//todo client setup
-			break;
-		default:;
+		{
+			ClientSocket clientSocket(&mpApp->threadPool);
+			clientSocket.SetAddressAndPort(mInputString.at(TEXT_INPUT_PORT).c_str(), mInputString.at(TEXT_INPUT_IP).c_str());
+			mpApp->threadPool.PushThreadQueue(clientSocket, ThreadPool::Type::CLIENT_SOCKET);
 		}
+			break;
+		default:
+			break;
+		}
+		//switch (mpApp->gameType)
+		//{
+		//case ReversiSFML::GameType::HOST:
+		//	//todo host setup
+		//	break;
+		//case ReversiSFML::GameType::JOIN:
+		//	//todo client setup
+		//	break;
+		//default:;
+		//}
 
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_PLAYER_SELECTION, true);
@@ -97,7 +117,15 @@ void NetworkState::TextEntered(unsigned int key)
 		mText.at(mActiveText).setFillColor(sf::Color::Green);
 		break;
 	default:
-		mInputString.at(mActiveText) += key;
+		// limit string length
+		if ((mActiveText == TEXT_INPUT_PORT &&
+			mInputString.at(TEXT_INPUT_PORT).length() < ClientServer::PORT_SIZE) ||
+			(mActiveText == TEXT_INPUT_IP &&
+			mInputString.at(TEXT_INPUT_IP).length() < ClientServer::ADDRESS_SIZE))
+		{
+			mInputString.at(mActiveText) += key;
+		}
+
 		break;
 	}
 

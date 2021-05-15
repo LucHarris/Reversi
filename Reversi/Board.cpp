@@ -302,6 +302,8 @@ void ReversiBoard::PopulateStart()
 	mDiscGrid.at(4, 3) = CELL_WHITE;
 	mDiscGrid.at(4, 4) = CELL_BLACK;
 	mDiscGrid.at(3, 3) = CELL_BLACK;
+	mPlayerIndex = PLAYER_ONE; // white moves first
+	
 }
 
 const bool MoveData::IsValid() const

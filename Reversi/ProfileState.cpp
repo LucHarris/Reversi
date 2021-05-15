@@ -77,7 +77,7 @@ void ProfileState::TextEntered(unsigned int key)
 					// assign new name
 					std::copy(mInputString.begin(), mInputString.begin() + (mInputString.length() ), mpApp->localPlayer.userData.name);
 					// update file
-					util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+					util::saveFile(gc::PATH_LOCAL_USER[mpApp->profileIndex], mpApp->localPlayer.userData);
 					// update Player list
 					mpApp->playerSelection.PlayerUpdatesPlayerList(mpApp->localPlayer);
 					// return to main menu

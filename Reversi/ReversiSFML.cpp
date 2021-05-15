@@ -258,7 +258,7 @@ void ReversiSFML::UpdateGameType()
 
 void ReversiSFML::ResetPlayers()
 {
-	util::loadFile<UserData>(gc::PATH_LOCAL_USER, localPlayer.userData);
+	util::loadFile<UserData>(gc::PATH_LOCAL_USER[profileIndex], localPlayer.userData);
 	localPlayer.type = Player::Type::HUMAN;
 
 	if (!playerSelection.AddPlayer(localPlayer)) // index 0

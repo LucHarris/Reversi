@@ -52,7 +52,7 @@ void GameSampleState::GameEnded()
 	mpApp->playerSelection.PlayerListToLocalUser(mpApp->localPlayer);
 
 	// output local user data
-	util::saveFile(gc::PATH_LOCAL_USER, mpApp->localPlayer.userData);
+	util::saveFile(gc::PATH_LOCAL_USER[mpApp->profileIndex], mpApp->localPlayer.userData);
 }
 
 void GameSampleState::UpdateTurnList()

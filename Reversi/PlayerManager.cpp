@@ -18,6 +18,8 @@ PlayerManager::PlayerManager()
 
 	mSideCount.at(0) = 0;
 	mSideCount.at(1) = 0;
+	mPosition.at(0) = 0;
+	mPosition.at(1) = 0;
 }
 
 void PlayerManager::Increment()

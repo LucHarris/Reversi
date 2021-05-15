@@ -45,7 +45,7 @@ bool ClientServer::Init()
 
 	}
 
-	result = getaddrinfo(mAddress, "8888", &hints, &mInfo);
+	result = getaddrinfo(mAddress, mPort, &hints, &mInfo);
 
 	if (result != 0)
 	{
@@ -96,19 +96,9 @@ void ClientServer::Close()
 	mClosed = true;
 }
 
-void ClientServer::SetAddressAndPort()
+void ClientServer::SetAddressAndPort(const char p[PORT_SIZE],const char a[ADDRESS_SIZE])
 {
-	// todo remove?
-	//if (sizeof(*add) / sizeof(add[0]) <= sizeof(*mAddress) / sizeof(mAddress[0]) &&
-	//	sizeof(*port) / sizeof(port[0]) <= sizeof(*mPort) / sizeof(mPort[0])
-	//	)
-	//{
-	//	//todo simlify
-	//	*mAddress = *add;
-	//	*mPort = *port;
-	//}
-	//else
-	//{
-	//	assert(false);
-	//}
+	std::copy(p, p + PORT_SIZE, mPort);
+	std::copy(a, a + ADDRESS_SIZE, mAddress);
+
 }

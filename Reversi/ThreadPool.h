@@ -60,8 +60,11 @@ public:
 
 
 	enum Type{END = -1, NONE = 0,CLIENT_SOCKET,SERVER_LISTEN,SERVER_SOCKETS};
+	enum {MAX_PLAYERS = 4, THREAD_SIZE = 8};
 	// 
 	std::atomic_int socketType = Type::NONE;
+	std::atomic_int socketCount = 0;
+	
 
 private:
 	// Thread takes a job from the queue and executes it

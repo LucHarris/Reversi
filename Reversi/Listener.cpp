@@ -61,7 +61,7 @@ bool ServerListener::Body()
 		mThreadPool->PushOutputQueue(csd);
 	}
 
-	while (mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN && mSocketCount < MAX_COUNT)
+	while (mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN && mThreadPool->socketCount <= ThreadPool::MAX_PLAYERS)
 	{
 
 		result = listen(mSocket, 1024);
@@ -113,7 +113,6 @@ bool ServerListener::Body()
 				// assign a client to a thread
 				ServerSocket sc(clientSocket, mThreadPool);
 				mThreadPool->PushThreadQueue(sc, ThreadPool::Type::SERVER_LISTEN);
-				++mSocketCount;
 			}
 		}
 	}

@@ -99,9 +99,11 @@ void ServerSocket::Body()
 void ServerSocket::operator()()
 {
 	std::cout << "\n ServerClient::operator()() Thread process begin \n";
+
+	++mpThreadPool->socketCount;
 	Body();
-	
 	shutdown(mSocket, SD_SEND);
 	closesocket(mSocket);
 	WSACleanup();
+	--mpThreadPool->socketCount;
 }

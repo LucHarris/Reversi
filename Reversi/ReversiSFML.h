@@ -41,6 +41,7 @@ public:
 	// sf volume range from 0.0f - 100.0f
 	float masterVolume;
 	bool sentPlayerDataToHost = false;
+	char profileIndex = 0;
 	
 
 	enum class GameType{SINGLE,HOST,JOIN};
