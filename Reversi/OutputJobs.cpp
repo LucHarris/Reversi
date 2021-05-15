@@ -132,6 +132,17 @@ void ClientSendData::UpdateHostButtons(ReversiSFML* d)
 		break;
 	}
 }
+void ClientSendData::SetMessage(const std::string& str)
+{
+	if (str.length() <= ClientSendData::MSG_SIZE)
+	{
+		std::copy_n(str.begin(), str.length(), msg);
+	}
+	else
+	{
+		std::cout << "\nMessgae too long";
+	}
+}
 // updates client application 
 void ServerSendData::operator()(ReversiSFML* pd)
 {

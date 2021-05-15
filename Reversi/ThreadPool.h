@@ -50,6 +50,7 @@ private:
 	std::mutex mServerDataMutex;
 	ServerSendData mServerData;
 public:
+	SOCKET mListener;
 
 	// mod in producer
 	//std::atomic_int producerCount;

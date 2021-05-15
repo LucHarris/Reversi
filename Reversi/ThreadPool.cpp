@@ -89,6 +89,9 @@ ThreadPool::ThreadPool(ReversiSFML* pld)
 
 ThreadPool::~ThreadPool()
 {
+
+	closesocket(mListener);
+
 	socketType = Type::END;
 
 	for (auto& t : threads)

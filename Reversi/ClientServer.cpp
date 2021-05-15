@@ -70,7 +70,6 @@ void ClientServer::Init()
 	}
 
 	// connect // listen comes next
-
 }
 
 //void ClientServer::Send(char buffer[], size_t size)

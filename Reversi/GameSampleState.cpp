@@ -165,9 +165,6 @@ void GameSampleState::Update(float dt)
 		{
 			// client
 		}
-		
-		
-
 	}
 	else
 	{

@@ -14,7 +14,11 @@ ServerListener::~ServerListener()
 void ServerListener::operator()()
 {
 	Init();
+	// assign socket
+	mThreadPool->mListener = mSocket;
+
 	Body(); // listen loop
+
 
 	//shutdown(mSocket, SD_SEND);
 	closesocket(mSocket);
@@ -86,7 +90,11 @@ void ServerListener::Listen()
 			std::cout << "Server: invalid socket " << WSAGetLastError() << "\n";
 			closesocket(clientSocket);
 			WSACleanup();
-			assert(false);
+
+			ClientSendData csd;
+			csd.SetMessage("Host Listener Closed");
+			mThreadPool->PushOutputQueue(csd);
+			//assert(false);
 		}
 		else
 		{

@@ -39,6 +39,8 @@ struct ClientSendData
 	void UpdateHostMoves(ReversiSFML* d);
 	// client button updates host to submit operations
 	void UpdateHostButtons(ReversiSFML* d);
+
+	void SetMessage(const std::string& str);
 };
 
 // members are copied from the main application
