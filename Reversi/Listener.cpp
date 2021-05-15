@@ -13,21 +13,22 @@ ServerListener::~ServerListener()
 
 void ServerListener::operator()()
 {
-	Init();
-	// assign socket
-	mThreadPool->mListener = mSocket;
+	if (Init())
+	{
+		// assign socket
+		mThreadPool->mListener = mSocket;
 
-	Body(); // listen loop
-
-
-	//shutdown(mSocket, SD_SEND);
-	closesocket(mSocket);
+		Body();
+	}
+	
 	mClosed = true;
-	//Close();
+	shutdown(mSocket, SD_SEND);
+	Close();
 }
 
-void ServerListener::Listen()
+bool ServerListener::Body()
 {
+	ClientSendData csd;
 
 	// setup tcp listening socket
 	int result = bind(mSocket, mInfo->ai_addr, (int)mInfo->ai_addrlen);
@@ -38,7 +39,11 @@ void ServerListener::Listen()
 		std::cout << "Server: Failed with error: " << WSAGetLastError() << "\n";
 		freeaddrinfo(mInfo);
 		closesocket(mSocket);
-		assert(false);
+
+		csd.SetMessage("Unable to bind: " + std::to_string(WSAGetLastError()));
+		mThreadPool->PushOutputQueue(csd);
+		//assert(false);
+		return false;
 	}
 	else
 	{
@@ -46,7 +51,7 @@ void ServerListener::Listen()
 		freeaddrinfo(mInfo);
 	}
 
-	// 
+	// starting session message
 	{
 		char startMsg[ClientSendData::MSG_SIZE] = "Session Start\0";
 		ClientSendData csd;
@@ -54,13 +59,12 @@ void ServerListener::Listen()
 		std::copy(startMsg, startMsg + ClientSendData::MSG_SIZE, csd.msg);
 
 		mThreadPool->PushOutputQueue(csd);
-
 	}
-	
-	while(mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN && mSocketCount < MAX_COUNT)
+
+	while (mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN && mSocketCount < MAX_COUNT)
 	{
 
-		result = listen(mSocket, 2);
+		result = listen(mSocket, 1024);
 
 		std::cout << "Server: listen() for a conection " << result << "\n";
 
@@ -69,15 +73,18 @@ void ServerListener::Listen()
 			std::cout << "Server:  fail " << WSAGetLastError() << "\n";
 			closesocket(mSocket);
 			WSACleanup();
-			assert(false);
+
+
+			csd.SetMessage("Unable to listen for a connection");
+			mThreadPool->PushOutputQueue(csd);
+
+			return false;
+			//assert(false);
 		}
 		else
 		{
 			std::cout << "Server: listen success " << result << "\n";
 		}
-
-
-		
 
 		//Accept a client socket
 		std::cout << "Server: accept() start...\n";
@@ -91,9 +98,11 @@ void ServerListener::Listen()
 			closesocket(clientSocket);
 			WSACleanup();
 
-			ClientSendData csd;
-			csd.SetMessage("Host Listener Closed");
+			csd.SetMessage("Host ended");
 			mThreadPool->PushOutputQueue(csd);
+
+
+			return false;
 			//assert(false);
 		}
 		else
@@ -103,19 +112,11 @@ void ServerListener::Listen()
 			{
 				// assign a client to a thread
 				ServerSocket sc(clientSocket, mThreadPool);
-				mThreadPool->PushThreadQueue(sc,ThreadPool::Type::SERVER_LISTEN);
+				mThreadPool->PushThreadQueue(sc, ThreadPool::Type::SERVER_LISTEN);
 				++mSocketCount;
 			}
-
-
 		}
 	}
 
-	int z = 0;
-}
-
-void ServerListener::Body()
-{
-	// moved to ServerSocket
-	Listen();
+	return true;
 }

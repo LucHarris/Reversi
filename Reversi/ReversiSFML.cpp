@@ -21,25 +21,8 @@ void ReversiSFML::Init()
 	reversiGame.Initialize();
 	stateManager.Init();
 
-	util::loadFile<UserData>(gc::PATH_LOCAL_USER, localPlayer.userData);
-	localPlayer.type = Player::Type::HUMAN;
+	ResetPlayers();
 	
-	if(!playerSelection.AddPlayer(localPlayer)) // index 0
-	{
-		assert(false);
-	}
-
-	// ai player
-	Player ai(Player::Type::AI);
-
-	ai.userData.name[0] = 'C';
-	ai.userData.name[1] = 'P';
-	ai.userData.name[2] = 'U';
-
-	if (!playerSelection.AddPlayer(ai))// index 1
-	{
-		assert(false);
-	}
 
 	InitText(debugLog);
 	debugLog.setString("Debug");
@@ -113,6 +96,11 @@ void ReversiSFML::Run()
 		if (networkDelay.HasElapsed())
 		{
 			networkDelay.Restart(0.5f);
+
+
+			
+
+
 			switch (gameType)
 			{
 			case ReversiSFML::GameType::SINGLE:
@@ -154,17 +142,23 @@ void ReversiSFML::InitText(sf::Text& t)
 	t.setFillColor(sf::Color::Magenta);
 }
 
-
-
 void ReversiSFML::UpdateClient()
 {
 
 	// recv data
 	ServerSendData updateClient = threadPool.GetServerData();
 
-
-	
 	updateClient(this);
+
+	// get messages from client socket thread
+	{
+		OutputJob j;
+		while (threadPool.PopOutputQueue(j)) // if
+		{
+			j(this);
+		}
+	}
+	
 }
 
 void ReversiSFML::UpdateHost()
@@ -207,9 +201,6 @@ void ReversiSFML::SendDummyClientData()
 
 		std::cout << "\n\n\n\n\n CLIENT SENDS USER DATA \n\n\n\n\n\n";
 	}
-	
-
-	
 }
 
 void ReversiSFML::ValidateSockets()
@@ -243,4 +234,47 @@ void ReversiSFML::ValidateSockets()
 		
 	}
 	
+}
+
+void ReversiSFML::UpdateGameType()
+{
+	switch (threadPool.socketType)
+	{
+	case ThreadPool::Type::END:
+	case ThreadPool::Type::NONE:
+		gameType = GameType::SINGLE;
+		break;
+	case ThreadPool::Type::CLIENT_SOCKET:
+		gameType = GameType::JOIN;
+		break;
+	case ThreadPool::Type::SERVER_LISTEN:
+	case ThreadPool::Type::SERVER_SOCKETS:
+		gameType = GameType::HOST;
+		break;
+	default:
+		break;
+	}
+}
+
+void ReversiSFML::ResetPlayers()
+{
+	util::loadFile<UserData>(gc::PATH_LOCAL_USER, localPlayer.userData);
+	localPlayer.type = Player::Type::HUMAN;
+
+	if (!playerSelection.AddPlayer(localPlayer)) // index 0
+	{
+		assert(false);
+	}
+
+	// ai player
+	Player ai(Player::Type::AI);
+
+	ai.userData.name[0] = 'C';
+	ai.userData.name[1] = 'P';
+	ai.userData.name[2] = 'U';
+
+	if (!playerSelection.AddPlayer(ai))// index 1
+	{
+		assert(false);
+	}
 }

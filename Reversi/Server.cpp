@@ -21,10 +21,9 @@ ServerSocket::ServerSocket(const SOCKET& s, ThreadPool* ptp)
 ServerSocket::~ServerSocket()
 {
 	std::cout << "\nServer: ~ServerClient() ";
-
 }
 
-// 
+// todo remove
 int ServerSocket::RecvSend(char* rData, int rSize, char* sData, int sSize)
 {
 	return -1;
@@ -32,6 +31,8 @@ int ServerSocket::RecvSend(char* rData, int rSize, char* sData, int sSize)
 
 void ServerSocket::Body()
 {
+	ClientSendData csd;
+
 	const int rSize = sizeof(ClientSendData);
 	const int sSize = sizeof(ServerSendData);
 	char rBuffer[rSize];
@@ -40,8 +41,6 @@ void ServerSocket::Body()
 	int result = 1;
 
 	mpThreadPool->PushSocketTracker(mSocket);
-
-	
 
 	do
 	{
@@ -57,7 +56,6 @@ void ServerSocket::Body()
 			data.player.serverSocket = mSocket;
 			data.ToConsole();
 
-
 			mpThreadPool->PushOutputQueue(data);
 
 			Sleep(50); // allow to be processed
@@ -72,13 +70,16 @@ void ServerSocket::Body()
 
 			if (result == SOCKET_ERROR)
 			{
-				std::cout << "\t Server: socket error  " << WSAGetLastError() << "\n";
+				csd.SetMessage("Socket error: " + std::to_string(WSAGetLastError()) + " Socket: " + std::to_string(mSocket));
+				mpThreadPool->PushOutputQueue(csd);
+
+				std::cout << "\n\n Server: socket error  " << WSAGetLastError() << "\n";
 			}
 			else
 			{
+				// success
 				std::cout << "\t Send data. Size " << result; // same line as recieved
 			}
-
 		}
 		else
 		{
@@ -99,4 +100,8 @@ void ServerSocket::operator()()
 {
 	std::cout << "\n ServerClient::operator()() Thread process begin \n";
 	Body();
+	
+	shutdown(mSocket, SD_SEND);
+	closesocket(mSocket);
+	WSACleanup();
 }

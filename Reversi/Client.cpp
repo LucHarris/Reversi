@@ -11,30 +11,44 @@
 
 void ClientSocket::operator()()
 {
-	Init();
-	Connect();
-	Body();
-
+	if (Init())
+	{
+		if (Connect())
+		{
+			Body();
+		}
+	}
 	shutdown(mSocket, SD_SEND);
 	Close();
 }
 
-void ClientSocket::Connect()
+bool ClientSocket::Connect()
 {
 	int result = connect(mSocket, mInfo->ai_addr, (int)mInfo->ai_addrlen);
 
+	ClientSendData csd;
+
 	if ( result == SOCKET_ERROR)
 	{
+		csd.SetMessage("Failed to connect to host...");
+		mThreadPool->PushOutputQueue(csd);
+
 		std::cout << "Client: Unable to connect" << result << "\n";
 		freeaddrinfo(mInfo);
 		closesocket(mSocket);
 		WSACleanup();
-		assert(false);
+		
+		return false;
+	}
+	else
+	{
+		return true;
 	}
 }
 
-void ClientSocket::Body()
+bool ClientSocket::Body()
 {
+	ClientSendData csd;
 	
 	int result = 1;
 	//char sBuffer[buffer_size] = "[send from client]";
@@ -67,29 +81,38 @@ void ClientSocket::Body()
 				result = recv(mSocket, rBuffer, rSize, 0);
 				std::cout << "\tRecv'ed";
 
-				//assert(rSize == sizeof(ServerSendData) && "Client recv sizes doesnt match");
-
 				ServerSendData r(rBuffer, rSize);
 
 				mThreadPool->UpdateServerData(r);
-				//mThreadPool->PushOutputQueue(r);
 
 				if (result == SOCKET_ERROR)
 				{
 					std::cout << "\tClient: socket error " << WSAGetLastError() ;
+
+					csd.SetMessage("Socket error: " + std::to_string(WSAGetLastError()));
+					mThreadPool->PushOutputQueue(csd);
 				}
 				else
 				{
+					// success
 					std::cout << "\tRecieved data. Size " << rBuffer << "\t" << result;
 				}
 			}
-			else if (result == 0)
-			{
-				std::cout << "\tClient: Connection to clent closing " << result;
-			}
 			else
 			{
-				std::cout << "\tClient: send failed " << WSAGetLastError() << "\t" << result;
+				if (result == 0)
+				{
+					std::cout << "\tClient: Connection to client closing " << result;
+					csd.SetMessage("Leaving Session...");
+					mThreadPool->PushOutputQueue(csd);
+				}
+				else
+				{
+					csd.SetMessage("Unable to send" + std::to_string(WSAGetLastError()));
+					mThreadPool->PushOutputQueue(csd);
+
+					std::cout << "\tClient: send failed " << WSAGetLastError() << "\t" << result;
+				}
 			}
 		}
 		else
@@ -99,8 +122,14 @@ void ClientSocket::Body()
 
 	} while (result > 0 && mThreadPool->socketType == ThreadPool::Type::CLIENT_SOCKET);
 	
+	if (mThreadPool->socketType != ThreadPool::Type::END)
+	{
+		mThreadPool->socketType = ThreadPool::Type::NONE;
+	}
+
 	std::cout << "\nClient body end";
 
+	return true;
 }
 
 //todo remove

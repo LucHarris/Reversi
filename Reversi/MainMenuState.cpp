@@ -86,4 +86,13 @@ void MainMenuState::Reset()
 	// ends client/server threads
 	mpApp->gameType = ReversiSFML::GameType::SINGLE;
 	mpApp->threadPool.socketType = ThreadPool::Type::NONE;
+
+	mpApp->UpdateGameType();
+
+
+
+	mpApp->playerSelection = PlayerManager();
+	mpApp->ResetPlayers();
+
+	closesocket(mpApp->threadPool.mListener);
 }

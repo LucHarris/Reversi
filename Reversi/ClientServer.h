@@ -39,19 +39,13 @@ public:
 	
 	virtual void operator()() = 0;
 
-	void Init();
-	
-	void Send(char buffer[], size_t size);
-
-	void Recv(char buffer[], size_t size);
-
-	int GetResult() const;
+	bool Init();
 
 	void Close();
 
 	void SetAddressAndPort();
 
-	virtual void Body() = 0;
+	virtual bool Body() = 0;
 
 };
 

@@ -16,7 +16,7 @@ ClientServer::~ClientServer()
 	}
 }
 
-void ClientServer::Init()
+bool ClientServer::Init()
 {
 	
 
@@ -29,10 +29,15 @@ void ClientServer::Init()
 
 	int result = WSAStartup(MAKEWORD(2, 2), &mWsaData);
 
+	ClientSendData csd;
 	if (result != 0)
 	{
 		std::cout << "Init: WSAStartup() failed:" << result << "\n";
-		assert(false);
+
+		csd.SetMessage("WSAStartup failed: " + std::to_string(result));
+		mThreadPool->PushOutputQueue(csd);
+
+		return false;
 	}
 	else
 	{
@@ -46,8 +51,12 @@ void ClientServer::Init()
 	{
 		std::cout << "Init: getaddrinfo() failed:" << result << "\n";
 
+		csd.SetMessage("getaddrinfo failed: " + std::to_string(result));
+		mThreadPool->PushOutputQueue(csd);
+
 		Close();
-		assert(false);
+
+		return false;
 	}
 	else
 	{
@@ -58,34 +67,26 @@ void ClientServer::Init()
 	mSocket = socket(mInfo->ai_family, mInfo->ai_socktype, mInfo->ai_protocol);
 	if (mSocket == INVALID_SOCKET)
 	{
-		std::cout << "Init: Unable to create server socket:" << result << "\n";
+		std::cout << "Init: Unable to create server socket:" << mSocket << "\n";
+
+		csd.SetMessage("Unable to create server socket: " + std::to_string(mSocket));
+		mThreadPool->PushOutputQueue(csd);
+
 		freeaddrinfo(mInfo);
 		WSACleanup();
-		assert(false);
+
+		return false;
+		//assert(false);
 	}
 	else
 	{
-		std::cout << "Init: success creating server socket:" << result << "\n";
-
+		std::cout << "Init: success creating server socket:" << mSocket << "\n";
 	}
+
+	return true;
 
 	// connect // listen comes next
 }
-
-//void ClientServer::Send(char buffer[], size_t size)
-//{
-//	result = send(mSocket, buffer, size, 0);
-//}
-
-//void ClientServer::Recv(char buffer[], size_t size)
-//{
-//	mResult = recv(mSocket, buffer, size, 0);
-//}
-
-//int ClientServer::GetResult() const
-//{
-//	return mResult;
-//}
 
 void ClientServer::Close()
 {
@@ -97,6 +98,7 @@ void ClientServer::Close()
 
 void ClientServer::SetAddressAndPort()
 {
+	// todo remove?
 	//if (sizeof(*add) / sizeof(add[0]) <= sizeof(*mAddress) / sizeof(mAddress[0]) &&
 	//	sizeof(*port) / sizeof(port[0]) <= sizeof(*mPort) / sizeof(mPort[0])
 	//	)

@@ -15,10 +15,10 @@ public:
 	// init / connect / loop
 	virtual void operator()() override;
 
-	void Connect();
+	bool Connect();
 
 	// for send/recv
-	virtual void Body() override;
+	virtual bool Body() override;
 
 	int SendRecv(char sData[], int sSize, char rData[], int rSize);
 };

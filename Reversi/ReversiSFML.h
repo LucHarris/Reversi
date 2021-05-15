@@ -46,6 +46,8 @@ public:
 	enum class GameType{SINGLE,HOST,JOIN};
 	GameType gameType = GameType::SINGLE;
 
+	void UpdateGameType();
+	void ResetPlayers();
 private:
 	DeltaCountdownTimer networkDelay;
 	void UpdateClient();
@@ -54,6 +56,5 @@ private:
 	void SendDummyClientData();
 	// host
 	void ValidateSockets();
-
 };
 

@@ -15,6 +15,9 @@ PlayerManager::PlayerManager()
 			pos = -1;
 		}
 	}
+
+	mSideCount.at(0) = 0;
+	mSideCount.at(1) = 0;
 }
 
 void PlayerManager::Increment()
