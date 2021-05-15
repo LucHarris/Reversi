@@ -1,7 +1,7 @@
 #pragma once
 
 class ReversiSFML;
-
+#include "Player.h"
 #include "PlayerManager.h"
 #include "Board.h"
 // contains structs for exchanging data between client and server
@@ -16,7 +16,9 @@ struct ClientSendData
 		SIDE_REMOVE_ALL_WHITE,SIDE_REMOVE_ALL_BLACK,
 		START_GAME
 	};
-	char msg[32] {'\0'};
+	enum {MSG_NAME_SIZE = 16, MSG_BODY_SIZE = 48, MSG_SIZE = MSG_NAME_SIZE + MSG_BODY_SIZE	};
+
+	char msg[MSG_SIZE] {'\0'};
 	Player player;
 	float mouse[2]{ -1.0f,-1.0f };
 	int move = -1;
@@ -43,7 +45,7 @@ struct ClientSendData
 // functor applies changes to the client main application 
 struct ServerSendData
 {
-	enum {	MSG_LENGTH = 15, MSG_COUNT = 9	}; // match size of chat messages
+	enum {	MSG_LENGTH = ClientSendData::MSG_SIZE, MSG_COUNT = 9 }; // match size of chat messages
 	// temp data
 	//std::array<int,20> moo;
 	PlayerManager mPlayerManagerSelect;

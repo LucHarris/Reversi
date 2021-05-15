@@ -42,6 +42,16 @@ void ServerListener::Listen()
 		freeaddrinfo(mInfo);
 	}
 
+	// 
+	{
+		char startMsg[ClientSendData::MSG_SIZE] = "Session Start\0";
+		ClientSendData csd;
+
+		std::copy(startMsg, startMsg + ClientSendData::MSG_SIZE, csd.msg);
+
+		mThreadPool->PushOutputQueue(csd);
+
+	}
 	
 	while(mThreadPool->socketType == ThreadPool::Type::SERVER_LISTEN && mSocketCount < MAX_COUNT)
 	{
@@ -61,6 +71,9 @@ void ServerListener::Listen()
 		{
 			std::cout << "Server: listen success " << result << "\n";
 		}
+
+
+		
 
 		//Accept a client socket
 		std::cout << "Server: accept() start...\n";

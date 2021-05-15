@@ -78,9 +78,10 @@ void Chat::Render()
 void Chat::TextEntered(unsigned int key)
 {
 
-	const bool canType = mInputString.length() < MSG_LENGTH;
+	const bool canType = mInputString.length() < MSG_BODY_SIZE - MSG_PADDING;
 
 	ClientSendData clientSend;
+	std::string temp = "";
 
 	switch (key)
 	{
@@ -92,21 +93,27 @@ void Chat::TextEntered(unsigned int key)
 		break;
 		// 
 	case '\r':
-		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
+		if (mInputString.length() > 0)
 		{
-			// host or local
-			if (mInputString.length() > 0)
+			temp = mpApp->localPlayer.userData.name + std::string(": ") + mInputString;
+
+			assert(temp.length() <= MSG_SIZE);
+
+			if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 			{
-				AddMessage(mInputString.c_str());
+				// host or local
+				//todo remove AddMessage(mInputString.c_str());
+				AddMessage(temp.c_str());
+			}
+			else
+			{
+				// client
+				//todo remove std::copy(mInputString.begin(), mInputString.end(), clientSend.msg);
+				std::copy(temp.begin(), temp.end(), clientSend.msg);
+				mpApp->threadPool.PushInputQueue(clientSend);
 			}
 		}
-		else
-		{
-			// client
-			std::copy(mInputString.begin(), mInputString.end(), clientSend.msg);
 
-			mpApp->threadPool.PushInputQueue(clientSend);
-		}
 		std::fill(mInputString.begin(), mInputString.end(), '\0');
 		mInputString.clear();
 		// todo send message (client) or add message (host) then clear
@@ -127,7 +134,7 @@ void Chat::AddMessage(const char msg[])
 	const int sizeA = sizeof(*msg) / sizeof(msg[0]);
 	const int sizeB = sizeof(mMessages[0]) / sizeof(mMessages[0][0]);
 	const int size = (sizeA > sizeB)? sizeA : sizeB;
-	assert(size <= 15); // message length
+	assert(size <= ClientSendData::MSG_SIZE); // message length
 
 	// reset message
 	std::fill(mMessages.front().begin(), mMessages.front().end(), '\0');
@@ -141,17 +148,17 @@ void Chat::AddMessage(const char msg[])
 	UpdateLog();
 }
 
-void Chat::SetChatLog(const std::array<std::array<char, MSG_LENGTH>, MSG_COUNT>& msgs)
+void Chat::SetChatLog(const std::array<std::array<char, Chat::MSG_SIZE>, MSG_COUNT>& msgs)
 {
 	mMessages = msgs;
 }
 
-const std::array<char, Chat::MSG_LENGTH>& Chat::GetRecentChatEntry() const
+const std::array<char, Chat::MSG_SIZE>& Chat::GetRecentChatEntry() const
 {
 	return mMessages.back();
 }
 
-const std::array<std::array<char, Chat::MSG_LENGTH>, Chat::MSG_COUNT>& Chat::GetChatMessages()
+const std::array<std::array<char, Chat::MSG_SIZE>, Chat::MSG_COUNT>& Chat::GetChatMessages()
 {
 	return mMessages;
 	// TODO: insert return statement here

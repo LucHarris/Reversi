@@ -6,6 +6,7 @@
 //#include "ThreadPool.h"
 #include "OutputJobs.h"
 #include "ReversiSFML.h"
+#include <string.h>
 
 
 ServerSocket::ServerSocket(const SOCKET& s, ThreadPool* ptp)
@@ -39,6 +40,8 @@ void ServerSocket::Body()
 	int result = 1;
 
 	mpThreadPool->PushSocketTracker(mSocket);
+
+	
 
 	do
 	{

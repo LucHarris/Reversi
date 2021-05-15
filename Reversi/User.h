@@ -2,6 +2,7 @@
 
 struct UserData
 {
+	enum { NAME_SIZE = 16 };
 	char name[16] = "-\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 	unsigned int id;
 	int whiteWin = 0;
