@@ -117,6 +117,7 @@ void StateManager::MouseInput(const sf::Vector2f& pos)
 	mChatBtn.MouseInput(pos);
 	// chat messages/input appears when toggled
 	mpApp->chat.display = mChatBtn.mDisplay;
+	mpApp->chat.UpdateLog();
 
 	if (mMenuButtons.at(BTN_MENU).getGlobalBounds().contains(pos))
 	{
@@ -137,7 +138,6 @@ void StateManager::MouseInput(const sf::Vector2f& pos)
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 		mpApp->music.SetMasterVolume(mpApp->masterVolume * gc::HALF);
 	}
-
 }
 
 void StateManager::KeyInput(sf::Keyboard::Key key)
@@ -166,7 +166,6 @@ void StateManager::ChangeState(size_t s, bool reset)
 			}
 			mpApp->music.PlayNext();
 		}
-		
 	}
 	else
 	{
