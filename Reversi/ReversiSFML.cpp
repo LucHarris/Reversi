@@ -25,7 +25,7 @@ void ReversiSFML::Init()
 	
 
 	InitText(debugLog);
-	debugLog.setString("Debug");
+	//debugLog.setString("Debug");
 
 	chat.Init();
 

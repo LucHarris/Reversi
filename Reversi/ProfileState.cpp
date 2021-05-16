@@ -13,13 +13,11 @@ void ProfileState::Init()
 {
 	mText.at(TEXT_USER_OUT).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
 	mText.at(TEXT_USER_OUT).setFillColor({ 0,0,0,200 });
+	mText.at(TEXT_USER_OUT).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_TC] + sf::Vector2f{0.0f,64.0f});
 
 	mText.at(TEXT_INPUT).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
-
-	
-	mText.at(TEXT_USER_OUT).setPosition(gc::VIEWPORT_CENTER);
 	mText.at(TEXT_PROMPT).setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
-	mText.at(TEXT_PROMPT).setString("Rename Profile: (Enter to apply) (Restart required)");
+	mText.at(TEXT_PROMPT).setString("Rename Profile: (Enter to apply) (Restart recommended)");
 	mText.at(TEXT_PROMPT).setOrigin({ 0.0f,mText.at(TEXT_PROMPT).getGlobalBounds().height });
 
 	auto pos = gc::VIEWPORT_PIVOT[gc::PIVOT_BL] + sf::Vector2f{ 128.0f,-128 };
@@ -118,7 +116,7 @@ void ProfileState::Reset()
 	const auto& playerList = mpApp->playerSelection.GetHumanPlayers();
 
 	// field names
-	oss << "Player Profiles\n\n#\tTW\tWW\tBW\tD\tPLY\tName\tid\n";
+	oss << "Player Profiles and Leaderboard\n\n#\tTW\tWW\tBW\tD\tPLY\tName\tid\n";
 
 	int position = 0;
 
@@ -137,13 +135,13 @@ void ProfileState::Reset()
 			;
 		
 	}
-	oss << "\n\nTW - Total Wins\t\tWW - WhtWin\t\tBW - BlkWin\nD-Draw\t\tPLY - Played";
+	oss << "\n\n# - Position\t\tTW - Total Wins\t\tWW - WhtWin\nBW - BlkWin\t\tD-Draw\t\tPLY - Played";
 
 	mText.at(TEXT_USER_OUT).setString(oss.str().c_str());
 
 	// centre viewport
 	auto rect = mText.at(TEXT_USER_OUT).getGlobalBounds();
-	mText.at(TEXT_USER_OUT).setOrigin({ gc::HALF * rect.width,gc::HALF * rect.height });
+	mText.at(TEXT_USER_OUT).setOrigin({ gc::HALF * rect.width,0 });
 
 }
 

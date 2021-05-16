@@ -22,6 +22,9 @@ void SelectionState::Init()
 	mPlayerDisplay.at(0).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CC] + sf::Vector2f{-190.0f,-190.0f});
 	mPlayerDisplay.at(1).setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_CC] + sf::Vector2f{  20.0f,-190.0f});
 
+	mText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
+	mText.setPosition(20.0f, 20.0f);
+
 	UpdatePlayerList();
 
 	// buttons
@@ -62,11 +65,39 @@ void SelectionState::Init()
 
 }
 
-void SelectionState::Update(float)
+void SelectionState::Update(float dt)
 {
-
 	UpdatePlayerList();
 
+	// avoid refreshing text every frame
+
+	mRefresh.Update(dt);
+	if (mRefresh.HasElapsed())
+	{
+		mRefresh.Restart(1.0f);
+		if (mpApp->gameType == ReversiSFML::GameType::SINGLE)
+		{
+			mText.setString("Single player game");
+		}
+		else
+		{
+			std::ostringstream oss;
+			// header
+			oss << "Multiplayer game\nPlayers:";
+			auto players = mpApp->playerSelection.GetHumanPlayers();
+
+			for (auto& p : players)
+			{
+				oss << "\n" << p.userData.name;
+			}
+			mText.setString(oss.str().c_str());
+		}
+
+
+
+	}
+
+	
 
 }
 
@@ -83,6 +114,8 @@ void SelectionState::Render(float)
 	{
 		mpApp->window.draw(btn);
 	}
+
+	mpApp->window.draw(mText);
 }
 
 void SelectionState::MouseInput(const sf::Vector2f& mos)

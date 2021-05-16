@@ -40,6 +40,8 @@ void StateManager::Init()
 {
 	InitStates();
 	
+	mText.setFont(mpApp->resources.GetFontAt(Resources::FONT_MAIN));
+	mText.setPosition(gc::VIEWPORT_PIVOT[gc::PIVOT_BL] + sf::Vector2f{300.0f, -55.0f});
 	// viewport background fill
 	mBackground.setTexture(mpApp->resources.GetTextureAt(Resources::TEXTURE_BG));
 	mBackground.setTextureRect({ 0,0,gc::VIEWPORT_WIDTH_U,gc::VIEWPORT_HEIGHT_U });
@@ -92,6 +94,11 @@ void StateManager::Init()
 void StateManager::Update(float dt)
 {
 	mStates.at(mActiveState)->Update(dt);
+
+	// profile name display
+	std::ostringstream oss;
+	oss << "Profile: " << mpApp->localPlayer.userData.name;
+	mText.setString(oss.str().c_str());
 }
 
 void StateManager::Render(float dt)
@@ -107,6 +114,7 @@ void StateManager::Render(float dt)
 
 	mHelpBtn.Render(dt);
 	mChatBtn.Render(dt);
+	mpApp->window.draw(mText);
 }
 
 void StateManager::MouseInput(const sf::Vector2f& pos)

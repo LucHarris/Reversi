@@ -4,6 +4,7 @@
 #include <array>
 #include <string>
 #include "OutputJobs.h"
+#include "DeltaTimer.h"
 
 // players/cpu selected for a game
 class SelectionState : public State
@@ -11,7 +12,9 @@ class SelectionState : public State
 	// two lists of players
 	std::array<sf::Text, 2> mPlayerDisplay;
 	std::array<sf::Sprite, 9> mButtons;
+	sf::Text mText;
 	sf::Sprite mBlackboard;
+	DeltaCountdownTimer mRefresh;
 
 	enum{
 		BTN_WHITE_PLAYER_PLUS = 0,

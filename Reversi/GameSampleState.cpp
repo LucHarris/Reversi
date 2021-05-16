@@ -117,6 +117,8 @@ void GameSampleState::Update(float dt)
 	{
 		mAiTimer.Update(dt);
 
+		UpdateTurnList();
+
 		// todo move !join logic?
 		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
@@ -159,12 +161,12 @@ void GameSampleState::Update(float dt)
 				}
 			}
 
-			UpdateTurnList();
+			
 		}
 		else
 		{
-			// client
 		}
+
 	}
 	else
 	{
@@ -194,6 +196,8 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 	{
 		if (!mpSelectionPlayers->HasGameEnded())
 		{
+			UpdateTurnList();
+
 			// valid active player able to move
 			if (mpSelectionPlayers->GetActivePlayer().type == Player::Type::HUMAN &&  
 				mpApp->reversiGame.CanMove() && 
@@ -219,6 +223,7 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 					}
 				}
 			}
+		
 		}
 	}
 	else
@@ -241,6 +246,7 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 
 	mpApp->debugLog.setString(mpApp->playerSelection.DebugSideInfo());
 
+	
 	
 }
 

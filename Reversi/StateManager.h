@@ -19,6 +19,7 @@ class StateManager
 	ToggleButton mChatBtn;
 	ReversiSFML* mpApp;
 	std::array<sf::Sprite,3> mMenuButtons;
+	sf::Text mText;
 	enum 
 	{
 		BTN_MENU,BTN_STATS,BTN_AUDIO
