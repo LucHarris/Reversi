@@ -168,25 +168,6 @@ int NormalForm::Evalualate(int agent, ReversiBoard board, int opponentMove)
 
 void NormalForm::ToConsole()
 {
-	/*
-	std::cout << "\nall payoff";
-	for (auto& e : mAllStrategies)
-	{
-		e.ToConsole();
-	}
-
-	std::cout << "\npure nash";
-	for (auto& e : mPureNash)
-	{
-		e.ToConsole();
-	}
-	std::cout << "\ndom";
-
-	for (auto& e : mDominantStrategies)
-	{
-		e.ToConsole();
-	}
-	*/
 }
 
 void NormalForm::GenerateDominant()
@@ -278,7 +259,6 @@ void NormalForm::CalculateDominantMax()
 
 	// sorted by second player key 
 	// reset sorting for debugging
-	// todo remove 
 	std::sort(mAllStrategies.begin(), mAllStrategies.end(), [](const Entry& lhs, const Entry& rhs)
 		{
 			return lhs.key[0] < rhs.key[0];
@@ -335,15 +315,11 @@ void NormalForm::CalcPureNashMax()
 			}
 
 			first = last;
-
-			//++first;
-
 		}
 	}
 
 	// sorted by second player key 
 	// reset sorting for debugging
-	// todo remove 
 	std::sort(mAllStrategies.begin(), mAllStrategies.end(), [](const Entry& lhs, const Entry& rhs)
 		{
 			return lhs.key[0] < rhs.key[0];

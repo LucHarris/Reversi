@@ -9,7 +9,6 @@
 template <
 	typename VALUE,					// elements of the 2D array
 	size_t SIZE, 					// axis size
-	//VALUE DEFAULT_VALUE = 0,		// set default element values
 	typename COORD = Vector2i		// Easier access elements in 2D array
 >
 // 2D square grid

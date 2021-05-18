@@ -10,10 +10,7 @@ class ServerSocket
 public:
 	ServerSocket(const SOCKET& s, ThreadPool* ptp);
 	~ServerSocket();
-	int RecvSend(char* rData, int rSize, char* sData, int sSize);
-
 	void Body();
-
 	void operator()();
 };
 

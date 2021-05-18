@@ -119,7 +119,6 @@ void GameSampleState::Update(float dt)
 
 		UpdateTurnList();
 
-		// todo move !join logic?
 		if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 		{
 			if (mpSelectionPlayers->GetActivePlayer().IsType( Player::Type::AI))
@@ -160,8 +159,6 @@ void GameSampleState::Update(float dt)
 					}
 				}
 			}
-
-			
 		}
 		else
 		{
@@ -170,7 +167,6 @@ void GameSampleState::Update(float dt)
 	}
 	else
 	{
-		// todo only called once but remove from loop if possible
 		mpApp->reversiGame.ExportWinningMoves();
 	}
 	
@@ -245,8 +241,6 @@ void GameSampleState::MouseInput(const sf::Vector2f& pos)
 	}
 
 	mpApp->debugLog.setString(mpApp->playerSelection.DebugSideInfo());
-
-	
 	
 }
 

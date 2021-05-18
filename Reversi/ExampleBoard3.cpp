@@ -1,5 +1,4 @@
-
-
+// testing environment
 #include "Board.h"
 #include "NormalForm.h"
 #include <chrono>
@@ -47,24 +46,19 @@ void Run()
 
 		if (b.BoardHasChanged())
 		{
-			//std::cout << "\n\nBoard changed\n\n\n";
 			// change visuals here
 			b.UpdateBoardBackup();
 		}
 		else
 		{
-			//std::cout << "\n\n\n\nBoard NOT changed\n\n\n\n\n";
 		}
 
 
 		playerManager.Increment();
-		//b.ToConsole();
-		//system("Pause");
 	}
 
 	// Final score
 	{
-		//b.ExportWinningMoves();
 
 		std::ofstream ofs(file, std::ios::app);
 
@@ -78,9 +72,7 @@ void Run()
 		}
 
 		ofs << winner << ',' << scores.first - scores.second << "\n";
-
 	}
-
 }
 
 int main()

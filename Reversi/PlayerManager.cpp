@@ -25,7 +25,7 @@ PlayerManager::PlayerManager()
 void PlayerManager::Increment()
 {
 	// cycle through players on active side
-	if (++mPosition.at(mActiveSide) >=   mSideCount.at(mActiveSide))//todo remove   (int)mPlayerSides.at(mActiveSide).size())
+	if (++mPosition.at(mActiveSide) >=   mSideCount.at(mActiveSide))
 	{
 		mPosition.at(mActiveSide) = 0;
 	}
@@ -38,7 +38,7 @@ Player& PlayerManager::GetActivePlayer()
 {
 	// within boundary
 	assert(mActiveSide < (int)mPlayerSides.size()); // less than 2
-	assert(mPosition.at(mActiveSide) < mSideCount.at(mActiveSide));// within active player range // todo remove dead code(int)mPlayerSides.at(mActiveSide).size());
+	assert(mPosition.at(mActiveSide) < mSideCount.at(mActiveSide));// within active player range
 
 	return  mPlayers.at( mPlayerSides.at(mActiveSide).at( mPosition.at(mActiveSide) ) );
 }
@@ -140,7 +140,6 @@ int PlayerManager::GetPlayerIndex(const Player& pl) const
 
 std::string PlayerManager::GetPlayerListString(int side)
 {
-	//std::string playerList = "";
 	std::ostringstream playerList;
 	assert(side < (int)mPlayerSides.size());
 
@@ -179,7 +178,7 @@ void PlayerManager::ValidatePlayers()
 	for (int i = 0; i < (int)mSideCount.size(); ++i)
 	{
 		assert(i < (int)mPlayerSides.size());
-		if (mSideCount.at(i) == 0)// (mPlayerSides.at(0).size() == 0)
+		if (mSideCount.at(i) == 0)
 		{
 			int lookup = GetAiPlayerIndex();
 			// lookup assigned to side
@@ -345,8 +344,6 @@ std::string PlayerManager::DebugSideInfo()
 			<< "game ended";
 	}
 
-	
-
 	return oss.str();
 	
 }
@@ -388,8 +385,6 @@ bool PlayerManager::PlayerUpdatesPlayerList(Player& localUser)
 	}
 }
 
-
-
 std::vector<Player> PlayerManager::GetHumanPlayers() const
 {
 	std::vector<Player> pl;
@@ -406,7 +401,6 @@ std::vector<Player> PlayerManager::GetHumanPlayers() const
 
 	return pl;
 }
-
 
 void PlayerManager::ReplacePlayersInSides(int search, int replace)
 {

@@ -25,14 +25,10 @@ void ReversiSFML::Init()
 	
 
 	InitText(debugLog);
-	//debugLog.setString("Debug");
 
 	chat.Init();
 
 	chat.display = false;
-
-	
-
 }
 
 void ReversiSFML::Run()
@@ -52,9 +48,6 @@ void ReversiSFML::Run()
 		stateManager.Update(dt);
 		music.Update(dt);
 
-		//todo remove
-		const char msg[2][15] = { "Moo...\0\0\0\0\0","Woof!\0\0\0\0\0" };
-
 		// sf events
 		while (window.pollEvent(sfEvent))
 		{
@@ -71,7 +64,7 @@ void ReversiSFML::Run()
 				stateManager.KeyInput(sfEvent.key.code);
 				break;
 			case sf::Event::TextEntered:
-				// visable chat overrides state 
+				// visable chat overrides state
 				if (chat.display)
 				{
 					chat.TextEntered(sfEvent.text.unicode);
@@ -80,27 +73,16 @@ void ReversiSFML::Run()
 				{
 					stateManager.TextEntered(sfEvent.text.unicode);
 				}
-
-				/*if (sfEvent.text.unicode < 128 && sfEvent.text.unicode >= 32)
-				{
-					stateManager.TextEntered(sfEvent.text.unicode);
-				}*/
 				break;
 			default:
 				break;
 			}
 		}
 
-		//todo remove network delay?
 		networkDelay.Update(dt);
 		if (networkDelay.HasElapsed())
 		{
 			networkDelay.Restart(0.5f);
-
-
-			
-
-
 			switch (gameType)
 			{
 			case ReversiSFML::GameType::SINGLE:
@@ -117,7 +99,6 @@ void ReversiSFML::Run()
 			};
 		}
 		
-		//render
 		Render(dt);
 	}
 }
@@ -150,14 +131,13 @@ void ReversiSFML::UpdateClient()
 
 	updateClient(this);
 
-	// get messages from client socket thread
+	// get all jobs from client socket thread
+	OutputJob j;
+	while (threadPool.PopOutputQueue(j))
 	{
-		OutputJob j;
-		while (threadPool.PopOutputQueue(j)) // if
-		{
-			j(this);
-		}
+		j(this);
 	}
+	
 	
 }
 
@@ -165,13 +145,12 @@ void ReversiSFML::UpdateHost()
 {
 	// recv
 	OutputJob j;
-	while(threadPool.PopOutputQueue(j)) // if
+	while(threadPool.PopOutputQueue(j))
 	{
 		j(this);
 	}
 
 	// send
-
 	ServerSendData sendData;
 	sendData.mBoard = reversiGame;
 	sendData.mPlayerManagerSelect = playerSelection;
@@ -227,11 +206,6 @@ void ReversiSFML::ValidateSockets()
 
 			}
 		}
-	}
-
-	if (playerSelection.HasGameEnded())
-	{
-		
 	}
 	
 }

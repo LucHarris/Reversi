@@ -91,7 +91,6 @@ void ProfileState::TextEntered(unsigned int key)
 			}
 			std::fill(mInputString.begin(), mInputString.end(), '\0');
 			mInputString.clear();
-			// todo send message (client) or add message (host) then clear
 			break;
 		default:
 			if (canType)
@@ -103,8 +102,6 @@ void ProfileState::TextEntered(unsigned int key)
 
 		mText.at(TEXT_INPUT).setString(mInputString);
 	}
-
-
 }
 
 void ProfileState::Reset()

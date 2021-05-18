@@ -14,7 +14,6 @@ void ClientSendData::operator()(ReversiSFML* d)
 		UpdateHostPlayers(d);
 		UpdateHostMoves(d);
 		UpdateHostButtons(d);
-		//todo stretch UpdateHostMousePos(d)... 
 	}
 }
 
@@ -75,7 +74,6 @@ void ClientSendData::UpdateHostMoves(ReversiSFML* d)
 			{
 				d->reversiGame.Move(move);
 				d->playerSelection.Increment();
-				//todo further operations required?
 			}
 		}
 		else

@@ -11,7 +11,6 @@ void ReversiBoard::SwapPlayers()
 
 void ReversiBoard::GenerateScoreGrid()
 {
-	//std::cout << "\n\n\nGenerateScoreGrid called\n\n\n";
 
 	Vector2i cell; // Zero
 
@@ -40,7 +39,6 @@ void ReversiBoard::GenerateScoreGrid()
 			{
 				Vector2i offset = cell;
 
-				//std::cout << "\n\ncell:" << cell.x << "," << cell.y << " ";//debug
 
 				// look in every direction
 				for (auto& direction : Vector2i::Directions)
@@ -50,13 +48,10 @@ void ReversiBoard::GenerateScoreGrid()
 					// reset score
 					score = 1;
 
-					//std::cout	<< "\n\t direction:" << direction.x << "," << direction.y << "\t"; //debug
-
 					// within limits and next cell in direction is oppenents disc
 					while (WithinLimits(offset) && mDiscGrid.at(offset) == Opponent)
 					{
 						offset += direction;
-						//std::cout << "\t offset: " << offset.x << "," << offset.y; //debug
 						++score;
 					}
 
@@ -66,13 +61,11 @@ void ReversiBoard::GenerateScoreGrid()
 						if (mDiscGrid.at(offset) == Active)
 						{
 							mScoreGrid.at(cell) += score;
-							//std::cout << "\t score added: " << score;//debug
 						}
 					}
 
 				}
 
-				//std::cout << "\n\t\tcumulative score @ cell:" << mScoreGrid.at(cell)<< "\n\n";//debug
 
 				// update min max
 				const int cellScore = mScoreGrid.at(cell); // can't use local score variable as may be different to cell score
@@ -105,25 +98,7 @@ void ReversiBoard::GenerateScoreGrid()
 
 bool ReversiBoard::Move(const Vector2i& v)
 {
-	/*bool m = false;
-
-	if (ValidCellForMove(v))
-	{
-		m = PlaceMove(v);
-		
-		mMoveTracker.emplace_back(v);
-
-		SwapPlayers();
-
-		GenerateScoreGrid();
-
-	}
-
-	return m;*/
-
 	return Move((v.y * GRID_SIZE) + v.x);
-
-
 }
 
 bool ReversiBoard::ValidCellForMove(const Vector2i& v)
@@ -211,18 +186,11 @@ bool ReversiBoard::PlaceMove(const Vector2i& v)
 void ReversiBoard::UpdateBoardBackup()
 {
 	// override old buffer
-	//mDiscGridBackup = mDiscGrid;
+	mDiscGridBackup = mDiscGrid;
 }
 
 bool ReversiBoard::Move(int a)
 {
-
-	// to 2d coordinates
-	/*int x = a % 8;
-	int y = a / 8;
-	return Move({x, y});*/
-
-
 	bool m = false;
 
 	if (ValidCellForMove(a))
@@ -238,7 +206,6 @@ bool ReversiBoard::Move(int a)
 		assert(f != mMoveTracker.end());
 		// update element with move
 		*f = m;
-		//todo remove vector deadcode mMoveTracker.emplace_back(a);
 
 		SwapPlayers();
 
@@ -252,22 +219,6 @@ bool ReversiBoard::Move(int a)
 
 void ReversiBoard::ToConsole()
 {
-	/*std::cout
-		<< "\n--------------------\n"
-		<< "Player " << GetActivePlayerDisc() << " Turn... mPlayerIndex = " << mPlayerIndex << " "
-		<< "\n--------------------\n"
-		;
-
-	mDiscGrid.to_console();
-	std::cout << "\n";
-
-	mScoreGrid.to_console();
-	std::cout << "\nMinMax:";
-	std::cout
-		<< "\n\tMin Score: " << mMinMax.first.score << "\tPos:" << mMinMax.first.position.x << "," << mMinMax.first.position.y << "\n"
-		<< "\n\tMax Score: " << mMinMax.second.score << "\tPos:" << mMinMax.second.position.x << "," << mMinMax.second.position.y << "\n"
-		;
-	std::cout << "\n";*/
 }
 
 
@@ -284,8 +235,6 @@ const char ReversiBoard::GetActiveOpponentDisc() const
 void ReversiBoard::Initialize()
 {
 	mExportedWinningMoves = false;
-	//mMoveTracker.reserve(GRID_SIZE * GRID_SIZE); // won't need more moves than board size
-	//mMoveTracker.clear();
 	mMoveTracker.fill(-1);
 	mDiscGrid.fill(CELL_EMPTY);
 	mDiscGridBackup.fill(CELL_EMPTY);
@@ -403,7 +352,7 @@ void ReversiBoard::ExportWinningMoves()
 			inputMoveFile.close();
 
 
-			//starts at location in move list
+			// starts at location in move list
 			size_t winner = (finalScores.first > finalScores.second)? 0 : 1; // white wins : black wins. draw already evaluated
 
 			while (winner < moves.size())
@@ -435,9 +384,6 @@ void ReversiBoard::ExportWinningMoves()
 			{
 				assert(false);
 			}
-
-
-
 		}
 		else
 		{
@@ -447,6 +393,5 @@ void ReversiBoard::ExportWinningMoves()
 		// mark as exported
 		mExportedWinningMoves = true;
 	}
-
 
 }

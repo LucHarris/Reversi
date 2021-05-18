@@ -12,7 +12,6 @@ int AiAgent::EvaluateGame(ReversiBoard board)
     // for all moves, play opponents moves
     // after the two moves, get scores
 
-
     std::vector<std::vector<int>> strategies;
 
     int depth = 0;
@@ -35,8 +34,6 @@ void AiAgent::SimulateMove(int depth, int cell, ReversiBoard board, std::vector<
             SimulateMove(depth + 1,cell, board,strategies);
         }
     }
-
-
 }
 
 

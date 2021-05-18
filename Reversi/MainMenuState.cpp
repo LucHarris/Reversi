@@ -58,8 +58,6 @@ void MainMenuState::MouseInput(const sf::Vector2f& pos)
 
 	if (mButtons.at(BTN_HOST_GAME).Contains(pos))
 	{
-		// todo start hosting
-		//mpApp->stateManager.ChangeState(???);
 		mpApp->gameType = ReversiSFML::GameType::HOST;
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_NETWORK, true);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
@@ -88,8 +86,6 @@ void MainMenuState::Reset()
 	mpApp->threadPool.socketType = ThreadPool::Type::NONE;
 
 	mpApp->UpdateGameType();
-
-
 
 	mpApp->playerSelection = PlayerManager();
 	mpApp->ResetPlayers();

@@ -289,8 +289,6 @@ void SelectionState::MouseInput(const sf::Vector2f& mos)
 
 	}
 
-	// todo remove dead code ... moved to update for networking
-	//UpdatePlayerList();
 }
 
 void SelectionState::KeyInput(sf::Keyboard::Key)
@@ -321,7 +319,4 @@ void SelectionState::ClientSendOperation(ClientSendData::ButtonOp op)
 
 void SelectionState::Reset()
 {
-	// todo note moved to 
-
-	
 }

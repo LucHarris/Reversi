@@ -102,13 +102,11 @@ void Chat::TextEntered(unsigned int key)
 			if (mpApp->gameType != ReversiSFML::GameType::JOIN)
 			{
 				// host or local
-				//todo remove AddMessage(mInputString.c_str());
 				AddMessage(temp.c_str());
 			}
 			else
 			{
 				// client
-				//todo remove std::copy(mInputString.begin(), mInputString.end(), clientSend.msg);
 				std::copy(temp.begin(), temp.end(), clientSend.msg);
 				mpApp->threadPool.PushInputQueue(clientSend);
 			}
@@ -116,7 +114,6 @@ void Chat::TextEntered(unsigned int key)
 
 		std::fill(mInputString.begin(), mInputString.end(), '\0');
 		mInputString.clear();
-		// todo send message (client) or add message (host) then clear
 		break;
 	default:
 		if (canType)
@@ -161,7 +158,6 @@ const std::array<char, Chat::MSG_SIZE>& Chat::GetRecentChatEntry() const
 const std::array<std::array<char, Chat::MSG_SIZE>, Chat::MSG_COUNT>& Chat::GetChatMessages()
 {
 	return mMessages;
-	// TODO: insert return statement here
 }
 
 

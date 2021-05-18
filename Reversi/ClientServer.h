@@ -1,6 +1,5 @@
 #pragma once
-#include <WinSock2.h>
-//todo add lib: Ws2_32.lib
+#include <WinSock2.h>// requires lib: Ws2_32.lib
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN

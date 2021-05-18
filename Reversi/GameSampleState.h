@@ -38,7 +38,6 @@ private:
 	void IncActivePlayer();
 	// sets active player to invalid for update and input logic. sets end text
 	void GameEnded();
-
 	void UpdateTurnList();
 
 };

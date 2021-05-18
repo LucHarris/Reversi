@@ -32,10 +32,6 @@ void Resources::LoadTextures()
 		{"Data/Textures/iconChat.png",false,true },
 		{"Data/Textures/chatWindow.png",false,true }
 
-
-
-
-
 	};
 
 	const size_t size = sizeof(textureData) / sizeof(textureData[0]);
@@ -128,6 +124,7 @@ const sf::Vector2f Resources::GetTextureCenter(size_t p) const
 
 void Resources::Play(size_t p, float vol)
 {
+	// randomises pitch
 	std::uniform_real_distribution<float> distribution(0.8f, 1.2f);
 	const float pitch = distribution(generator);
 	mSounds.at(p).sound.play();

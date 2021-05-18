@@ -149,7 +149,6 @@ void Discs::MoveByMousePos(const sf::Vector2f& pos)
 				}
 				else
 				{
-					// todo show winner
 					mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
 				}
 			}
@@ -164,7 +163,6 @@ void Discs::MoveByMousePos(const sf::Vector2f& pos)
 	}
 	else
 	{
-		// todo move to win state
 		auto scores = mpApp->reversiGame.GetPlayerScores();
 
 		mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
@@ -253,7 +251,6 @@ bool Discs::Move(int move)
 		}
 		else
 		{
-			// todo show winner
 			mpApp->resources.Play(Resources::SOUND_WIN, mpApp->masterVolume);
 		}
 

@@ -76,7 +76,6 @@ bool ClientServer::Init()
 		WSACleanup();
 
 		return false;
-		//assert(false);
 	}
 	else
 	{
@@ -84,15 +83,12 @@ bool ClientServer::Init()
 	}
 
 	return true;
-
-	// connect // listen comes next
 }
 
 void ClientServer::Close()
 {
-	//freeaddrinfo(mInfo); // maybe only in setting up
 	closesocket(mSocket);
-	WSACleanup(); // maybe not during certain setup
+	WSACleanup(); 
 	mClosed = true;
 }
 

@@ -78,16 +78,6 @@ void NetworkState::MouseInput(const sf::Vector2f& mos)
 		default:
 			break;
 		}
-		//switch (mpApp->gameType)
-		//{
-		//case ReversiSFML::GameType::HOST:
-		//	//todo host setup
-		//	break;
-		//case ReversiSFML::GameType::JOIN:
-		//	//todo client setup
-		//	break;
-		//default:;
-		//}
 
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_PLAYER_SELECTION, true);
@@ -100,8 +90,6 @@ void NetworkState::KeyInput(sf::Keyboard::Key key)
 
 void NetworkState::TextEntered(unsigned int key)
 {
-	//todo validate strings
-
 	switch (key)
 	{
 	case '\b':// backspace

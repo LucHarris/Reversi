@@ -14,11 +14,8 @@ public:
 
 	// init / connect / loop
 	virtual void operator()() override;
-
+	// connect to host
 	bool Connect();
-
 	// for send/recv
 	virtual bool Body() override;
-
-	int SendRecv(char sData[], int sSize, char rData[], int rSize);
 };

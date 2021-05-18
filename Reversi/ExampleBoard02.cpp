@@ -1,4 +1,4 @@
-
+// testing environment
 #include "Board.h"
 #include <chrono>
 
@@ -10,8 +10,6 @@ void Run()
 
 	// game init
 	b.Initialize();
-
-	//b.ToConsole();
 
 	// player turns until win/draw
 	while (b.CanMove())
@@ -39,17 +37,13 @@ void Run()
 
 		if (b.BoardHasChanged())
 		{
-			//std::cout << "\n\nBoard changed\n\n\n";
 			// change visuals here
 			b.UpdateBoardBackup();
 		}
 		else
 		{
-			//std::cout << "\n\n\n\nBoard NOT changed\n\n\n\n\n";
 		}
 
-		//b.ToConsole();
-		//system("Pause");
 	}
 
 	// Final score

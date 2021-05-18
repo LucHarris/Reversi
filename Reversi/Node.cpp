@@ -13,7 +13,6 @@ Node::Node(int agent, int& m, int depth, ReversiBoard board)
 	{
 		board.Move(m);
 
-		// todo is backup baord needed?
 		if (board.BoardHasChanged())
 		{
 			board.UpdateBoardBackup();
@@ -56,18 +55,11 @@ Node::Node(int agent, int& m, int depth, ReversiBoard board)
 		else
 		{
 			// did the agent win
-			// todo test
 			if (agent ^ (scores.first > scores.second))
 			{
 				boardState = BoardState::WIN;
 			}
 
-			// todo remove if ubove condition is valid
-			/*if ((agent == PLAYER_ONE && scores.first > scores.second) ||
-				(agent == PLAYER_TWO && scores.first < scores.second))
-			{
-				boardState = BoardState::WIN;
-			}*/
 		}
 	}
 

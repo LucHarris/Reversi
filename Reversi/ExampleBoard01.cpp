@@ -1,4 +1,4 @@
-
+// testing environment
 #include "Board.h"
 
 int main()
@@ -45,7 +45,6 @@ int main()
 			}
 
 			b.ToConsole();
-			//system("Pause");
 		}
 		
 		// Final score

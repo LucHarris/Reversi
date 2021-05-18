@@ -3,7 +3,6 @@
 #include <iostream>
 #include <assert.h>
 #include <WS2tcpip.h>
-//#include "ThreadPool.h"
 #include "OutputJobs.h"
 #include "ReversiSFML.h"
 #include <string.h>
@@ -15,18 +14,11 @@ ServerSocket::ServerSocket(const SOCKET& s, ThreadPool* ptp)
 	mResult(0),
 	mpThreadPool(ptp)
 {
-	
 }
 
 ServerSocket::~ServerSocket()
 {
 	std::cout << "\nServer: ~ServerClient() ";
-}
-
-// todo remove
-int ServerSocket::RecvSend(char* rData, int rSize, char* sData, int sSize)
-{
-	return -1;
 }
 
 void ServerSocket::Body()
@@ -58,7 +50,8 @@ void ServerSocket::Body()
 
 			mpThreadPool->PushOutputQueue(data);
 
-			Sleep(50); // allow to be processed
+			// allow to be processed
+			Sleep(50); 
 
 			// retrieve data to be sent
 			ServerSendData sendData = mpThreadPool->GetServerData();

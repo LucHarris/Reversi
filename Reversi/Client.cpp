@@ -51,7 +51,6 @@ bool ClientSocket::Body()
 	ClientSendData csd;
 	
 	int result = 1;
-	//char sBuffer[buffer_size] = "[send from client]";
 	const int sSize = (int)sizeof(ClientSendData);
 	const int rSize = (int)sizeof(ServerSendData);
 	char sBuffer[sSize];
@@ -60,15 +59,12 @@ bool ClientSocket::Body()
 
 	do
 	{
-		//std::cout << "\nDoWhile start";
 		ClientSendData j;
 		if (mThreadPool->PopInputQueue(j))
 		{
-			//std::cout << "\nPop to send from input queue";
 
 			// convert to buffer
 			CopyMemory(sBuffer, &j, sSize);
-			//CopyMemory(sData, &j, sizeof(sData));
 			// send
 			std::cout << "\nSend";
 			result = send(mSocket, sBuffer, sSize, 0);
@@ -117,7 +113,7 @@ bool ClientSocket::Body()
 		}
 		else
 		{
-			//std::cout << "\nnothing to pop from input queue";
+			// nothing to pop from input queue
 		}
 
 	} while (result > 0 && mThreadPool->socketType == ThreadPool::Type::CLIENT_SOCKET);
@@ -130,10 +126,4 @@ bool ClientSocket::Body()
 	std::cout << "\nClient body end";
 
 	return true;
-}
-
-//todo remove
-int ClientSocket::SendRecv(char sData[], int sSize, char rData[], int rSize)
-{
-	return -1;
 }

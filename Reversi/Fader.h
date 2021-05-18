@@ -6,7 +6,6 @@ class Fader
 	bool mFading = false;
 	bool mEndState = false;
 	float mRate = 1.0f;
-	// between 0 and 100
 
 public:
 	void Reset(float r = 1.0f);

@@ -135,7 +135,6 @@ void StateManager::MouseInput(const sf::Vector2f& pos)
 
 	if (mMenuButtons.at(BTN_STATS).getGlobalBounds().contains(pos))
 	{
-		//todo
 		mpApp->stateManager.ChangeState(gc::STATE_INDEX_PROFILE,true);
 		mpApp->resources.Play(Resources::SOUND_CLICK, mpApp->masterVolume);
 	}
@@ -156,9 +155,6 @@ void StateManager::KeyInput(sf::Keyboard::Key key)
 void StateManager::TextEntered(unsigned int key)
 {
 	mStates.at(mActiveState)->TextEntered(key);
-
-	//todo add logic for chat to display and enter
-	// mChatBtn.mDisplay = true;
 }
 
 void StateManager::ChangeState(size_t s, bool reset)

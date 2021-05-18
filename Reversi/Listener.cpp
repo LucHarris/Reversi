@@ -8,7 +8,6 @@
 
 ServerListener::~ServerListener()
 {
-	//std::cout << "\n~ServerListener()";
 }
 
 void ServerListener::operator()()

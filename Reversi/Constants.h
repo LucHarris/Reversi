@@ -8,7 +8,6 @@
 
 namespace gc
 {
-	// todo rename for naming convention
 	const std::string AppTitle = "Reversi";
 
 	const unsigned int
