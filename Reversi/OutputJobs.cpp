@@ -15,7 +15,6 @@ void ClientSendData::operator()(ReversiSFML* d)
 		UpdateHostMoves(d);
 		UpdateHostButtons(d);
 		//todo stretch UpdateHostMousePos(d)... 
-		ToConsole();
 	}
 }
 
@@ -26,8 +25,6 @@ void ClientSendData::ToConsole()
 	std::cout <<'\t'
 		<< dummy << '\t'
 		<< msg << '\t'
-		<< mouse[0] << '\t'
-		<< mouse[1] << '\t'
 		<< player.userData.id << '\t'
 		<< move << '\t'
 		;

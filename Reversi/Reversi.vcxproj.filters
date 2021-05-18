@@ -120,9 +120,6 @@
     <ClInclude Include="Listener.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="LocalData.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="OutputJobs.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
@@ -240,9 +237,6 @@
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="Listener.cpp">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="LocalData.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="OutputJobs.cpp">

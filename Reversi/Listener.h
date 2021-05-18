@@ -8,14 +8,11 @@ public:
 		:
 		ClientServer(tp)
 	{
-
 	}
 
 	~ServerListener();
-
 	// Initialise / listen / loop
 	virtual void operator()() override;
-	
 	// listener
 	virtual bool Body() override;
 	// loops listen/accept until broken

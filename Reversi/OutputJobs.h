@@ -4,8 +4,8 @@ class ReversiSFML;
 #include "Player.h"
 #include "PlayerManager.h"
 #include "Board.h"
-// contains structs for exchanging data between client and server
 
+// contains structs for exchanging data between client and server
 struct ClientSendData
 {
 	// button actions performed by client that are registered by the host
@@ -20,16 +20,14 @@ struct ClientSendData
 
 	char msg[MSG_SIZE] {'\0'};
 	Player player;
-	float mouse[2]{ -1.0f,-1.0f };
 	int move = -1;
 	ButtonOp op = ButtonOp::NO_OP;
+	// position in host player list
 	int netPlayerIndex = -1;
-	
 	// to stop other member variables being evaluated/applied in operator()
 	bool dummy = false;
-
+	// processed after taken from threadpool output job queue
 	void operator()(ReversiSFML* d);
-
 	void ToConsole();
 	// clients submitted chat messages updates host chat log
 	void UpdateHostChat(ReversiSFML* d);
@@ -39,7 +37,6 @@ struct ClientSendData
 	void UpdateHostMoves(ReversiSFML* d);
 	// client button updates host to submit operations
 	void UpdateHostButtons(ReversiSFML* d);
-
 	void SetMessage(const std::string& str);
 };
 
@@ -48,17 +45,15 @@ struct ClientSendData
 struct ServerSendData
 {
 	enum {	MSG_LENGTH = ClientSendData::MSG_SIZE, MSG_COUNT = 9 }; // match size of chat messages
-	// temp data
-	//std::array<int,20> moo;
+	// copied from host
 	PlayerManager mPlayerManagerSelect;
+	// copied from host
 	ReversiBoard mBoard;
+	// copied from host
 	std::array<std::array<char, MSG_LENGTH>, MSG_COUNT> mChatLog;
-	//char a[500];
 	// updates client application
 	void operator()(ReversiSFML* pd);
 	ServerSendData() = default;
-
 	//  client recv buffer to state
 	ServerSendData(const char buffer[], size_t size);
-
 };

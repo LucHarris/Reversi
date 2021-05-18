@@ -31,8 +31,8 @@ public:
 
 	ClientServer(ThreadPool* const tp)
 		:
-		mPort("8888"), // overriden in nextowk state
-		mAddress("localhost"), // overriden in nextowk state
+		mPort("8888"),			// overriden in nextowk state
+		mAddress("localhost"),	// overriden in nextowk state
 		mThreadPool(tp)
 	{
 	}
@@ -40,13 +40,9 @@ public:
 	~ClientServer();
 	
 	virtual void operator()() = 0;
-
 	bool Init();
-
 	void Close();
-
 	void SetAddressAndPort(const char p[PORT_SIZE],const char a[ADDRESS_SIZE]);
-
 	virtual bool Body() = 0;
 
 };
